@@ -1,0 +1,13 @@
+model Transactionstatus {
+    id Int @unique
+    label Label
+
+}
+
+
+enum Label {
+  ongoing
+  dispute
+  cancel
+  completed
+}

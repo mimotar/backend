@@ -1,0 +1,18 @@
+model Setting {
+    id Int @id @default(autoincrement())
+    defaultCurrency DefaultCurrency
+    notificationPreference NotificationPreference
+
+}
+
+enum DefaultCurrency {
+    GBP
+    USD
+    NGN
+}
+
+enum NotificationPreference {
+    SMS
+    EMAIL
+    BOTH
+}

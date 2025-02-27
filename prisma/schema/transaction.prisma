@@ -1,0 +1,33 @@
+model Transaction {
+    id Int @id @default(autoincrement())
+    amount Int 
+    description String @db.VarChar(200)
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    status_id Status @default(ongoing)
+    pay_escrow_fee  Int
+    additional_agreement String @db.VarChar(200)
+    pay_shipping_cost Int 
+    creator_fullname String
+    creator_email String @unique
+    creator_no String
+    creator_address String
+    creator_role String
+
+     receiver_fullname String
+     receiver_no String
+     receiver_address String
+     link_expires Boolean @default(false)
+     txn_link String
+     agreement String
+     txn_type String
+     duration DateTime @default(now())
+     created_at DateTime  @default(now())
+}
+
+ enum Status {
+  ongoing
+  dispute
+  cancel
+  completed
+}

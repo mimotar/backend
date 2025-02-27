@@ -1,0 +1,6 @@
+model Contact {
+    id Int @id @default(autoincrement())
+    email String
+    name String 
+    message String @db.VarChar(300)
+}
