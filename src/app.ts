@@ -20,11 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", routes);
 
 //error handling middleware
-app.use(
-  (err: Error, req: Request, res: Response, next: express.NextFunction) => {
-    GlobalErrorMiddleware(err, req, res, next);
-  }
-);
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  GlobalErrorMiddleware(err, req, res, next);
+});
 
 // Error handling
 app.use(
