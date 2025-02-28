@@ -10,5 +10,7 @@
   notification Notification[]
   Sender Chat[] @relation("Sender")
   Receiver Chat[] @relation("receiver")
+  disputeSender_id Dispute? @relation("sender_userId")
+  disputeReceiver_id Dispute? @relation("receiver_userId")
 }
 

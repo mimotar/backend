@@ -1,6 +1,7 @@
 model Transactionstatus {
     id Int @unique
     label Label
+    dispute Dispute?
 
 }
 

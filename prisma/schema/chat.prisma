@@ -6,4 +6,5 @@ model Chat {
     sender_user_id Int
     receiver User @relation("receiver",fields: [receiver_user_id], references: [id])
     receiver_user_id Int
+    dispute Dispute?
 }

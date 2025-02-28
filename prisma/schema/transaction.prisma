@@ -13,16 +13,16 @@ model Transaction {
     creator_no String
     creator_address String
     creator_role String
-
-     receiver_fullname String
-     receiver_no String
-     receiver_address String
-     link_expires Boolean @default(false)
-     txn_link String
-     agreement String
-     txn_type String
-     duration DateTime @default(now())
-     created_at DateTime  @default(now())
+    dispute Dispute?
+    receiver_fullname String
+    receiver_no String
+    receiver_address String
+    link_expires Boolean @default(false)
+    txn_link String
+    agreement String
+    txn_type String
+    duration DateTime @default(now())
+    created_at DateTime  @default(now())
 }
 
  enum Status {

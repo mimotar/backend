@@ -2,6 +2,11 @@ model Setting {
     id Int @id @default(autoincrement())
     defaultCurrency DefaultCurrency
     notificationPreference NotificationPreference
+    securityQuestion SecurityQuestion @relation( fields: [securityQuestionId], references: [id])
+    securityQuestionId Int
+    twoFactorAuth Boolean
+    account Account @relation( fields: [accountId], references: [id])
+    accountId Int
 
 }
 
