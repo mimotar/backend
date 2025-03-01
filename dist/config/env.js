@@ -7,6 +7,7 @@ exports.env = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.env = {
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    PORT: process.env.PORT || '3000',
+    NODE_ENV: process.env.NODE_ENV || "development",
+    PORT: process.env.PORT || "3000",
+    JWT_SECRET: process.env.JWT_SECRET,
 };

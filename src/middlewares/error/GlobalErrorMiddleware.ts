@@ -7,25 +7,25 @@ export const GlobalErrorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error("error", err);
-  console.error("stack", err.stack);
-  console.error("error message", err.message);
   if (err instanceof GlobalError) {
     if (err.operational) {
-      return res.status(err.statusCode).json({
+      res.status(err.statusCode).json({
         name: err.name,
         message: err.message,
       });
+      return;
     } else {
-      return res.status(500).json({
+      res.status(500).json({
         name: err.name,
         message: "Something went wrong",
       });
+      return;
     }
   } else {
-    return res.status(500).json({
+    res.status(500).json({
       name: "error",
       message: "Internal Server Error",
     });
+    return;
   }
 };
