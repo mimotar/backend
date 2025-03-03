@@ -17,11 +17,11 @@ app.use(cookieParser());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+const emailRoutes = require("./routes/emailRoutes");
 // Routes
 app.use("/api", routes);
 app.use("/api/test", authenticateTokenMiddleware, routes);
-
+app.use("/api/email", emailRoutes);
 // Error handling
 // app.use(
 //   (

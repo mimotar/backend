@@ -28,6 +28,7 @@
     "express-winston": "^4.2.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "sib-api-v3-sdk": "^8.5.0",
     "winston": "^3.17.0",
     "zod": "^3.24.2"
   },
@@ -37,7 +38,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.8",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
