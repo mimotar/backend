@@ -3,8 +3,8 @@ import { sendEmailController } from "../controllers/emailController";
 const express = require("express");
 
 
-const router = express.Router();
+const emailRouter = express.Router();
 
-router.post("/send-email", sendEmailController);
+emailRouter.post("/send-email", sendEmailController);
 
-module.exports = router;
+export default emailRouter;
