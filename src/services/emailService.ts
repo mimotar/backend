@@ -19,11 +19,10 @@
 
 // const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-
 // const sendBrevoEmail =  async (
-//   to: Recipient[], 
-//   subject: string, 
-//   htmlContent: string, 
+//   to: Recipient[],
+//   subject: string,
+//   htmlContent: string,
 //   sender: Sender = { email: "no-reply@yourdomain.com", name: "Your Company" }
 // ): Promise<any> => {
 //   const emailData = {
@@ -42,13 +41,16 @@
 //     throw new Error("Failed to send email");
 //   }
 // }
-// module.exports = { sendBrevoEmail }; 
+// module.exports = { sendBrevoEmail };
 import apiInstance from "../config/brevo";
 import { getEmailTemplate } from "../emails/templates";
 import { EmailType } from "../emails/templates/emailTypes";
 
-
-export async function sendEmail(to: string, type: EmailType, params: Record<string, any>) {
+export async function sendEmail(
+  to: string,
+  type: EmailType,
+  params: Record<string, any>
+) {
   try {
     const { subject, htmlContent } = getEmailTemplate(type, params);
 
@@ -60,7 +62,7 @@ export async function sendEmail(to: string, type: EmailType, params: Record<stri
 
     console.log(`Email sent successfully: ${type}`);
     return { success: true, message: `Email sent: ${type}` };
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error sending email:", error);
     return { success: false, error: error?.message };
   }
