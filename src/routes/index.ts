@@ -1,4 +1,5 @@
 import { Router } from "express";
+import emailRouter from "./emailRoute";
 import { PasswordResetController } from "../controllers/emailResetController";
 import prisma from "../utils/prisma";
 
@@ -11,6 +12,8 @@ router.get("/", (req, res) => {
 router.post("/middleware", (req, res) => {
   res.send("middleware");
 });
+
+router.use("/email", emailRouter);
 
 router.post(
   "/confirm-email-password-reset",

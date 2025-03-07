@@ -20,6 +20,17 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Routes
 app.use("/api", routes_1.default);
+// Error handling
+// app.use(
+//   (
+//     err: Error,
+//     req: express.Request,
+//     res: express.Response,
+//     next: express.NextFunction
+//   ) => {
+//     errorHandler(err, req, res, next);
+//   }
+// );
 //error handling middleware
 app.use(GlobalErrorMiddleware_1.GlobalErrorMiddleware);
 exports.default = app;

@@ -94,6 +94,7 @@ class PasswordResetController {
                 },
             });
             res.status(200).json({ success: true, msg: "password reset successful" });
+            return;
         }
         catch (error) {
             if (error instanceof GlobalErrorHandler_1.GlobalError) {

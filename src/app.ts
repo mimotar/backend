@@ -20,6 +20,17 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api", routes);
+// Error handling
+// app.use(
+//   (
+//     err: Error,
+//     req: express.Request,
+//     res: express.Response,
+//     next: express.NextFunction
+//   ) => {
+//     errorHandler(err, req, res, next);
+//   }
+// );
 
 //error handling middleware
 app.use(GlobalErrorMiddleware);
