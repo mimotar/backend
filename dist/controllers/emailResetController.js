@@ -10,6 +10,9 @@ const prisma_1 = __importDefault(require("../utils/prisma"));
 const createToken_1 = require("../utils/createToken");
 const emailService_1 = require("../services/emailService");
 const emailTypes_1 = require("../emails/templates/emailTypes");
+const verifyToken_1 = __importDefault(require("../utils/verifyToken"));
+const HashPassword_1 = require("../utils/HashPassword");
+const comparePassword_1 = require("../utils/comparePassword");
 class PasswordResetController {
     constructor(prisma) {
         this.prisma = prisma;
@@ -47,6 +50,50 @@ class PasswordResetController {
                 email,
             });
             return;
+        }
+        catch (error) {
+            if (error instanceof GlobalErrorHandler_1.GlobalError) {
+                next(new GlobalErrorHandler_1.GlobalError(error.name, error.message, error.statusCode, error.operational));
+                return;
+            }
+            if (error instanceof Error) {
+                next(new GlobalErrorHandler_1.GlobalError(error.name, "Internal server Error", 500, false));
+                return;
+            }
+            next(new GlobalErrorHandler_1.GlobalError("UnknownError", "Internal server Error", 500, false));
+            return;
+        }
+    }
+    async passwordReset(req, res, next) {
+        try {
+            const { token, newPassWord, email } = req.body;
+            //validate the token
+            const tokenDecoded = await (0, verifyToken_1.default)(token);
+            //making sure it was the user who make the password reset request
+            if (tokenDecoded !== email) {
+                next(new GlobalErrorHandler_1.GlobalError("UnauthorizedPasswordReset", "Security bridge: You are not the user who make the password request", 401, true));
+                return;
+            }
+            //MAKE SURE THE USER IS NOT SENDING THE SAME PASSWORD as of old one
+            //the db password of the current user
+            const dbCredential = await prisma_1.default.user.findFirst({
+                where: { email: email },
+            });
+            //check if the new password and old match
+            const password_compare = await (0, comparePassword_1.comparePassword)(newPassWord, dbCredential?.password);
+            if (password_compare) {
+                next(new GlobalErrorHandler_1.GlobalError("TheSamePasswordError", "new  Password other than the old one is required", 400, true));
+                return;
+            }
+            //hash password
+            const hash_Password = await (0, HashPassword_1.hashPassword)(newPassWord);
+            await prisma_1.default.user.create({
+                data: {
+                    password: hash_Password,
+                    email: "",
+                },
+            });
+            res.status(200).json({ success: true, msg: "password reset successful" });
         }
         catch (error) {
             if (error instanceof GlobalErrorHandler_1.GlobalError) {
