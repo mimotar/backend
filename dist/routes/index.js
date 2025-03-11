@@ -17,4 +17,5 @@ router.post("/middleware", (req, res) => {
 });
 router.use("/email", emailRoute_1.default);
 router.post("/confirm-email-password-reset", PasswordResetControllerImpl.ConfirmEmail);
+router.post("/password-reset", PasswordResetControllerImpl.passwordReset);
 exports.default = router;

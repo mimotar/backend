@@ -20,4 +20,6 @@ router.post(
   PasswordResetControllerImpl.ConfirmEmail
 );
 
+router.post("/password-reset", PasswordResetControllerImpl.passwordReset);
+
 export default router;

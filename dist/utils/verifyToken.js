@@ -11,7 +11,7 @@ async function VerifyToken(token) {
     return new Promise((resolve, reject) => {
         jsonwebtoken_1.default.verify(token, env_1.env.JWT_SECRET, (err, decoded) => {
             if (err) {
-                console.log(err);
+                // console.log(err);
                 reject(new GlobalErrorHandler_1.GlobalError(err.name, err.message, 401, true));
             }
             else {
