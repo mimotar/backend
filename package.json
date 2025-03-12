@@ -38,9 +38,14 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+<<<<<<< HEAD
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.8",
     "@types/jest": "^29.5.14",
+=======
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.5",
+>>>>>>> 62597c8 (Unit and integration test setup)
     "@types/supertest": "^6.0.2",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",

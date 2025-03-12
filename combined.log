@@ -1,6 +1,7 @@
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-02-24T14:15:40.578Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-02-24T14:32:19.679Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-02-24T14:33:35.208Z"}
+<<<<<<< HEAD
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-02-26T14:50:00.608Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-02-26T15:11:58.404Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-02-28T12:28:03.747Z"}
@@ -63,3 +64,7 @@
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-03-01T16:09:22.299Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-03-01T16:09:25.022Z"}
 {"level":"info","message":"Server running on port 3000","timestamp":"2025-03-01T16:09:39.584Z"}
+=======
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-03-04T11:46:54.576Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-03-04T15:42:19.161Z"}
+>>>>>>> 62597c8 (Unit and integration test setup)
