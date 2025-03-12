@@ -1,9 +1,13 @@
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import prisma from "../utils/prisma";
-import dotenv from "dotenv";
 import JWTService from "../utils/JWTService";
-dotenv.config();
+import { env } from "../config/env";
+import { Request, Response } from 'express';
 
-export const PassportConfig = async (
+
+export const HandleSocialAuth = async (
   profile: any,
   provider: "google" | "facebook"
 ) => {
@@ -91,3 +95,48 @@ export const PassportConfig = async (
     }
   }
 };
+
+
+
+export const ConfigPassportStrategy = async() => {
+
+    passport.use(new GoogleStrategy(
+        {
+            clientID: env.GOOGLE_CLIENT_ID || '',
+            clientSecret: env.GOOGLE_CLIENT_SECRET || ' ',
+            callbackURL: env.GOOGLE_CALLBACK_URL,
+            scope: ['profile', 'email']
+        },
+        async( accessToken, refreshToken, profile, done ) => {
+            try {
+                const result = await HandleSocialAuth(profile, 'google')
+                return done(null, result)
+            } catch (error) {
+                return done(error, undefined)
+            }
+        }
+    ));
+
+    passport.use(new FacebookStrategy(
+        {
+            clientID: env.FACEBOOK_APP_ID || '',
+            clientSecret: env.FACEBOOK_APP_SECRET || '',
+            callbackURL: env.FACEBOOK_CALLBACK_URL || ' ',
+            profileFields: ['id', 'displayName', 'email', 'name', 'photos']
+        },
+        async( accessToken, refreshToken, profile, done ) => {
+            try {
+                const result = await HandleSocialAuth(profile, 'facebook')
+                return done(null, result)
+            } catch (error) {
+                return done(error, undefined)
+            }
+        }
+    ))
+}
+
+
+export const socialAuthCallback = (req: Request, res: Response) => {
+    const { user, token } = req.user as { user: any, token: string };
+    res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}`);
+  };
