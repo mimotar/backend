@@ -1,9 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const sib = require("sib-api-v3-sdk");
-import { env } from "./env";
-
+const env_1 = require("./env");
 const client = sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey = env.brevoApiKey;
-
+apiKey.apiKey = env_1.env.brevoApiKey;
 const apiInstance = new sib.TransactionalEmailsApi();
-export default apiInstance;
+exports.default = apiInstance;
