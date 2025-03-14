@@ -7,6 +7,7 @@ import { sendEmail } from "../services/emailService";
 import VerifyToken from "../utils/verifyToken";
 import { hashPassword } from "../utils/HashPassword";
 import { comparePassword } from "../utils/comparePassword";
+import { EmailType } from "../emails/templates/emailTypes";
 
 jest.mock("../utils/createToken", () => ({
   createToken: jest.fn().mockResolvedValue("mocked_reset_token"),
@@ -51,6 +52,9 @@ describe("PasswordResetController", () => {
       json: jest.fn(),
     };
     next = jest.fn();
+
+    req = {} as Request; // Reset request object
+    next = jest.fn(); // Reset the next function
   });
 
   describe("ConfirmEmail", () => {
@@ -93,11 +97,12 @@ describe("PasswordResetController", () => {
 
       expect(sendEmail).toHaveBeenCalledWith(
         "test@example.com",
-        expect.any(String),
+        expect.any(EmailType),
         expect.objectContaining({
           resetLink: expect.stringContaining("reset-password?token="),
         })
       );
+
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({ success: true })

@@ -19,8 +19,7 @@ export class PasswordResetController {
     try {
       //this is gotten from the req header
       const currentUser = {
-        email: "i don't know how if the user credential is sent along request",
-        other_field: "",
+        email: "testing@gmail.com",
       };
       // email validation schema
       const emailSchema = z.object({
@@ -54,6 +53,8 @@ export class PasswordResetController {
         select: { email: true, password: true },
       });
 
+      console.log(verifyEmail);
+
       if (!verifyEmail) {
         next(new GlobalError("NotFound", "Email not found", 404, true));
         return;
@@ -61,8 +62,9 @@ export class PasswordResetController {
 
       //create token and new password form link
       const reset_token = await createToken(3600, validationResult.data);
-      const resetPasswordUrl = `http://localhot:5000/reset-password?token=${reset_token}`;
+      const resetPasswordUrl = `http://localhost:5000/reset-password?token=${reset_token}`;
       const linkObj = { resetLink: resetPasswordUrl };
+      console.log("sendEmail function:", sendEmail);
       await sendEmail(email, EmailType.PASSWORD_RESET, linkObj);
       res.status(200).json({
         success: true,
