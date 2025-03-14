@@ -7,4 +7,5 @@ export const env = {
   PORT: process.env.PORT || "3000",
   JWT_SECRET: process.env.JWT_SECRET,
   brevoApiKey: process.env.BREVO_API_KEY as string,
+  saltRounds: Number(process.env.SALTROUNDS),
 };
