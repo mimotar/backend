@@ -25,3 +25,29 @@ export async function sendEmail(
 		return { success: false, error: error?.message };
 	}
 }
+
+
+
+
+export async function sendEmailWithTemplate(
+	to: string,
+	params: Record<string, any>,
+	templateId: number
+) {
+	try {
+		
+
+		await apiInstance.sendTransacEmail({
+			sender: { email: 'mimotarinc@gmail.com'}, 
+			to: [{ email: to }],
+			templateId,
+			params
+		});
+
+		// console.log(`Email sent successfully`);
+		return { success: true, message: `Email sent` };
+	} catch (error: any) {
+		console.error("Error sending email:", error);
+		return { success: false, error: error?.message };
+	}
+}

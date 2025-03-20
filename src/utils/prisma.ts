@@ -7,7 +7,7 @@ if(process.env.NODE_ENV === 'production') {
     if(!(global as any).prisma) {
         (global as any).prisma = new PrismaClient();
     }
-    prisma = (global as typeof globalThis & { prisma?: PrismaClient }).prisma;
+    prisma = (global as typeof globalThis & { prisma?: PrismaClient }).prisma!;
 }
 
 export default prisma;

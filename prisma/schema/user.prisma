@@ -2,12 +2,15 @@
  model User {
   id        Int  @id @default(autoincrement())
   email     String  @unique
-  password  String?
+  password  String
+  firstName String
+  lastName String
   createdAt DateTime @default(now())
   verified  Boolean  @default(false)
   verificationToken String? // ✅ Nullable token for email verification
   profile   Profile?
-  name      String?
+  provider String?
+  subject String?
   transaction Transaction[]
   notification Notification[]
   Sender Chat[] @relation("Sender")
