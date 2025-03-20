@@ -7,6 +7,12 @@ export const env = {
   PORT: process.env.PORT || "3000",
   JWT_SECRET: process.env.JWT_SECRET,
   brevoApiKey: process.env.BREVO_API_KEY as string,
+  DATABASE_URL:process.env.DATABASE_URL as string,
+  EMAIL:process.env.EMAIL_SENDER,
+  FACEBOOK_ID:process.env.FACEBOOK_APP_ID,
+  FACEBOOK_SECRET:process.env.FACEBOOK_SECRET as string,
+  GOOGLE_ID:process.env.GOOGLE_CLIENT_ID as string,
+  GOOGLE_SECRET:process.env.GOOGLE_CLIENT_SECRET as string,
 
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -18,3 +24,4 @@ export const env = {
 
   FRONTEND_URL: process.env.FRONTEND_URL
 };
+
