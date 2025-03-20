@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = sendEmail;
+exports.sendEmailWithTemplate = sendEmailWithTemplate;
 const brevo_1 = __importDefault(require("../config/brevo"));
 const env_1 = require("../config/env");
 const templates_1 = require("../emails/templates");
@@ -18,6 +19,22 @@ async function sendEmail(to, type, params) {
         });
         console.log(`Email sent successfully: ${type}`);
         return { success: true, message: `Email sent: ${type}` };
+    }
+    catch (error) {
+        console.error("Error sending email:", error);
+        return { success: false, error: error?.message };
+    }
+}
+async function sendEmailWithTemplate(to, params, templateId) {
+    try {
+        await brevo_1.default.sendTransacEmail({
+            sender: { email: 'mimotarinc@gmail.com' },
+            to: [{ email: to }],
+            templateId,
+            params
+        });
+        // console.log(`Email sent successfully`);
+        return { success: true, message: `Email sent` };
     }
     catch (error) {
         console.error("Error sending email:", error);

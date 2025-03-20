@@ -105,14 +105,27 @@ const register = async (req, res) => {
             email = userData.email;
             // name = userData.name;
             user = await db_1.prisma.user.create({
-                data: { email, verified: true },
+                data: {
+                    email,
+                    verified: true,
+                    password: '', // Provide a default or placeholder value
+                    firstName: 'OAuth', // Provide a default or placeholder value
+                    lastName: 'User' // Provide a default or placeholder value
+                },
             });
         }
         else {
             const hashedPassword = await bcryptjs_1.default.hash(password, 10);
             const verificationToken = crypto_1.default.randomBytes(32).toString('hex');
             user = await db_1.prisma.user.create({
-                data: { email, password: hashedPassword, verified: false, verificationToken },
+                data: {
+                    email,
+                    password: hashedPassword,
+                    verified: false,
+                    verificationToken,
+                    firstName: 'DefaultFirstName',
+                    lastName: 'DefaultLastName'
+                },
             });
             const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
             console.log(`Fake Verification Link: ${verificationLink}`);

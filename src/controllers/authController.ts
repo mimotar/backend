@@ -114,7 +114,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             email = userData.email;
             // name = userData.name;
             user = await prisma.user.create({
-              data: { email, verified: true },
+              data: { 
+                email, 
+                verified: true, 
+                password: '', // Provide a default or placeholder value
+                firstName: 'OAuth', // Provide a default or placeholder value
+                lastName: 'User' // Provide a default or placeholder value
+              },
           });
           
         } else {
@@ -122,7 +128,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             const verificationToken = crypto.randomBytes(32).toString('hex');
             
             user = await prisma.user.create({
-                data: { email, password: hashedPassword, verified: false, verificationToken },
+                data: { 
+                    email, 
+                    password: hashedPassword, 
+                    verified: false, 
+                    verificationToken, 
+                    firstName: 'DefaultFirstName', 
+                    lastName: 'DefaultLastName'  
+                },
             });
             
             const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
