@@ -12,7 +12,7 @@ export const testDB = async () => {
         datasources: {
             db: {
                 url: TEST_DATABASE_URL,
-                schema: schemaName,
+                // schema: schemaName,
             },
         },
     });

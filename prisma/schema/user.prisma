@@ -3,9 +3,14 @@
   id        Int  @id @default(autoincrement())
   email     String  @unique
   password  String
+  firstName String
+  lastName String
   createdAt DateTime @default(now())
   verified  Boolean  @default(false)
+  verificationToken String? // ✅ Nullable token for email verification
   profile   Profile?
+  provider String?
+  subject String?
   transaction Transaction[]
   notification Notification[]
   Sender Chat[] @relation("Sender")
