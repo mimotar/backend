@@ -114,7 +114,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       email = userData.email;
       // name = userData.name;
       user = await prisma.user.create({
-        data: { email, verified: true },
+        data: {
+          email,
+          verified: true,
+          password: "", // Provide a default or placeholder value
+          firstName: "OAuth", // Provide a default or placeholder value
+          lastName: "User", // Provide a default or placeholder value
+        },
       });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -126,6 +132,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           password: hashedPassword,
           verified: false,
           verificationToken,
+          firstName: "DefaultFirstName",
+          lastName: "DefaultLastName",
         },
       });
 
@@ -200,12 +208,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // const isMatch = await bcrypt.compare(password, user?.password);
     // const isMatch = await bcrypt.compare(password, user?.password);
     if (!user.password) {
-      res
-        .status(400)
-        .json({
-          message:
-            "User registered via OAuth, please log in with Google/Facebook",
-        });
+      res.status(400).json({
+        message:
+          "User registered via OAuth, please log in with Google/Facebook",
+      });
       return;
     }
 

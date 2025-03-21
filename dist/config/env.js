@@ -10,7 +10,7 @@ exports.env = {
     NODE_ENV: process.env.NODE_ENV || "development",
     PORT: process.env.PORT || "3000",
     JWT_SECRET: process.env.JWT_SECRET,
-    brevoApiKey: process.env.BREVO_API_KEY,
+    BREVO_API_KEY: process.env.BREVO_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
     EMAIL: process.env.EMAIL_SENDER,
     FACEBOOK_ID: process.env.FACEBOOK_APP_ID,

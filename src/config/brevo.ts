@@ -3,7 +3,7 @@ import { env } from "./env";
 
 const client = sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey = env.brevoApiKey;
+apiKey.apiKey = env.BREVO_API_KEY;
 
 const apiInstance = new sib.TransactionalEmailsApi();
 export default apiInstance;

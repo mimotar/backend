@@ -2,6 +2,7 @@ import apiInstance from "../config/brevo";
 import { env } from "../config/env";
 import { getEmailTemplate } from "../emails/templates";
 import { EmailType } from "../emails/templates/emailTypes";
+import axios from 'axios';
 
 export async function sendEmail(
 	to: string,
@@ -34,17 +35,26 @@ export async function sendEmailWithTemplate(
 	params: Record<string, any>,
 	templateId: number
 ) {
+	
 	try {
 		
+        const response = await axios.post(
+            'https://api.brevo.com/v3/smtp/email',
+            {
+                sender: { email: env.EMAIL },
+                to: [{ email: to }],
+                templateId,
+                params,
+            },
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'api-key': env.BREVO_API_KEY,
+                    'content-type': 'application/json',
+                }
+            }
+        )
 
-		await apiInstance.sendTransacEmail({
-			sender: { email: 'mimotarinc@gmail.com'}, 
-			to: [{ email: to }],
-			templateId,
-			params
-		});
-
-		// console.log(`Email sent successfully`);
 		return { success: true, message: `Email sent` };
 	} catch (error: any) {
 		console.error("Error sending email:", error);

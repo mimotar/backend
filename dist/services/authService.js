@@ -15,7 +15,7 @@ const registerUser = async (email, password) => {
         throw new Error("Email already registered");
     const hashedPassword = await bcryptjs_1.default.hash(password, 10);
     return prisma.user.create({
-        data: { email, password: hashedPassword, verified: false },
+        data: { email, password: hashedPassword, verified: false, firstName: "DefaultFirstName", lastName: "DefaultLastName" },
     });
 };
 exports.registerUser = registerUser;
