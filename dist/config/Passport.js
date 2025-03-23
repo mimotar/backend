@@ -53,10 +53,10 @@ const HandleSocialAuth = async (profile, provider, isLogin) => {
             }
         }
         else {
-            const name = profile.displayName || '';
-            const firstName = profile.name?.givenName || name.split(' ')[0] || '';
-            const lastName = profile.name?.familyName || name.split(' ').slice(1).join(' ') || '';
-            const picture = provider === 'google'
+            const name = profile.displayName || "";
+            const firstName = profile.name?.givenName || name.split(" ")[0] || "";
+            const lastName = profile.name?.familyName || name.split(" ").slice(1).join(" ") || "";
+            const picture = provider === "google"
                 ? profile.photos?.[0]?.value
                 : `https://graph.facebook.com/${subject}/picture?type=large`;
             user = await prisma_1.default.user.create({
@@ -70,16 +70,17 @@ const HandleSocialAuth = async (profile, provider, isLogin) => {
                     verified: true,
                     profile: {
                         create: {
-                            avatar: picture
-                        }
-                    }
+                            avatar: picture,
+                        },
+                    },
                 },
                 include: {
-                    profile: true
-                }
+                    profile: true,
+                },
             });
         }
         const token = JWTService_1.default.signToken(user?.id, user?.email);
+        console.log(token);
         const response = {
             user,
             token,
@@ -97,13 +98,13 @@ const HandleSocialAuth = async (profile, provider, isLogin) => {
 };
 exports.HandleSocialAuth = HandleSocialAuth;
 const PassportConfig = () => {
-    passport_1.default.use('google-signup', new passport_google_oauth20_1.Strategy({
-        clientID: env_1.env.GOOGLE_CLIENT_ID || '',
-        clientSecret: env_1.env.GOOGLE_CLIENT_SECRET || '',
+    passport_1.default.use("google-signup", new passport_google_oauth20_1.Strategy({
+        clientID: env_1.env.GOOGLE_CLIENT_ID || "",
+        clientSecret: env_1.env.GOOGLE_CLIENT_SECRET || "",
         callbackURL: env_1.env.GOOGLE_CALLBACK_URL,
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            const result = await (0, exports.HandleSocialAuth)(profile, 'google', false);
+            const result = await (0, exports.HandleSocialAuth)(profile, "google", false);
             return done(null, result);
         }
         catch (error) {
@@ -117,13 +118,13 @@ const PassportConfig = () => {
             }
         }
     }));
-    passport_1.default.use('google-login', new passport_google_oauth20_1.Strategy({
-        clientID: env_1.env.GOOGLE_CLIENT_ID || '',
-        clientSecret: env_1.env.GOOGLE_CLIENT_SECRET || '',
+    passport_1.default.use("google-login", new passport_google_oauth20_1.Strategy({
+        clientID: env_1.env.GOOGLE_CLIENT_ID || "",
+        clientSecret: env_1.env.GOOGLE_CLIENT_SECRET || "",
         callbackURL: env_1.env.GOOGLE_CALLBACK_URL,
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            const result = await (0, exports.HandleSocialAuth)(profile, 'google', true);
+            const result = await (0, exports.HandleSocialAuth)(profile, "google", true);
             return done(null, result);
         }
         catch (error) {
@@ -144,13 +145,13 @@ const PassportConfig = () => {
         done(null, user);
     });
     passport_1.default.use(new passport_facebook_1.Strategy({
-        clientID: env_1.env.FACEBOOK_APP_ID || '',
-        clientSecret: env_1.env.FACEBOOK_APP_SECRET || '',
-        callbackURL: 'http://localhost:5000/auth/home',
+        clientID: env_1.env.FACEBOOK_APP_ID || "",
+        clientSecret: env_1.env.FACEBOOK_APP_SECRET || "",
+        callbackURL: "http://localhost:5000/api/auth/home",
         // profileFields: ['id', 'displayName', 'email', 'name', 'photos']
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            const result = await (0, exports.HandleSocialAuth)(profile, 'facebook', false);
+            const result = await (0, exports.HandleSocialAuth)(profile, "facebook", false);
             return done(null, result);
         }
         catch (error) {

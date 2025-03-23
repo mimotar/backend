@@ -38,6 +38,6 @@ app.use(express_1.default.urlencoded({ extended: true }));
 // app.use("/api/auth", authRoutes);
 (0, Passport_1.PassportConfig)();
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/", routes_1.default);
+app.use("/api", routes_1.default);
 app.use(GlobalErrorMiddleware_1.GlobalErrorMiddleware);
 exports.default = app;

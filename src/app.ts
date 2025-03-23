@@ -15,7 +15,6 @@ import { PassportConfig } from "./config/Passport";
 import { sessionConfig } from "./config/session";
 dotenv.config();
 
-
 import { connectDB } from "./config/db";
 
 const app = express();
@@ -25,7 +24,9 @@ connectDB();
 
 // Middlewares
 // app.use(session(sessionConfig));
-app.use(session({ secret: "your_secret_key", resave: false, saveUninitialized: true }));
+app.use(
+  session({ secret: "your_secret_key", resave: false, saveUninitialized: true })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet());
@@ -40,15 +41,10 @@ app.use(express.urlencoded({ extended: true }));
 // app.use("/api/email", emailRoutes);
 // app.use("/api/auth", authRoutes);
 
-
-
-
-
-
 PassportConfig();
 
 app.use(express.urlencoded({ extended: true }));
-app.use("/", routes);
+app.use("/api", routes);
 app.use(GlobalErrorMiddleware);
 
 export default app;
