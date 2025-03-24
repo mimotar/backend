@@ -13,3 +13,4 @@ model Profile {
      user               User        @relation(fields:[user_id], references:[id])
      user_id            Int         @unique
 }
+

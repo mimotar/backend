@@ -7,7 +7,7 @@
   lastName String
   createdAt DateTime @default(now())
   verified  Boolean  @default(false)
-  verificationToken String? // ✅ Nullable token for email verification
+  verificationToken String? 
   profile   Profile?
   provider String?
   subject String?
