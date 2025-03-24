@@ -25,12 +25,15 @@ connectDB();
 
 // Middlewares
 // app.use(session(sessionConfig));
-app.use(session({ secret: "your_secret_key", resave: false, saveUninitialized: true }));
+app.use(cookieParser())
+app.use(session({ secret: "your_secret_key", resave: false, saveUninitialized: true , cookie: { 
+    secure: process.env.NODE_ENV === 'production', 
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet());
 app.use(cors());
-app.use(cookieParser());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

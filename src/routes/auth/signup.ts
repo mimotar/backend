@@ -9,40 +9,38 @@ const signupRouter = Router();
 signupRouter.get("/", socialAuth.googleAuth);
 signupRouter.get("/home", socialAuth.home);
 signupRouter.get("/login", socialAuth.loginAuth);
+signupRouter.get("/dashboard", socialAuth.dashboard);
+
 
 
 
 // Google signup
 signupRouter.get(
-  "/google",
-  // socialAuth.demo
-  passport.authenticate("google-signup", { scope: ["email", "profile"] })
+  "/signup/google",
+  passport.authenticate("google", { scope: ["email", "profile"] , state: 'signup'})
 );
-
-signupRouter.get(
-  "/google/verify",
-  passport.authenticate("google-signup", { failureRedirect: "/login" }),
-  (req, res) => {
-    res.redirect("/auth/home");
-  }
-);
-
 
 
 //Google Login
 signupRouter.get(
-  "/google",
-  passport.authenticate("google-login", { scope: ["email", "profile"] })
-);
+  "/login/google",
+  passport.authenticate("google", { scope: ["email", "profile"] , state: 'login'})
+);                    
 
 signupRouter.get(
-  "/google/callback",
-  passport.authenticate("google-login", { failureRedirect: "/login" }),
+  "/google/verify",
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    console.log("Google login successful");
-    res.redirect("/dashboard");
+    console.log("REQ", req.query.state)
+    if(req.query.state === 'login'){
+      res.redirect("/auth/dashboard");
+    }
+    else {  
+      res.redirect("/auth/home");
+    }
   }
 );
+   
 
 
 // Facebook signup
