@@ -6,6 +6,13 @@ import JWTService from "../utils/JWTService";
 import { env } from "../config/env";
 import { Request, Response } from "express";
 
+declare module "express-session" {
+  interface SessionData {
+    authMode?: string;
+  }
+}
+import { User } from "../types/user";
+
 export const HandleSocialAuth = async (
   profile: any,
   provider: "google" | "facebook",
@@ -14,6 +21,7 @@ export const HandleSocialAuth = async (
   try {
     const subject = profile.id;
     const email = profile.emails[0].value;
+    console.log("PROFILE MAIL", profile.emails[0].value);
     if (!email) {
       throw new Error(`Email not found from ${provider} profile`);
     }
@@ -35,17 +43,19 @@ export const HandleSocialAuth = async (
       },
     });
 
+    // If login mode and no user found, throw error
     if (isLogin && !user) {
       throw new Error(
         `No account found with this ${provider} account. Please sign up first.`
       );
     }
 
+    // If user exists, check if we need to update the provider details
     if (user) {
       if (
         !user.provider ||
-        user.provider !== user.provider ||
-        user.subject !== user.subject
+        user.provider !== provider ||
+        user.subject !== subject
       ) {
         user = await prisma.user.update({
           where: { id: user.id },
@@ -58,7 +68,9 @@ export const HandleSocialAuth = async (
           },
         });
       }
-    } else {
+    }
+    // If no user exists and not in login mode, create new user
+    else {
       const name = profile.displayName || "";
       const firstName = profile.name?.givenName || name.split(" ")[0] || "";
       const lastName =
@@ -88,12 +100,14 @@ export const HandleSocialAuth = async (
         },
       });
     }
+
     const token = JWTService.signToken(user?.id, user?.email);
     console.log(token);
     const response = {
       user,
       token,
     };
+    console.log("RESPONSE", response);
     return response;
   } catch (error) {
     if (error instanceof Error) {
@@ -106,41 +120,19 @@ export const HandleSocialAuth = async (
 
 export const PassportConfig = () => {
   passport.use(
-    "google-signup",
+    "google",
     new GoogleStrategy(
       {
         clientID: env.GOOGLE_CLIENT_ID || "",
         clientSecret: env.GOOGLE_CLIENT_SECRET || "",
         callbackURL: env.GOOGLE_CALLBACK_URL,
+        passReqToCallback: true,
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (req, accessToken, refreshToken, profile, done) => {
+        const isLogin = req.query.state === "login";
+        // console.log("IS LOGIN", isLogin)
         try {
-          const result = await HandleSocialAuth(profile, "google", false);
-          return done(null, result);
-        } catch (error) {
-          if (error instanceof Error) {
-            console.log(error.message);
-            return done(error.message, undefined);
-          } else {
-            console.log("An error occured", error);
-            return done(error, undefined);
-          }
-        }
-      }
-    )
-  );
-
-  passport.use(
-    "google-login",
-    new GoogleStrategy(
-      {
-        clientID: env.GOOGLE_CLIENT_ID || "",
-        clientSecret: env.GOOGLE_CLIENT_SECRET || "",
-        callbackURL: env.GOOGLE_CALLBACK_URL,
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          const result = await HandleSocialAuth(profile, "google", true);
+          const result = await HandleSocialAuth(profile, "google", isLogin);
           return done(null, result);
         } catch (error) {
           if (error instanceof Error) {
@@ -159,29 +151,28 @@ export const PassportConfig = () => {
     done(null, user);
   });
 
-  passport.deserializeUser((user: any, done) => {
+  passport.deserializeUser((user: User, done) => {
     done(null, user);
   });
 
-  passport.use(
-    new FacebookStrategy(
-      {
-        clientID: env.FACEBOOK_APP_ID || "",
-        clientSecret: env.FACEBOOK_APP_SECRET || "",
-        callbackURL: "http://localhost:5000/api/auth/home",
-        // profileFields: ['id', 'displayName', 'email', 'name', 'photos']
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          const result = await HandleSocialAuth(profile, "facebook", false);
+  // passport.use('facebook', new FacebookStrategy(
+  //     {
+  //         clientID: env.FACEBOOK_APP_ID || '',
+  //         clientSecret: env.FACEBOOK_APP_SECRET || '',
+  //         callbackURL: 'http://localhost:5000/auth/home',
+  //         // profileFields: ['id', 'displayName', 'email', 'name', 'photos']
+  //     },
+  //     async( accessToken, refreshToken, profile, done ) => {
 
-          return done(null, result);
-        } catch (error) {
-          return done(error, undefined);
-        }
-      }
-    )
-  );
+  //         try {
+  //             const result = await HandleSocialAuth(profile, 'facebook', false)
+
+  //             return done(null, result)
+  //         } catch (error) {
+  //             return done(error, undefined)
+  //         }
+  //     }
+  // ))
 };
 
 export const socialAuthCallback = (req: Request, res: Response) => {

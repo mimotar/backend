@@ -22,12 +22,20 @@ const app = (0, express_1.default)();
 (0, db_1.connectDB)();
 // Middlewares
 // app.use(session(sessionConfig));
-app.use((0, express_session_1.default)({ secret: "your_secret_key", resave: false, saveUninitialized: true }));
+app.use((0, cookie_parser_1.default)());
+app.use((0, express_session_1.default)({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+}));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
-app.use((0, cookie_parser_1.default)());
 app.use((0, compression_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
