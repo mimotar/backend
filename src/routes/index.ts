@@ -50,6 +50,7 @@ router.use("/email", emailRouter);
 
 router.post(
   "/confirm-email-password-reset",
+  createRateLimiterMiddleware(10 * 60 * 1000, 10),
   PasswordResetControllerImpl.ConfirmEmail
 );
 

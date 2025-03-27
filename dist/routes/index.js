@@ -37,6 +37,6 @@ router.post("/create/user", async (req, res) => {
 });
 router.use("/email", emailRoute_1.default);
 // router.use("/email", emailRouter);
-router.post("/confirm-email-password-reset", PasswordResetControllerImpl.ConfirmEmail);
+router.post("/confirm-email-password-reset", (0, loginLimiter_1.default)(10 * 60 * 1000, 10), PasswordResetControllerImpl.ConfirmEmail);
 router.post("/password-reset", (0, loginLimiter_1.default)(10 * 60 * 1000, 10), PasswordResetControllerImpl.passwordReset);
 exports.default = router;
