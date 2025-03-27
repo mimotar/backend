@@ -4,8 +4,8 @@ exports.EmailController = void 0;
 const emailService_1 = require("../../services/emailService");
 class emailControllers {
     async welcome(req, res) {
-        (0, emailService_1.sendEmailWithTemplate)('kcblack22@gmail.com', { firstname: 'Agu!' }, 1);
-        res.send('Email sent');
+        (0, emailService_1.sendEmailWithTemplate)("kcblack22@gmail.com", { firstname: "Agu!", link: "" }, 1);
+        res.send("Email sent");
     }
 }
 exports.EmailController = new emailControllers();

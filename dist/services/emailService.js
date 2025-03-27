@@ -28,17 +28,17 @@ async function sendEmail(to, type, params) {
 }
 async function sendEmailWithTemplate(to, params, templateId) {
     try {
-        const response = await axios_1.default.post('https://api.brevo.com/v3/smtp/email', {
+        const response = await axios_1.default.post("https://api.brevo.com/v3/smtp/email", {
             sender: { email: env_1.env.EMAIL },
             to: [{ email: to }],
             templateId,
             params,
         }, {
             headers: {
-                'accept': 'application/json',
-                'api-key': env_1.env.BREVO_API_KEY,
-                'content-type': 'application/json',
-            }
+                accept: "application/json",
+                "api-key": env_1.env.BREVO_API_KEY,
+                "content-type": "application/json",
+            },
         });
         return { success: true, message: `Email sent` };
     }
