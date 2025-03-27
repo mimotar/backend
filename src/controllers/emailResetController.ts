@@ -12,6 +12,10 @@ import { comparePassword } from "../utils/comparePassword";
 import { env } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
 
+//interface for the verify token payload object
+interface EmailPayload extends JwtPayload {
+  email: string;
+}
 export class PasswordResetController {
   private prisma: PrismaClient;
   constructor(prismaClient: PrismaClient) {
@@ -19,19 +23,22 @@ export class PasswordResetController {
   }
   async ConfirmEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      // const authHeader = req.headers.authorization;
+      const authHeader = req.headers.authorization;
 
-      // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      //   next(new GlobalError("Unauthorized", "No token provided", 401, true));
-      //   return;
-      // }
-      // const token = authHeader.split(" ")[1];
-      // // console.log(token);
-      // const tokenDecoded = await VerifyToken(token);
-      // const currentUser: { userId: string; email: string } =
-      //   JSON.parse(tokenDecoded);
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        next(new GlobalError("Unauthorized", "No token provided", 401, true));
+        return;
+      }
+      const token = authHeader.split(" ")[1];
 
-      // console.log(tokenDecoded, currentUser);
+      //guessing this is the payload format that was used to signed the SIgn/login user token
+      interface tokenSignPayload extends JwtPayload {
+        userId: string;
+        email: string;
+      }
+      // console.log(token);
+      const tokenDecoded = await VerifyToken<tokenSignPayload>(token);
+      console.log(tokenDecoded);
 
       // validation the email u want to reset
       const emailSchema = z.object({
@@ -40,50 +47,50 @@ export class PasswordResetController {
 
       const validationResult = emailSchema.safeParse(req.body);
 
-      // if (!validationResult.success) {
-      //   const errors = validationResult.error.format().email?._errors;
-      //   next(new GlobalError("ZodError", String(errors?.[0]), 400, true));
-      //   return;
-      // }
-      // const { email } = validationResult.data;
+      if (!validationResult.success) {
+        const errors = validationResult.error.format().email?._errors;
+        next(new GlobalError("ZodError", String(errors?.[0]), 400, true));
+        return;
+      }
+      const ValidatedEmail = validationResult.data as EmailPayload;
 
-      // //check if the current user email is the same with the email sent  to reset password.
-      // // this is to prevent user from resetting other user passwords
+      //check if the current user email is the same with the email sent  to reset password.
+      // this is to prevent user from resetting other user passwords
 
-      // if (currentUser.email !== email) {
-      //   next(
-      //     new GlobalError(
-      //       "Forbidden",
-      //       "You are not allowed to reset other user password",
-      //       403,
-      //       true
-      //     )
-      //   );
-      //   return;
-      // }
-      // // Check if email exists in database
-      // const verifyEmailInDb = await this.prisma.user.findUnique({
-      //   where: { email },
-      //   select: { email: true, password: true },
-      // });
+      if (tokenDecoded.email !== ValidatedEmail.email) {
+        next(
+          new GlobalError(
+            "Forbidden",
+            "You are not allowed to reset other user password",
+            403,
+            true
+          )
+        );
+        return;
+      }
+      // Check if email exists in database
+      const verifyEmailInDb = await this.prisma.user.findUnique({
+        where: { email: ValidatedEmail.email },
+        select: { email: true, password: true },
+      });
 
-      // console.log(verifyEmailInDb);
+      console.log(verifyEmailInDb);
 
-      // if (!verifyEmailInDb) {
-      //   next(
-      //     new GlobalError(
-      //       "EmailNotFound",
-      //       "The email you provided does not exist",
-      //       404,
-      //       true
-      //     )
-      //   );
+      if (!verifyEmailInDb) {
+        next(
+          new GlobalError(
+            "EmailNotFound",
+            "The email you provided does not exist",
+            404,
+            true
+          )
+        );
 
-      //   return;
-      // }
+        return;
+      }
 
       //create token and new password form link
-      const reset_token = await createToken(3600, validationResult.data!);
+      const reset_token = await createToken(3600, ValidatedEmail);
       const resetPasswordUrl = `${env.FRONTEND_URL}/reset-password?token=${reset_token}`;
       const linkObj = {
         firstname: validationResult.data?.email,
@@ -125,6 +132,8 @@ export class PasswordResetController {
 
   async passwordReset(req: Request, res: Response, next: NextFunction) {
     try {
+      // note: the current user email should come from the token for security reason
+      // used the email payload here because the token is unavailable here for testing
       const { token, newPassword, email } = req.body;
 
       const passwordSchema = z.object({
@@ -151,10 +160,6 @@ export class PasswordResetController {
         return;
       }
 
-      //interface for the verify token payload object
-      interface EmailPayload extends JwtPayload {
-        email: string;
-      }
       //validate the token
       const tokenDecoded = await VerifyToken<EmailPayload>(token);
       // console.log(tokenDecoded);
@@ -178,11 +183,24 @@ export class PasswordResetController {
         where: { email: email },
       });
 
+      // check if the user is already registered
+      if (!dbCredential) {
+        next(
+          new GlobalError(
+            "forbidden",
+            "Not registered User, no try this nonsense again for your life",
+            401,
+            true
+          )
+        );
+        return;
+      }
+
       console.log("hello", dbCredential);
       //check if the new password and old password match
       const password_compare = await comparePassword(
         newPassword,
-        dbCredential?.password!
+        dbCredential?.password! //hashed already
       );
       if (password_compare) {
         next(

@@ -18,60 +18,44 @@ class PasswordResetController {
     }
     async ConfirmEmail(req, res, next) {
         try {
-            // const authHeader = req.headers.authorization;
-            // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            //   next(new GlobalError("Unauthorized", "No token provided", 401, true));
-            //   return;
-            // }
-            // const token = authHeader.split(" ")[1];
-            // // console.log(token);
-            // const tokenDecoded = await VerifyToken(token);
-            // const currentUser: { userId: string; email: string } =
-            //   JSON.parse(tokenDecoded);
-            // console.log(tokenDecoded, currentUser);
+            const authHeader = req.headers.authorization;
+            if (!authHeader || !authHeader.startsWith("Bearer ")) {
+                next(new GlobalErrorHandler_1.GlobalError("Unauthorized", "No token provided", 401, true));
+                return;
+            }
+            const token = authHeader.split(" ")[1];
+            // console.log(token);
+            const tokenDecoded = await (0, verifyToken_1.default)(token);
+            console.log(tokenDecoded);
             // validation the email u want to reset
             const emailSchema = zod_1.z.object({
                 email: zod_1.z.string().email(),
             });
             const validationResult = emailSchema.safeParse(req.body);
-            // if (!validationResult.success) {
-            //   const errors = validationResult.error.format().email?._errors;
-            //   next(new GlobalError("ZodError", String(errors?.[0]), 400, true));
-            //   return;
-            // }
-            // const { email } = validationResult.data;
-            // //check if the current user email is the same with the email sent  to reset password.
-            // // this is to prevent user from resetting other user passwords
-            // if (currentUser.email !== email) {
-            //   next(
-            //     new GlobalError(
-            //       "Forbidden",
-            //       "You are not allowed to reset other user password",
-            //       403,
-            //       true
-            //     )
-            //   );
-            //   return;
-            // }
-            // // Check if email exists in database
-            // const verifyEmailInDb = await this.prisma.user.findUnique({
-            //   where: { email },
-            //   select: { email: true, password: true },
-            // });
-            // console.log(verifyEmailInDb);
-            // if (!verifyEmailInDb) {
-            //   next(
-            //     new GlobalError(
-            //       "EmailNotFound",
-            //       "The email you provided does not exist",
-            //       404,
-            //       true
-            //     )
-            //   );
-            //   return;
-            // }
+            if (!validationResult.success) {
+                const errors = validationResult.error.format().email?._errors;
+                next(new GlobalErrorHandler_1.GlobalError("ZodError", String(errors?.[0]), 400, true));
+                return;
+            }
+            const ValidatedEmail = validationResult.data;
+            //check if the current user email is the same with the email sent  to reset password.
+            // this is to prevent user from resetting other user passwords
+            if (tokenDecoded.email !== ValidatedEmail.email) {
+                next(new GlobalErrorHandler_1.GlobalError("Forbidden", "You are not allowed to reset other user password", 403, true));
+                return;
+            }
+            // Check if email exists in database
+            const verifyEmailInDb = await this.prisma.user.findUnique({
+                where: { email: ValidatedEmail.email },
+                select: { email: true, password: true },
+            });
+            console.log(verifyEmailInDb);
+            if (!verifyEmailInDb) {
+                next(new GlobalErrorHandler_1.GlobalError("EmailNotFound", "The email you provided does not exist", 404, true));
+                return;
+            }
             //create token and new password form link
-            const reset_token = await (0, createToken_1.createToken)(3600, validationResult.data);
+            const reset_token = await (0, createToken_1.createToken)(3600, ValidatedEmail);
             const resetPasswordUrl = `${env_1.env.FRONTEND_URL}/reset-password?token=${reset_token}`;
             const linkObj = {
                 firstname: validationResult.data?.email,
@@ -100,6 +84,8 @@ class PasswordResetController {
     }
     async passwordReset(req, res, next) {
         try {
+            // note: the current user email should come from the token for security reason
+            // used the email payload here because the token is unavailable here for testing
             const { token, newPassword, email } = req.body;
             const passwordSchema = zod_1.z.object({
                 newPassword: zod_1.z
@@ -132,9 +118,15 @@ class PasswordResetController {
             const dbCredential = await this.prisma.user.findUnique({
                 where: { email: email },
             });
+            // check if the user is already registered
+            if (!dbCredential) {
+                next(new GlobalErrorHandler_1.GlobalError("forbidden", "Not registered User, no try this nonsense again for your life", 401, true));
+                return;
+            }
             console.log("hello", dbCredential);
             //check if the new password and old password match
-            const password_compare = await (0, comparePassword_1.comparePassword)(newPassword, dbCredential?.password);
+            const password_compare = await (0, comparePassword_1.comparePassword)(newPassword, dbCredential?.password //hashed already
+            );
             if (password_compare) {
                 next(new GlobalErrorHandler_1.GlobalError("SamePasswordError", "new Password matches the old password. Insert a new unique password", 400, true));
                 return;
