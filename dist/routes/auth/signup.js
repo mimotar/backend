@@ -11,18 +11,19 @@ const signupRouter = (0, express_1.Router)();
 signupRouter.get("/", socialAuth_1.default.googleAuth);
 signupRouter.get("/home", socialAuth_1.default.home);
 signupRouter.get("/login", socialAuth_1.default.loginAuth);
+signupRouter.get("/dashboard", socialAuth_1.default.dashboard);
 // Google signup
-signupRouter.get("/google", 
-// socialAuth.demo
-passport_1.default.authenticate("google-signup", { scope: ["email", "profile"] }));
-signupRouter.get("/google/verify", passport_1.default.authenticate("google-signup", { failureRedirect: "/login" }), (req, res) => {
-    res.redirect("/auth/home");
-});
+signupRouter.get("/signup/google", passport_1.default.authenticate("google", { scope: ["email", "profile"], state: 'signup' }));
 //Google Login
-signupRouter.get("/google", passport_1.default.authenticate("google-login", { scope: ["email", "profile"] }));
-signupRouter.get("/google/callback", passport_1.default.authenticate("google-login", { failureRedirect: "/login" }), (req, res) => {
-    console.log("Google login successful");
-    res.redirect("/dashboard");
+signupRouter.get("/login/google", passport_1.default.authenticate("google", { scope: ["email", "profile"], state: 'login' }));
+signupRouter.get("/google/verify", passport_1.default.authenticate("google", { failureRedirect: "/login" }), (req, res) => {
+    console.log("REQ", req.query.state);
+    if (req.query.state === 'login') {
+        res.redirect("/auth/dashboard");
+    }
+    else {
+        res.redirect("/auth/home");
+    }
 });
 // Facebook signup
 signupRouter.get('/facebook', passport_1.default.authenticate('facebook', {
