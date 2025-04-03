@@ -6,9 +6,11 @@ import { PasswordResetController } from "../controllers/emailResetController";
 // import prisma from "../utils/prisma";
 import { prisma } from "../config/db";
 import createRateLimiterMiddleware from "../utils/loginLimiter";
+import { Ticket } from "../controllers/ticket";
 
 const router = Router();
 const PasswordResetControllerImpl = new PasswordResetController(prisma);
+const TicketImpl = new Ticket(prisma);
 router.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -58,6 +60,13 @@ router.post(
   "/password-reset",
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   PasswordResetControllerImpl.passwordReset
+);
+
+//ticket route
+router.post(
+  "/ticket",
+  createRateLimiterMiddleware(10 * 60 * 1000, 10),
+  TicketImpl.GenerateTicket
 );
 
 export default router;
