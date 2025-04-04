@@ -23,5 +23,6 @@ exports.env = {
     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     FACEBOOK_CALLBACK_URL: process.env.FACEBOOK_CALLBACK_URL,
-    FRONTEND_URL: process.env.FRONTEND_URL
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    saltRounds: Number(process.env.SALTROUNDS),
 };

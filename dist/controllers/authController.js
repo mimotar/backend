@@ -30,7 +30,7 @@ const env_1 = require("../config/env");
 //     const verificationToken = crypto.randomBytes(32).toString('hex');
 //     await prisma.user.create({
 //       data: { email, password: hashedPassword, verified: false,
-//         verificationToken 
+//         verificationToken
 //        }
 //     });
 //     const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
@@ -60,20 +60,20 @@ const register = async (req, res) => {
     try {
         let user = await db_1.prisma.user.findUnique({ where: { email } });
         if (user) {
-            res.status(400).json({ message: 'Email is already registered' });
+            res.status(400).json({ message: "Email is already registered" });
             return;
         }
-        let name = '';
+        let name = "";
         if (oauthProvider && oauthCode) {
             let userData;
             let accessToken;
-            if (oauthProvider === 'google') {
+            if (oauthProvider === "google") {
                 const googleResponse = await axios_1.default.post(GOOGLE_TOKEN_URL, null, {
                     params: {
                         client_id: env_1.env.GOOGLE_ID,
                         client_secret: env_1.env.GOOGLE_SECRET,
                         code: oauthCode,
-                        grant_type: 'authorization_code',
+                        grant_type: "authorization_code",
                         // redirect_uri: env.BACKEND_URL + '/auth/google/callback',
                     },
                 });
@@ -83,7 +83,7 @@ const register = async (req, res) => {
                 });
                 userData = response.data;
             }
-            else if (oauthProvider === 'facebook') {
+            else if (oauthProvider === "facebook") {
                 const facebookResponse = await axios_1.default.get(FACEBOOK_TOKEN_URL, {
                     params: {
                         client_id: env_1.env.FACEBOOK_ID,
@@ -99,7 +99,7 @@ const register = async (req, res) => {
                 userData = response.data;
             }
             else {
-                res.status(400).json({ message: 'Invalid OAuth provider' });
+                res.status(400).json({ message: "Invalid OAuth provider" });
                 return;
             }
             email = userData.email;
@@ -108,63 +108,65 @@ const register = async (req, res) => {
                 data: {
                     email,
                     verified: true,
-                    password: '', // Provide a default or placeholder value
-                    firstName: 'OAuth', // Provide a default or placeholder value
-                    lastName: 'User' // Provide a default or placeholder value
+                    password: "", // Provide a default or placeholder value
+                    firstName: "OAuth", // Provide a default or placeholder value
+                    lastName: "User", // Provide a default or placeholder value
                 },
             });
         }
         else {
             const hashedPassword = await bcryptjs_1.default.hash(password, 10);
-            const verificationToken = crypto_1.default.randomBytes(32).toString('hex');
+            const verificationToken = crypto_1.default.randomBytes(32).toString("hex");
             user = await db_1.prisma.user.create({
                 data: {
                     email,
                     password: hashedPassword,
                     verified: false,
                     verificationToken,
-                    firstName: 'DefaultFirstName',
-                    lastName: 'DefaultLastName'
+                    firstName: "DefaultFirstName",
+                    lastName: "DefaultLastName",
                 },
             });
             const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
             console.log(`Fake Verification Link: ${verificationLink}`);
-            await (0, emailService_1.sendEmail)(email, emailTypes_1.EmailType.VERIFY_EMAIL, { verificationLink }).catch(err => {
+            await (0, emailService_1.sendEmail)(email, emailTypes_1.EmailType.VERIFY_EMAIL, {
+                verificationLink,
+            }).catch((err) => {
                 console.error("Email sending error:", err);
-                res.status(500).json({ message: 'Failed to send verification email' });
+                res.status(500).json({ message: "Failed to send verification email" });
                 return;
             });
         }
-        const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: 'User registered successfully', token, user });
+        const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.json({ message: "User registered successfully", token, user });
     }
     catch (error) {
         console.error("Error in registration:", error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: "Server error" });
     }
 };
 exports.register = register;
 const verifyEmail = async (req, res) => {
     const { email } = req.body;
     if (!email) {
-        res.status(400).json({ message: 'Email is required' });
+        res.status(400).json({ message: "Email is required" });
         return;
     }
     try {
         const user = await db_1.prisma.user.findUnique({ where: { email } });
         if (!user) {
-            res.status(400).json({ message: 'User not found' });
+            res.status(400).json({ message: "User not found" });
             return;
         }
         await db_1.prisma.user.update({
             where: { id: user.id },
             // data: { verified: true }
-            data: { verified: true, verificationToken: null }
+            data: { verified: true, verificationToken: null },
         });
-        res.json({ message: 'Email verified successfully' });
+        res.json({ message: "Email verified successfully" });
     }
     catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: "Server error" });
     }
 };
 exports.verifyEmail = verifyEmail;
@@ -178,41 +180,45 @@ const login = async (req, res) => {
     try {
         const user = await db_1.prisma.user.findUnique({ where: { email } });
         if (!user) {
-            res.status(400).json({ message: 'Invalid credentials' });
+            res.status(400).json({ message: "Invalid credentials" });
             return;
         }
         // const isMatch = await bcrypt.compare(password, user?.password);
         // const isMatch = await bcrypt.compare(password, user?.password);
         if (!user.password) {
-            res.status(400).json({ message: 'User registered via OAuth, please log in with Google/Facebook' });
+            res.status(400).json({
+                message: "User registered via OAuth, please log in with Google/Facebook",
+            });
             return;
         }
         const isMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!isMatch) {
-            res.status(400).json({ message: 'Invalid credentials' });
+            res.status(400).json({ message: "Invalid credentials" });
             return;
         }
         if (!isMatch) {
-            res.status(400).json({ message: 'Invalid credentials' });
+            res.status(400).json({ message: "Invalid credentials" });
             return;
         }
         if (!user.verified) {
-            res.status(403).json({ message: 'Please verify your email before logging in' });
+            res
+                .status(403)
+                .json({ message: "Please verify your email before logging in" });
             return;
         }
-        const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
         // res.json({ token });
         res.json({
-            message: 'Login successful',
+            message: "Login successful",
             token,
             user: {
                 id: user.id,
-                email: user.email
-            }
+                email: user.email,
+            },
         });
     }
     catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: "Server error" });
     }
 };
 exports.login = login;

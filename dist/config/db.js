@@ -15,10 +15,10 @@ exports.prisma = prisma;
 async function connectDB() {
     try {
         await prisma.$connect();
-        console.log('Connected to remote PostgreSQL database');
+        console.log("Connected to remote PostgreSQL database");
     }
     catch (error) {
-        console.error('Database connection failed:', error);
+        console.error("Database connection failed:", error);
         process.exit(1);
     }
 }
