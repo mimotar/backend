@@ -17,7 +17,7 @@ enum TransactionType {
 }
 
 
- enum Status {
+ enum StatusEnum {
   ONGOING
   DISPUTE
   CANCEL
@@ -31,7 +31,7 @@ model Transaction {
     transaction_description String @db.VarChar(200)
     user User? @relation(fields: [user_id], references: [id])
     user_id Int?
-    status Status @default(ONGOING)
+    status StatusEnum @default(ONGOING)
     pay_escrow_fee  EscrowFeePayer
     additional_agreement String @db.VarChar(200)
     pay_shipping_cost EscrowFeePayer 
