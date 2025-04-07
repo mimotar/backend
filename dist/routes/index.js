@@ -12,6 +12,7 @@ const emailResetController_1 = require("../controllers/emailResetController");
 const db_1 = require("../config/db");
 const loginLimiter_1 = __importDefault(require("../utils/loginLimiter"));
 const ticket_1 = require("../controllers/ticket");
+const { createUser } = require("../controllers/test/user");
 const router = (0, express_1.Router)();
 const PasswordResetControllerImpl = new emailResetController_1.PasswordResetController(db_1.prisma);
 const TicketImpl = new ticket_1.Ticket(db_1.prisma);
@@ -43,4 +44,8 @@ router.post("/confirm-email-password-reset", (0, loginLimiter_1.default)(10 * 60
 router.post("/password-reset", (0, loginLimiter_1.default)(10 * 60 * 1000, 10), PasswordResetControllerImpl.passwordReset);
 //ticket route
 router.post("/ticket", (0, loginLimiter_1.default)(10 * 60 * 1000, 10), TicketImpl.GenerateTicket);
+
+router.post('/user', createUser as RequestHandler);
+
+
 exports.default = router;

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 // import emailRouter from "./emailRoute";
 import signupRouter from "./auth/signup";
 import emailRouter from "./emailRoute";
@@ -7,6 +7,7 @@ import { PasswordResetController } from "../controllers/emailResetController";
 import { prisma } from "../config/db";
 import createRateLimiterMiddleware from "../utils/loginLimiter";
 import { Ticket } from "../controllers/ticket";
+import { createUser } from "../controllers/test/user";
 
 const router = Router();
 const PasswordResetControllerImpl = new PasswordResetController(prisma);
@@ -68,5 +69,8 @@ router.post(
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   TicketImpl.GenerateTicket
 );
+
+
+router.post('/user', createUser as RequestHandler);
 
 export default router;
