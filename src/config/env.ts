@@ -24,4 +24,9 @@ export const env = {
 
   FRONTEND_URL: process.env.FRONTEND_URL,
   saltRounds: Number(process.env.SALTROUNDS),
+  CLOUD_NAME: process.env.CLOUD_NAME,
+  API_KEY: process.env.API_KEY,
+  API_SECRET: process.env.API_SECRET,
+
+
 };
