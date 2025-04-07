@@ -1,10 +1,10 @@
 model Chat {
-    id Int @id @default(autoincrement())
-    content String 
-    timestamp DateTime @default(now())
-    sender User @relation("Sender", fields: [sender_user_id], references: [id])
-    sender_user_id Int
-    receiver User @relation("receiver",fields: [receiver_user_id], references: [id])
-    receiver_user_id Int
-    dispute Dispute?
+  id               Int      @id @default(autoincrement())
+  content          String
+  timestamp        DateTime @default(now())
+  sender_user_id   Int
+  receiver_user_id Int
+  receiver         User     @relation("receiver", fields: [receiver_user_id], references: [id])
+  sender           User     @relation("Sender", fields: [sender_user_id], references: [id])
+  dispute          Dispute?
 }

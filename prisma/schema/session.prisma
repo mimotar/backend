@@ -3,6 +3,6 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
-  
+
   @@map("session")
 }
