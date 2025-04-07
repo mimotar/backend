@@ -1,16 +1,42 @@
 model Dispute{
     id Int @id @default(autoincrement())
-    transaction Transaction @relation(fields: [transactionId], references: [id])
-    transactionId Int @unique
-    amount Int
-    status Transactionstatus @relation(fields: [statusId], references: [id])
-    statusId Int @unique
-    timestamp DateTime @default(now())
-    elapsed DateTime @default(now())
-    chat Chat @relation(fields: [chatId], references: [id])
-    chatId Int @unique
-    user User @relation("sender_userId",fields: [sender_userId], references: [id])
-    sender_userId Int @unique
-    receiver User @relation("receiver_userId",fields: [receiver_userId], references: [id])
-    receiver_userId Int @unique
+    transaction Transaction? @relation(fields: [transactionId], references: [id])
+    transactionId Int? @unique
+    amount Int?
+    status Transactionstatus? @relation(fields: [statusId], references: [id])
+    statusId Int? @unique
+    timestamp DateTime? @default(now())
+    elapsed DateTime? @default(now())
+    chat Chat? @relation(fields: [chatId], references: [id])
+    chatId Int? @unique
+    user User? @relation("sender_userId",fields: [sender_userId], references: [id])
+    sender_userId Int? @unique
+    receiver User? @relation("receiver_userId",fields: [receiver_userId], references: [id])
+    receiver_userId Int? @unique
+    description     String
+    reason          Reasons
+    resolutionOption ResolutionOption
+    evidence String
+}
+
+enum Reasons {
+    PRODUCT_NOT_AS_DESCRIBED
+    DAMAGED_OR_DEFECTIVE_ITEM
+    ITEM_NOT_RECEIVED
+    WRONG_ITEM_SENT
+    LATE_DELIVERY
+    COUNTERFEIT_OR_FAKE_ITEM
+    INCOMPLETE_SERVICE_RENDERED
+    POOR_QUALITY
+
+}
+
+enum ResolutionOption {
+REFUND_ONLY
+REPLACEMENT_ONLY
+REFUND_OR_REPLACEMENT
+PARTIAL_REPAYMENT
+RESEND_PRODUCT
+REPEAT_SERVICE
+CANCEL_TRANSACTION
 }

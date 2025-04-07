@@ -1,16 +1,16 @@
 model Notification {
-    id Int @id @default(autoincrement())
-    user User @relation(fields: [sender_user_id], references: [id])
-    sender_user_id Int
-    receiver_user_id Int
-    timestamp DateTime @default(now())
-    content String? 
-    link String?
-    avatar String
-    read Read
+  id               Int      @id @default(autoincrement())
+  sender_user_id   Int
+  receiver_user_id Int
+  timestamp        DateTime @default(now())
+  content          String?
+  link             String?
+  avatar           String
+  read             Read
+  user             User     @relation(fields: [sender_user_id], references: [id])
 }
 
 enum Read {
-    read
-    unread
+  read
+  unread
 }
