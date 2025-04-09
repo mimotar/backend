@@ -16,7 +16,8 @@ model Dispute{
     description     String
     reason          Reasons
     resolutionOption ResolutionOption
-    evidence String
+    evidenceUrl String
+    evidenceId String
 }
 
 enum Reasons {

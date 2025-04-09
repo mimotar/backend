@@ -9,7 +9,6 @@ import createRateLimiterMiddleware from "../utils/loginLimiter";
 import { Ticket } from "../controllers/ticket";
 import { createUser } from "../controllers/test/user";
 import disputeRouter from "./dispute/dispute.router";
-import authRoutes from "./authRoute"
 
 const router = Router();
 const PasswordResetControllerImpl = new PasswordResetController(prisma);
@@ -19,37 +18,12 @@ router.get("/", (req, res) => {
 });
 
 router.use("/auth", signupRouter);
-router.use("/autho", authRoutes);
 
 
 router.post("/middleware", (req, res) => {
   res.send("middleware");
 });
 
-router.post("/create/user", async (req, res) => {
-  const {
-    email,
-    password,
-    firstName,
-    lastName,
-    verificationToken,
-    provider,
-    subject,
-  } = req.body;
-  await prisma.user.create({
-    data: {
-      email,
-      firstName,
-      lastName,
-      password,
-      verificationToken,
-      provider,
-      subject,
-    },
-  });
-
-  res.send("User Created");    
-});
 
 router.use("/email", emailRouter);
 

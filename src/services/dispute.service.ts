@@ -3,7 +3,7 @@ import prisma from "../utils/prisma";
 
 export async function createDisputeService(data: any) {
     try {
-        const { userId, orderId, evidence, description, reason, resolutionOption } = data;
+        const { userId, orderId, evidenceUrl, evidenceId, description, reason, resolutionOption } = data;
 
         if (!userId || !orderId || !reason) {
             return { status: 400, message: "All fields are required" };
@@ -36,17 +36,19 @@ export async function createDisputeService(data: any) {
 
 
         const disputeData = {
-            
            reason,
            resolutionOption,
            description,
-           evidence
+           evidenceUrl,
+           evidenceId,
+              orderId,
+              userId
         };
 
-    await prisma.dispute.create({
+    const dispute = await prisma.dispute.create({
         data: disputeData
     })
-        
+      return { status: 201, data: dispute, message: "Dispute created successfully" };  
     } catch (error) {
         console.error("Error creating dispute:", error);
         return { status: 500, message: "Internal server error" };
@@ -102,55 +104,55 @@ export async function getAllUserDisputes(userId: number){
     }
 }
 
-export async function updateDisputeStatus(input: UpdateDisputeInput, status: string, reason: string) {
-    try {
-        const { disputeId, userId, data } = input;
+// export async function updateDisputeStatus(input: UpdateDisputeInput, status: string, reason: string) {
+//     try {
+//         const { disputeId, userId, data } = input;
 
-        if (!disputeId || !userId || !status) {
-            return { status: 400, message: "All fields are required" };
-        }
+//         if (!disputeId || !userId || !status) {
+//             return { status: 400, message: "All fields are required" };
+//         }
 
 
-        const existingDispute = await prisma.dispute.findUnique({
-            where: { id: disputeId },
-            include: {
-              transaction: true
-            }
-          });
+//         const existingDispute = await prisma.dispute.findUnique({
+//             where: { id: disputeId },
+//             include: {
+//               transaction: true
+//             }
+//           });
         
-          if (!existingDispute) {
-            throw new Error(`Dispute with ID ${disputeId} not found`);
-          }
+//           if (!existingDispute) {
+//             throw new Error(`Dispute with ID ${disputeId} not found`);
+//           }
 
-          if (existingDispute.sender_userId !== userId && existingDispute.receiver_userId !== userId) {
-            throw new Error('You are not authorized to update this dispute');
-          }
+//           if (existingDispute.sender_userId !== userId && existingDispute.receiver_userId !== userId) {
+//             throw new Error('You are not authorized to update this dispute');
+//           }
 
-          const updatedDispute = await prisma.dispute.update({
-            where: { id: disputeId },
-            data: {
-              description: data.description,
-              reason: data.reason,
-              resolutionOption: data.resolutionOption,
-              evidence: data.evidence,
-              statusId: data.statusId,
-              elapsed: new Date()
-            },
-            include: {
-              transaction: true,
-              status: true,
-              user: true,
-              receiver: true,
-              chat: true
-            }
-          });
+//           const updatedDispute = await prisma.dispute.update({
+//             where: { id: disputeId },
+//             data: {
+//               description: data.description,
+//               reason: data.reason,
+//               resolutionOption: data.resolutionOption,
+//               evidence: data.evidence,
+//               statusId: data.statusId,
+//               elapsed: new Date()
+//             },
+//             include: {
+//               transaction: true,
+//               status: true,
+//               user: true,
+//               receiver: true,
+//               chat: true
+//             }
+//           });
 
-        return { status: 200, data: updatedDispute, message: "Dispute status updated successfully" };
-    } catch (error) {
-        console.error("Error updating dispute status:", error);
-        return { status: 500, message: "Internal server error" };
+//         return { status: 200, data: updatedDispute, message: "Dispute status updated successfully" };
+//     } catch (error) {
+//         console.error("Error updating dispute status:", error);
+//         return { status: 500, message: "Internal server error" };
         
-    }
-}
+//     }
+// }
 
 
