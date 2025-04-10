@@ -481,6 +481,7 @@
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-03-24T12:46:06.214Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-03-24T12:47:14.387Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-03-24T12:47:41.531Z"}
+<<<<<<< HEAD
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-05T14:00:54.807Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-05T14:10:26.419Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-05T14:10:51.703Z"}
@@ -562,3 +563,8 @@
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-10T04:02:30.713Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-10T04:09:10.726Z"}
 {"level":"info","message":"Server running on port 5000","timestamp":"2025-04-10T04:09:25.413Z"}
+=======
+{"level":"info","message":"Server running on port 5000","timestamp":"2025-04-07T09:16:57.060Z"}
+{"level":"info","message":"Server running on port 5000","timestamp":"2025-04-07T09:17:49.057Z"}
+{"level":"info","message":"Server running on port 5000","timestamp":"2025-04-07T09:22:56.002Z"}
+>>>>>>> 349919a9c0ea795bfa2d77ecc7b762a71f8b0308
