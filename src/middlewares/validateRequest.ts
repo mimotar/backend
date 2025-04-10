@@ -1,4 +1,5 @@
-import { body, ValidationChain } from 'express-validator';
+import { NextFunction, Request, Response } from 'express';
+import { body, ValidationChain, validationResult } from 'express-validator';
 
 export const registerValidation: ValidationChain[] = [
   body('email').isEmail().withMessage('Invalid email format'),
@@ -49,3 +50,17 @@ export const validateLoginWithEmail: ValidationChain[] = [
     .trim()
     .escape()
 ];
+
+export const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    res.status(400).json({
+      status: 400,
+      message: 'Validation errors',
+      data: error.array(),
+      success: false
+    });
+    return;
+  }
+  next();
+};

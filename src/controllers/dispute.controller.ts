@@ -1,10 +1,22 @@
 import { Request, Response } from "express";
 import { createDisputeService, getAllUserDisputes, getDisputeById } from "../services/dispute.service";
 import { cloudinaryConfig } from "../config/cloudinary";
+import { validationResult } from "express-validator";
 
 export const createDisputeController = async (req: any, res: any) => {
     const {id } = req.user;
     const {transactionId, reason, description, resolutionOption} = req.body;
+    
+const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+     res.status(400).json({
+      status: 400,
+      message: "Validation errors",
+      data: errors.array(),
+      success: false
+    });
+    return;
+  }
 
     if(!id){
          res.status(400).json({ message: "User ID is required", success: false });
