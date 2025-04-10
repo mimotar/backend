@@ -1,14 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import socialAuth from "../../controllers/test/socialAuth";
-import {
-  deleteAUserController,
-  getAllUserController,
-  loginWithEmailController,
-  registerWithEmailController,
-  resendOTPToEmailController,
-  verifyOTPController,
-} from "../../controllers/authController";
+import { getAllUsersController, loginWithEmailController, registerUserWithEmailController, resendOTPController, verifyOTPController } from "../../controllers/authController";
+
 
 const userRouter = Router();
 
@@ -49,12 +43,12 @@ userRouter.get(
 
 //Login with email and password
 userRouter.post("/login-with-email", loginWithEmailController);
-userRouter.post("/resend-otp", resendOTPToEmailController);
-userRouter.get("/all-users", getAllUserController);
+userRouter.post("/resend-otp", resendOTPController);
+userRouter.get("/all-users", getAllUsersController);
 
 //Register with email and password
-userRouter.post("/register-with-email", registerWithEmailController);
+userRouter.post("/register-with-email", registerUserWithEmailController);
 userRouter.post('/register-with-email/verify-otp', verifyOTPController);
-userRouter.delete('/delete-user', deleteAUserController)
+// userRouter.delete('/delete-user', )
 
 export default userRouter;

@@ -341,7 +341,6 @@ export const verifyOTPController: RequestHandler = async (req: Request, res: Res
 }
 
 export const resendOTPController: RequestHandler = async (req: Request, res: Response) => {
-const { email } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -353,16 +352,16 @@ const { email } = req.body;
     return;
   }
 
+  const { email } = req.body;
+
   try {
     const result = await resendOTPToEmail(email);
-    if(result){
-      res.status(result.status).json({
-        status: result.status,
-        message: result.message,
-        data: null,
-        success: true
-      });
-    }
+    res.status(result.status).json({
+      status: result.status,
+      message: result.message,
+      data: null,
+      success: result.success
+    });
     return;
   } catch (error) {
     res.status(500).json({
@@ -371,10 +370,9 @@ const { email } = req.body;
       data: null,
       success: false
     });
+    return; 
   }
-  return;
-}
-
+};
 
 
 export const loginWithEmailController: RequestHandler = async (req: Request, res: Response) => {
