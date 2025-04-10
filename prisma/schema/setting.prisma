@@ -7,7 +7,6 @@ model Setting {
     twoFactorAuth Boolean
     account Account @relation( fields: [accountId], references: [id])
     accountId Int
-
 }
 
 enum DefaultCurrency {
