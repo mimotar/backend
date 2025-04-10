@@ -6,6 +6,7 @@ import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
 import { JwtPayload } from "jsonwebtoken";
 import VerifyToken from "../utils/verifyToken";
 import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
+import prisma from "../utils/prisma";
 
 export class Ticket {
   constructor(private readonly prisma: PrismaClient) {}
@@ -88,7 +89,7 @@ export class Ticket {
       const expiresIn = payload.expiresAt * 24 * 60 * 60 * 1000; // convert to milliseconds
       const transactionToken = await createToken(expiresIn, LinkJwtPayload);
 
-      const transaction = await this.prisma.transaction.create({
+      const transaction = await prisma.transaction.create({
         data: {
           ...payload,
           transactionToken: transactionToken,

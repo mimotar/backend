@@ -1,7 +1,7 @@
 model Transaction {
   id                      Int             @id @default(autoincrement())
   amount                  Int
-  user_id                 Int?
+  user_id                 Int?            @unique
   additional_agreement    String          @db.VarChar(200)
   creator_fullname        String
   creator_email           String          @unique
