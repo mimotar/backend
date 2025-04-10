@@ -1,23 +1,22 @@
 model Setting {
-    id Int @id @default(autoincrement())
-    defaultCurrency DefaultCurrency
-    notificationPreference NotificationPreference
-    securityQuestion SecurityQuestion @relation( fields: [securityQuestionId], references: [id])
-    securityQuestionId Int
-    twoFactorAuth Boolean
-    account Account @relation( fields: [accountId], references: [id])
-    accountId Int
-
+  id                     Int                    @id @default(autoincrement())
+  defaultCurrency        DefaultCurrency
+  notificationPreference NotificationPreference
+  securityQuestionId     Int
+  twoFactorAuth          Boolean
+  accountId              Int
+  account                Account                @relation(fields: [accountId], references: [id])
+  securityQuestion       SecurityQuestion       @relation(fields: [securityQuestionId], references: [id])
 }
 
 enum DefaultCurrency {
-    GBP
-    USD
-    NGN
+  GBP
+  USD
+  NGN
 }
 
 enum NotificationPreference {
-    SMS
-    EMAIL
-    BOTH
+  SMS
+  EMAIL
+  BOTH
 }

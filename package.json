@@ -9,8 +9,8 @@
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate --schema=./prisma/prisma",
+    "prisma:migrate": "prisma migrate dev --schema=./prisma/prisma",
     "prisma:studio": "prisma studio",
     "test": "jest",
     "test:watch": "jest --watch"

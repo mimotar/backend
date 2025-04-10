@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response , NextFunction, RequestHandler} from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "../config/db";
@@ -8,6 +8,11 @@ import { EmailType } from "../emails/templates/emailTypes";
 import crypto from "crypto";
 import axios from "axios";
 import { env } from "../config/env";
+import { hashPassword } from "../utils/HashPassword";
+import { getALlUsersService, registerUserWithEmailService } from "../services/auth/users.service";
+import { verifyOTPService } from "../services/auth/verifyOTP.service";
+import { resendOTPToEmail } from "../services/auth/sendOTP";
+import { loginWithEmailService } from "../services/auth/loginWithEmail.service";
 
 // export const register = async (req: Request, res: Response): Promise<void> => {
 //   const errors = validationResult(req);
@@ -189,6 +194,7 @@ export const verifyEmail = async (
   }
 };
 
+
 export const login = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -251,3 +257,183 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+
+export const registerUserWithEmailController: RequestHandler = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      status: 400,
+      message: "Validation errors",
+      data: errors.array(),
+      success: false
+    });
+    return;
+  }
+
+  const { email, password, firstName, lastName } = req.body;
+
+  const result = await registerUserWithEmailService({
+    email,
+    password,
+    firstName,
+    lastName
+  });
+
+  res.status(result.status).json({
+    status: result.status,
+    message: result.message,
+    data: result.data,
+    success: result.success
+  });
+  return;
+};
+
+export const verifyOTPController: RequestHandler = async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      status: 400,
+      message: "Validation errors",
+      data: errors.array(),
+      success: false
+    });
+    return;
+  }
+
+  try {
+    const result = await verifyOTPService(email, otp);
+    if (result) {
+      if (result) {
+        res.status(result.status).json({
+          status: result.status,
+          message: result.message,
+          data: null,
+          success: true
+        });
+      } else {
+        res.status(500).json({
+          status: 500,
+          message: "Unexpected error occurred",
+          data: null,
+          success: false
+        });
+      }
+    } else {
+      res.status(500).json({
+        status: 500,
+        message: "Unexpected error occurred",
+        data: null,
+        success: false
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Server error",
+      data: null,
+      success: false
+    });
+  }
+}
+
+export const resendOTPController: RequestHandler = async (req: Request, res: Response) => {
+const { email } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      status: 400,
+      message: "Validation errors",
+      data: errors.array(),
+      success: false
+    });
+    return;
+  }
+
+  try {
+    const result = await resendOTPToEmail(email);
+    if(result){
+      res.status(result.status).json({
+        status: result.status,
+        message: result.message,
+        data: null,
+        success: true
+      });
+    }
+    return;
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Server error",
+      data: null,
+      success: false
+    });
+  }
+  return;
+}
+
+
+
+export const loginWithEmailController: RequestHandler = async (req: Request, res: Response) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+     res.status(400).json({
+      status: 400,
+      message: "Validation errors",
+      data: errors.array(),
+      success: false
+    });
+    return;
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    const result = await loginWithEmailService(email, password);
+
+     res.status(result.status).json({
+      status: result.status,
+      message: result.message,
+      data: {
+        token: result.token,
+        user: result.user
+      },
+      success: result.success || false 
+    });
+    return;
+
+  } catch (error) {
+    console.error('Login controller error:', error);
+     res.status(500).json({
+      status: 500,
+      message: "An unexpected error occurred during login",
+      data: null,
+      success: false
+    });
+    return;
+  }
+};
+
+
+export const getAllUsersController = async(req: Request,res: Response) => {
+
+ const response = await getALlUsersService()
+ res.status(response.status).json({
+  message: response.message,
+  data: response.users,
+  success: response.status
+ })
+ return;
+}
+
+export const testMiddleware = async(req: Request, res: Response) => {
+  res.status(200).json({
+    message: "I can now access this route",
+    data: "I got no data",
+    succes: true
+  })
+}

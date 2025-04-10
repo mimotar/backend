@@ -22,6 +22,8 @@ export const env = {
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
   FACEBOOK_CALLBACK_URL: process.env.FACEBOOK_CALLBACK_URL,
 
+  SENDER_EMAIL: process.env.SENDER_EMAIL,
+
   FRONTEND_URL: process.env.FRONTEND_URL,
   saltRounds: Number(process.env.SALTROUNDS),
   CLOUD_NAME: process.env.CLOUD_NAME,

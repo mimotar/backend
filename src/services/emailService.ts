@@ -36,7 +36,7 @@ export async function sendEmailWithTemplate(
     const response = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
       {
-        sender: { email: env.EMAIL },
+        sender: { email: env.SENDER_EMAIL },
         to: [{ email: to }],
         templateId,
         params,
