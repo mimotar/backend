@@ -1,7 +1,6 @@
 import { RequestHandler, Router } from "express";
 // import emailRouter from "./emailRoute";
 import signupRouter from "./auth/signup";
-import emailRouter from "./emailRoute";
 import { PasswordResetController } from "../controllers/emailResetController";
 // import prisma from "../utils/prisma";
 import { prisma } from "../config/db";
@@ -9,6 +8,7 @@ import createRateLimiterMiddleware from "../utils/loginLimiter";
 import { Ticket } from "../controllers/ticket";
 import { createUser } from "../controllers/test/user";
 import disputeRouter from "./dispute/dispute.router";
+import userRouter from "./userRoutes";
 
 const router = Router();
 const PasswordResetControllerImpl = new PasswordResetController(prisma);
@@ -18,14 +18,14 @@ router.get("/", (req, res) => {
 });
 
 router.use("/auth", signupRouter);
+router.use("/user", userRouter);
+
 
 
 router.post("/middleware", (req, res) => {
   res.send("middleware");
 });
 
-
-router.use("/email", emailRouter);
 
 // router.use("/email", emailRouter);
 

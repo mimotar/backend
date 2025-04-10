@@ -5,8 +5,6 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import routes from "./routes";
 import { GlobalErrorMiddleware } from "./middlewares/error/GlobalErrorMiddleware";
-import { authenticateTokenMiddleware } from "./middlewares/authenticateTokenMiddleware";
-const emailRoutes = require("./routes/emailRoute");
 import authRoutes from "./routes/authRoute";
 import passport from "passport";
 import session from "express-session";

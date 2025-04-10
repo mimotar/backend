@@ -8,14 +8,23 @@ export async function authenticateTokenMiddleware(
   next: NextFunction
 ) {
   try {
-    const tokenHeader = req.cookies;
-    console.log(tokenHeader);
-    const token = tokenHeader.token;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader?.split(' ')[1]
+    
     if (!token) {
-      throw new GlobalError("TokenError", "token not provided", 403, true);
+      res.status(401).json({
+        status: 401,
+        message: 'Authorization token required',
+        data: null,
+        success: false
+      });
+      return;
     }
-    // verify the token
-    await VerifyToken(token);
+
+    const decoded = await VerifyToken(token);
+    console.log("Decoded...", decoded)
+    req.user = decoded;
+
     next();
   } catch (error: unknown) {
     if (error instanceof GlobalError) {
@@ -27,3 +36,10 @@ export async function authenticateTokenMiddleware(
     }
   }
 }
+
+
+
+
+
+
+

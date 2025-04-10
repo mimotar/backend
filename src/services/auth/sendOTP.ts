@@ -1,8 +1,9 @@
+import { generateSixDigitString } from "../../utils/OTPGenerator";
 import prisma from "../../utils/prisma";
 import { sendEmailWithTemplate } from "../emailService";
 
 
-export const resendOTPToEmail = async (email: string, firstName: string) => {
+export const resendOTPToEmail = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -25,7 +26,7 @@ export const resendOTPToEmail = async (email: string, firstName: string) => {
           otpCreatedAt: new Date(),
         },
       });
-      sendEmailWithTemplate(email, { otp, firstName }, 3);
+      sendEmailWithTemplate(email, { otp, firstName: user.firstName }, 3);
     }
   } catch (error) {
     console.error("Error in verifying email:", error);

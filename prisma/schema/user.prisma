@@ -16,4 +16,6 @@ model User {
   notification       Notification[]
   profile            Profile?
   transaction        Transaction[]
+  otp String?
+  otpCreatedAt DateTime?
 }
