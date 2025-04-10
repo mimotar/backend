@@ -70,7 +70,6 @@ router.post(
   TicketImpl.GenerateTicket
 );
 
-
-router.post('/user', createUser as RequestHandler);
+router.post("/user", createUser as RequestHandler);
 
 export default router;

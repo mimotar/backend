@@ -42,6 +42,7 @@ model Transaction {
     creator_role Role
     dispute Dispute?
     receiver_fullname String
+    reciever_email String @unique
     receiver_no String
     receiver_address String?
     reciever_role Role
@@ -49,6 +50,8 @@ model Transaction {
     txn_link String
     terms String?
     transactionType TransactionType
+    transactionToken String @unique
+    expiresAt DateTime
     inspection_duration Int 
     created_at DateTime  @default(now())
 }
