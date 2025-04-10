@@ -55,13 +55,13 @@ export class Ticket {
       // const user = await VerifyToken<tokenSignPayload>(token);
       // console.log(user);
 
-      const validatePassword = TransactionSchema.safeParse({
+      const validateTicket = TransactionSchema.safeParse({
         ...payload,
       });
 
-      if (!validatePassword.success) {
+      if (!validateTicket.success) {
         let error: string = "";
-        const errors = validatePassword.error.format();
+        const errors = validateTicket.error.format();
         console.log(errors);
         for (let [key, value] of Object.entries(errors)) {
           // console.log(key, value);
@@ -84,7 +84,7 @@ export class Ticket {
         reciever_email: payload.reciever_email,
       };
 
-      const parseDayToExpireToDate = convertDayToExpireDate(payload.expiresAt); // add 2 (expire date) to current Date
+      const parseDayToExpireToDate = convertDayToExpireDate(payload.expiresAt); //user send 2 (i.e 2day). add 2 to expire Date
       const expiresIn = payload.expiresAt * 24 * 60 * 60 * 1000; // convert to milliseconds
       const transactionToken = await createToken(expiresIn, LinkJwtPayload);
 
@@ -110,10 +110,11 @@ export class Ticket {
 
       res.status(200).json({
         message: "Ticket created successfully",
-        // data: { ...transaction },
+        data: { ...transaction },
       });
       return;
     } catch (error) {
+      console.log(error);
       if (error instanceof GlobalError) {
         next(
           new GlobalError(

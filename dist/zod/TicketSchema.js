@@ -11,7 +11,7 @@ exports.TransactionTypeEnum = zod_1.z.enum([
 ]);
 exports.StatusEnum = zod_1.z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
 exports.TransactionSchema = zod_1.z.object({
-    amount: zod_1.z.number().int().positive(),
+    amount: zod_1.z.number().int(),
     transaction_description: zod_1.z.string().max(200),
     user_id: zod_1.z.number().positive().optional(),
     // status: StatusEnum.default("ONGOING"),

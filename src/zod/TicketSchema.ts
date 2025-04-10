@@ -10,7 +10,7 @@ export const TransactionTypeEnum = z.enum([
 export const StatusEnum = z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
 
 export const TransactionSchema = z.object({
-  amount: z.number().int().positive(),
+  amount: z.number().int(),
   transaction_description: z.string().max(200),
   user_id: z.number().positive().optional(),
   // status: StatusEnum.default("ONGOING"),
