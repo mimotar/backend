@@ -22,7 +22,6 @@ export async function authenticateTokenMiddleware(
     }
 
     const decoded = await VerifyToken(token);
-    console.log("Decoded...", decoded)
     req.user = decoded;
 
     next();
