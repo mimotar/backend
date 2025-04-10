@@ -1,3 +1,36 @@
+model Transaction {
+  id                      Int             @id @default(autoincrement())
+  amount                  Int
+  user_id                 Int?
+  additional_agreement    String          @db.VarChar(200)
+  creator_fullname        String
+  creator_email           String          @unique
+  creator_no              String
+  creator_address         String?
+  receiver_fullname       String
+  receiver_no             String
+  receiver_address        String?
+  link_expires            Boolean         @default(false)
+  txn_link                String
+  created_at              DateTime        @default(now())
+  inspection_duration     Int
+  reciever_role           Role
+  terms                   String?
+  transactionType         TransactionType
+  transaction_description String          @db.VarChar(200)
+  pay_escrow_fee          EscrowFeePayer
+  pay_shipping_cost       EscrowFeePayer
+  creator_role            Role
+  status                  StatusEnum      @default(ONGOING)
+  expiresAt               DateTime
+  transactionToken        String          @unique
+  reciever_email          String          @unique
+  dispute                 Dispute?
+  user                    User?           @relation(fields: [user_id], references: [id])
+}
+
+
+
 
 enum EscrowFeePayer {
   BUYER
@@ -16,8 +49,7 @@ enum TransactionType {
   SERVICE
 }
 
-
- enum StatusEnum {
+enum StatusEnum {
   ONGOING
   DISPUTE
   CANCEL
@@ -25,33 +57,3 @@ enum TransactionType {
 }
 
 
-model Transaction {
-    id Int @id @default(autoincrement())
-    amount Int 
-    transaction_description String @db.VarChar(200)
-    user User? @relation(fields: [user_id], references: [id])
-    user_id Int?
-    status StatusEnum @default(ONGOING)
-    pay_escrow_fee  EscrowFeePayer
-    additional_agreement String @db.VarChar(200)
-    pay_shipping_cost EscrowFeePayer 
-    creator_fullname String
-    creator_email String @unique
-    creator_no String
-    creator_address String?
-    creator_role Role
-    dispute Dispute?
-    receiver_fullname String
-    reciever_email String @unique
-    receiver_no String
-    receiver_address String?
-    reciever_role Role
-    link_expires Boolean @default(false)
-    txn_link String
-    terms String?
-    transactionType TransactionType
-    transactionToken String @unique
-    expiresAt DateTime
-    inspection_duration Int 
-    created_at DateTime  @default(now())
-}
