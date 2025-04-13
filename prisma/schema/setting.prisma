@@ -1,12 +1,14 @@
 model Setting {
+  user_id                Int                    @unique
   id                     Int                    @id @default(autoincrement())
-  defaultCurrency        DefaultCurrency
+  defaultCurrency        DefaultCurrency        @default(NGN)
   notificationPreference NotificationPreference
   securityQuestionId     Int
   twoFactorAuth          Boolean
-  accountId              Int
-  account                Account                @relation(fields: [accountId], references: [id])
-  securityQuestion       SecurityQuestion       @relation(fields: [securityQuestionId], references: [id])
+  accountId              Int?                   @unique
+  account                SettingAccountStatus?  @relation(fields: [accountId], references: [id])
+  // securityQuestion       SecurityQuestion       @relation(fields: [securityQuestionId], references: [id])
+  user                   User                   @relation(fields: [user_id], references: [id])
 }
 
 enum DefaultCurrency {

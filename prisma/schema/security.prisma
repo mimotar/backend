@@ -1,7 +1,5 @@
 model SecurityQuestion {
   id                    Int       @id @default(autoincrement())
-  securityQuestionOne   String
-  securityQuestionTwo   String
-  securityQuestionThree String
-  setting               Setting[]
+  securityQuestion      String
+  // setting              Setting?
 }
