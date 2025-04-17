@@ -34,6 +34,7 @@ export const TransactionSchema = z.object({
   // transactionToken: z.string(),
   inspection_duration: z.number().int().positive(),
   expiresAt: z.number(),
+  approveStatus: z.boolean().optional(),
   // created_at: z.date().default(new Date()),
 });
 

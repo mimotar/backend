@@ -35,5 +35,6 @@ exports.TransactionSchema = zod_1.z.object({
     // transactionToken: z.string(),
     inspection_duration: zod_1.z.number().int().positive(),
     expiresAt: zod_1.z.number(),
+    approveStatus: zod_1.z.boolean().optional(),
     // created_at: z.date().default(new Date()),
 });

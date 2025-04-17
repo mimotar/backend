@@ -27,6 +27,7 @@ model Transaction {
   reciever_email          String          @unique
   dispute                 Dispute?
   user                    User?           @relation(fields: [user_id], references: [id])
+  approveStatus           Boolean         @default(false)
 }
 
 

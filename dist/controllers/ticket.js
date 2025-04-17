@@ -7,6 +7,7 @@ exports.Ticket = void 0;
 const TicketSchema_1 = require("../zod/TicketSchema");
 const createToken_1 = require("../utils/createToken");
 const GlobalErrorHandler_1 = require("../middlewares/error/GlobalErrorHandler");
+const verifyToken_1 = __importDefault(require("../utils/verifyToken"));
 const convertDayToExpireDate_1 = require("../utils/convertDayToExpireDate");
 const prisma_1 = __importDefault(require("../utils/prisma"));
 class Ticket {
@@ -110,6 +111,60 @@ class Ticket {
         }
         catch (error) {
             console.log(error);
+            if (error instanceof GlobalErrorHandler_1.GlobalError) {
+                next(new GlobalErrorHandler_1.GlobalError(error.name, error.message, error.statusCode, error.operational));
+                return;
+            }
+            if (error instanceof Error) {
+                next(new GlobalErrorHandler_1.GlobalError(error.name, "Internal server Error", 500, false));
+                return;
+            }
+            next(new GlobalErrorHandler_1.GlobalError("UnknownError", "Internal server Error", 500, false));
+            return;
+        }
+    }
+    async approveTicket(req, res, next) {
+        try {
+            const body = req.body;
+            const bodyObj = {
+                ticket_id: body.ticketId,
+                ticket_token: body.ticketToken,
+                creator_email: body.creatorEmail,
+                reciever_email: body.recieverEmail,
+            };
+            //check if link has expires
+            const verifyLinkDecoded = await (0, verifyToken_1.default)(bodyObj.ticket_token);
+            if (!verifyLinkDecoded) {
+                next(new GlobalErrorHandler_1.GlobalError("ExpiresInvalidToken", "The token has expired or is invalid", 401, true));
+                return;
+            }
+            // console.log(bodyObj, body);
+            // optional:check the token is in db
+            const ticket = await prisma_1.default.transaction.findFirst({
+                where: {
+                    transactionToken: bodyObj.ticket_token,
+                },
+            });
+            if (!ticket) {
+                next(new GlobalErrorHandler_1.GlobalError("NotFound", "The token not found in db", 404, true));
+                return;
+            }
+            // aprrove
+            await prisma_1.default.transaction.update({
+                where: {
+                    id: bodyObj.ticket_id,
+                },
+                data: {
+                    approveStatus: true,
+                },
+            });
+            console.log("approved");
+            res.status(200).json({
+                message: "Ticket approve successfully",
+            });
+            return;
+        }
+        catch (error) {
             if (error instanceof GlobalErrorHandler_1.GlobalError) {
                 next(new GlobalErrorHandler_1.GlobalError(error.name, error.message, error.statusCode, error.operational));
                 return;

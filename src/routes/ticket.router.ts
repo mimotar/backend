@@ -13,4 +13,10 @@ ticketRouter.post(
   TicketImpl.GenerateTicket
 );
 
+ticketRouter.put(
+  "/approve",
+  createRateLimiterMiddleware(10 * 60 * 1000, 10),
+  TicketImpl.approveTicket
+);
+
 export default ticketRouter;

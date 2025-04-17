@@ -139,4 +139,90 @@ export class Ticket {
       return;
     }
   }
+
+  async approveTicket(req: Request, res: Response, next: NextFunction) {
+    try {
+      const body = req.body;
+      const bodyObj = {
+        ticket_id: body.ticketId,
+        ticket_token: body.ticketToken,
+        creator_email: body.creatorEmail,
+        reciever_email: body.recieverEmail,
+      };
+
+      type JWTPayloadUsedToSigned = JwtPayload & {
+        creator_email: string;
+        reciever_email: string;
+      };
+
+      //check if link has expires
+      const verifyLinkDecoded = await VerifyToken<JWTPayloadUsedToSigned>(
+        bodyObj.ticket_token
+      );
+      if (!verifyLinkDecoded) {
+        next(
+          new GlobalError(
+            "ExpiresInvalidToken",
+            "The token has expired or is invalid",
+            401,
+            true
+          )
+        );
+        return;
+      }
+
+      // console.log(bodyObj, body);
+      // optional:check the token is in db
+      const ticket = await prisma.transaction.findFirst({
+        where: {
+          transactionToken: bodyObj.ticket_token,
+        },
+      });
+
+      if (!ticket) {
+        next(
+          new GlobalError("NotFound", "The token not found in db", 404, true)
+        );
+        return;
+      }
+
+      // aprrove
+      await prisma.transaction.update({
+        where: {
+          id: bodyObj.ticket_id,
+        },
+        data: {
+          approveStatus: true,
+        },
+      });
+      console.log("approved");
+
+      res.status(200).json({
+        message: "Ticket approve successfully",
+      });
+      return;
+    } catch (error) {
+      if (error instanceof GlobalError) {
+        next(
+          new GlobalError(
+            error.name,
+            error.message,
+            error.statusCode,
+            error.operational
+          )
+        );
+        return;
+      }
+
+      if (error instanceof Error) {
+        next(new GlobalError(error.name, "Internal server Error", 500, false));
+        return;
+      }
+      next(
+        new GlobalError("UnknownError", "Internal server Error", 500, false)
+      );
+
+      return;
+    }
+  }
 }
