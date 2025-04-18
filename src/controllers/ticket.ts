@@ -113,6 +113,7 @@ export class Ticket {
         message: "Ticket created successfully",
         data: { ...transaction },
       });
+
       return;
     } catch (error) {
       console.log(error);
