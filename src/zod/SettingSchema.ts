@@ -21,13 +21,10 @@ export const SettingSchema = z.object({
   user_id: z.number(),
   defaultCurrency: DefaultCurrencyEnum,
   notificationPreference: NotificationPreferenceEnum,
-  securityQuestionId: z.number(),
+  securityQuestions: z.array(z.string()).length(4),
   twoFactorAuth: z.boolean(),
-  accountId: z.number().nullable().optional(),
-  account: SettingAccountStatusSchema.nullable().optional(),
+  accountStatus: z.enum(["ACTIVE", "DISABLED", "DELETED"]),
   user: UserSchema,
-  // Uncomment if needed:
-  // securityQuestion: SecurityQuestionSchema
 });
 
 export type ISetting = z.infer<typeof SettingSchema>;

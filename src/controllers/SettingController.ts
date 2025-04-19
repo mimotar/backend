@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prisma";
 import { NextFunction, Request, Response } from "express";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
 // import { ISetting } from "../types/settingType";
@@ -50,18 +51,15 @@ export class SettingController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     const payload = req.body;
-    let fields: keyof ISetting = payload.field;
-    let user_id: string = payload.user_id;
-    const updateValue: Partial<ISetting> = payload.value;
+    let user_id: number = Number(payload.user_id);
+    const updateValue: Partial<ISetting> = payload.field;
 
     const updateSchema = z.object({
       update: SettingSchema.partial(),
-      field: SettingSchema.keyof(),
     });
 
     const parsedPayloadValidate = updateSchema.safeParse({
       update: updateValue,
-      fields: fields,
     });
 
     if (!parsedPayloadValidate.success) {
@@ -85,11 +83,10 @@ export class SettingController {
     }
 
     try {
-      const updatedSetting =
-        await this.prismaClient.setting.updateManyAndReturn({
-          where: { user_id: user_id as any },
-          data: { [fields]: updateValue },
-        });
+      const updatedSetting = await prisma.setting.updateManyAndReturn({
+        where: { user_id: user_id },
+        data: updateValue,
+      });
 
       res.status(200).json({
         message: "setting update successfully",
@@ -98,6 +95,7 @@ export class SettingController {
       });
       return;
     } catch (error) {
+      console.log(error);
       if (error instanceof GlobalError) {
         next(
           new GlobalError(

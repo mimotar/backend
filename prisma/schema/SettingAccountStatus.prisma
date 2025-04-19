@@ -1,6 +1,0 @@
-model SettingAccountStatus {
-  id             Int       @id @default(autoincrement())
-  disable_status Boolean
-  delete_status  Boolean
-  setting        Setting?
-}
