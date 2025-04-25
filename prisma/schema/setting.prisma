@@ -1,12 +1,12 @@
 model Setting {
+  user_id                Int                    @unique
   id                     Int                    @id @default(autoincrement())
-  defaultCurrency        DefaultCurrency
-  notificationPreference NotificationPreference
-  securityQuestionId     Int
-  twoFactorAuth          Boolean
-  accountId              Int
-  account                Account                @relation(fields: [accountId], references: [id])
-  securityQuestion       SecurityQuestion       @relation(fields: [securityQuestionId], references: [id])
+  defaultCurrency        DefaultCurrency        @default(NGN)
+  notificationPreference NotificationPreference @default(EMAIL)
+  securityQuestions      Json                   
+  twoFactorAuth          Boolean                @default(false)
+  accountStatus          AccountStatus?         @default(ACTIVE)
+  user                   User                   @relation(fields: [user_id], references: [id])
 }
 
 enum DefaultCurrency {
@@ -19,4 +19,10 @@ enum NotificationPreference {
   SMS
   EMAIL
   BOTH
+}
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+  DELETED
 }

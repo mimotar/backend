@@ -1,8 +1,11 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import { env } from "../config/env";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
 
-export function createToken(expires: number, payload: JwtPayload) {
+export function createToken(
+  expires: SignOptions["expiresIn"],
+  payload: JwtPayload
+) {
   return new Promise<string>((resolve, reject) => {
     jwt.sign(
       payload,

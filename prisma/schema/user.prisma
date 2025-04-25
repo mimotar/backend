@@ -1,3 +1,4 @@
+
 model User {
   id                 Int            @id @default(autoincrement())
   email              String         @unique
@@ -15,7 +16,9 @@ model User {
   disputeSender_id   Dispute?       @relation("sender_userId")
   notification       Notification[]
   profile            Profile?
-  transaction        Transaction[]
+  transaction        Transaction?
+  setting            Setting?
   otp String?
   otpCreatedAt DateTime?
 }
+

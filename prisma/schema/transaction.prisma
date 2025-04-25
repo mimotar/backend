@@ -1,7 +1,7 @@
 model Transaction {
   id                      Int             @id @default(autoincrement())
   amount                  Int
-  user_id                 Int?
+  user_id                 Int?            @unique
   additional_agreement    String          @db.VarChar(200)
   creator_fullname        String
   creator_email           String          @unique
@@ -27,7 +27,11 @@ model Transaction {
   reciever_email          String          @unique
   dispute                 Dispute?
   user                    User?           @relation(fields: [user_id], references: [id])
+  approveStatus           Boolean         @default(false)
 }
+
+
+
 
 enum EscrowFeePayer {
   BUYER
@@ -52,3 +56,5 @@ enum StatusEnum {
   CANCEL
   COMPLETED
 }
+
+

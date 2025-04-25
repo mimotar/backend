@@ -29,12 +29,12 @@ CREATE TYPE "StatusEnum" AS ENUM ('ONGOING', 'DISPUTE', 'CANCEL', 'COMPLETED');
 CREATE TYPE "Label" AS ENUM ('ongoing', 'dispute', 'cancel', 'completed');
 
 -- CreateTable
-CREATE TABLE "Account" (
+CREATE TABLE "SettingAccountStatus" (
     "id" SERIAL NOT NULL,
     "disable_status" BOOLEAN NOT NULL,
     "delete_status" BOOLEAN NOT NULL,
 
-    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "SettingAccountStatus_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -72,7 +72,8 @@ CREATE TABLE "Dispute" (
     "description" TEXT NOT NULL,
     "reason" "Reasons" NOT NULL,
     "resolutionOption" "ResolutionOption" NOT NULL,
-    "evidence" TEXT NOT NULL,
+    "evidenceUrl" TEXT NOT NULL,
+    "evidenceId" TEXT NOT NULL,
 
     CONSTRAINT "Dispute_pkey" PRIMARY KEY ("id")
 );
@@ -111,9 +112,7 @@ CREATE TABLE "Profile" (
 -- CreateTable
 CREATE TABLE "SecurityQuestion" (
     "id" SERIAL NOT NULL,
-    "securityQuestionOne" TEXT NOT NULL,
-    "securityQuestionTwo" TEXT NOT NULL,
-    "securityQuestionThree" TEXT NOT NULL,
+    "securityQuestion" TEXT NOT NULL,
 
     CONSTRAINT "SecurityQuestion_pkey" PRIMARY KEY ("id")
 );
@@ -130,12 +129,13 @@ CREATE TABLE "session" (
 
 -- CreateTable
 CREATE TABLE "Setting" (
+    "user_id" INTEGER NOT NULL,
     "id" SERIAL NOT NULL,
-    "defaultCurrency" "DefaultCurrency" NOT NULL,
+    "defaultCurrency" "DefaultCurrency" NOT NULL DEFAULT 'NGN',
     "notificationPreference" "NotificationPreference" NOT NULL,
     "securityQuestionId" INTEGER NOT NULL,
     "twoFactorAuth" BOOLEAN NOT NULL,
-    "accountId" INTEGER NOT NULL,
+    "accountId" INTEGER,
 
     CONSTRAINT "Setting_pkey" PRIMARY KEY ("id")
 );
@@ -190,6 +190,8 @@ CREATE TABLE "User" (
     "lastName" TEXT NOT NULL,
     "provider" TEXT,
     "subject" TEXT,
+    "otp" TEXT,
+    "otpCreatedAt" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -214,6 +216,15 @@ CREATE UNIQUE INDEX "Profile_user_id_key" ON "Profile"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "session_sid_key" ON "session"("sid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Setting_user_id_key" ON "Setting"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Setting_accountId_key" ON "Setting"("accountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Transaction_user_id_key" ON "Transaction"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Transaction_creator_email_key" ON "Transaction"("creator_email");
@@ -258,10 +269,10 @@ ALTER TABLE "Notification" ADD CONSTRAINT "Notification_sender_user_id_fkey" FOR
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Setting" ADD CONSTRAINT "Setting_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Setting" ADD CONSTRAINT "Setting_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "SettingAccountStatus"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Setting" ADD CONSTRAINT "Setting_securityQuestionId_fkey" FOREIGN KEY ("securityQuestionId") REFERENCES "SecurityQuestion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Setting" ADD CONSTRAINT "Setting_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
