@@ -169,7 +169,7 @@ export class PasswordResetController {
         next(
           new GlobalError(
             "UnauthorizedPasswordReset",
-            "Security bridge: You are not the user who make the password request",
+            "Security bridge: You are not the user who make the password request.",
             401,
             true
           )
