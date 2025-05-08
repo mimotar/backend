@@ -22,7 +22,7 @@ router.post("/middleware", (req, res) => {
 
 // router.use("/email", emailRouter);
 
-router.use("password-reset", passwordResetReqRouter);
+router.use("/password-reset", passwordResetReqRouter);
 router.use("/ticket", ticketRouter);
 router.use("/setting", settingRouter);
 
