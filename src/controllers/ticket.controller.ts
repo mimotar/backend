@@ -63,14 +63,14 @@ export const createTransactionController = async (req: Request, res: Response): 
       user_id: userId
     };
 
-    // const transaction = await createTransactionService(transactionData);
+    const transaction = await createTransactionService(transactionData);
 
      res.status(201).json({
       message: "Transaction created successfully",
-      // data: transaction,
+      data: transaction,
     });
     sendEmailWithTemplate(reciever_email, {
-      transaction_description, receiver_fullname, amount, link: "www.kcblaq.com", creator_fullname, inspection_duration, expiresAt
+      transaction_description, receiver_fullname, amount, link: transaction.txn_link, creator_fullname, inspection_duration, expiresAt
     },6);
     sendEmailWithTemplate(creator_email, {creator_fullname, transaction_description, amount, expiresAt, inspection_duration}, 7)
     return
