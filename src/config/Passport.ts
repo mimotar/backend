@@ -133,6 +133,7 @@ export const PassportConfig = () => {
         // console.log("IS LOGIN", isLogin)
         try {
           const result = await HandleSocialAuth(profile, "google", isLogin);
+          console.log("result ", result);
           return done(null, result);
         } catch (error) {
           if (error instanceof Error) {

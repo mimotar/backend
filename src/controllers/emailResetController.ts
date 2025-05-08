@@ -11,6 +11,7 @@ import { hashPassword } from "../utils/HashPassword";
 import { comparePassword } from "../utils/comparePassword";
 import { env } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import prisma from "../utils/prisma";
 
 //interface for the verify token payload object
 interface EmailPayload extends JwtPayload {
@@ -25,20 +26,21 @@ export class PasswordResetController {
     try {
       const authHeader = req.headers.authorization;
 
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        next(new GlobalError("Unauthorized", "No token provided", 401, true));
-        return;
-      }
-      const token = authHeader.split(" ")[1];
+      //check if the request has authorization header
+      // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      //   next(new GlobalError("Unauthorized", "No token provided", 401, true));
+      //   return;
+      // }
+      // const token = authHeader.split(" ")[1];
 
       //guessing this is the payload format that was used to signed the SIgn/login user token
       interface tokenSignPayload extends JwtPayload {
         userId: string;
         email: string;
       }
-      // console.log(token);
-      const tokenDecoded = await VerifyToken<tokenSignPayload>(token);
-      console.log(tokenDecoded);
+
+      //verify the req token
+      // const tokenDecoded = await VerifyToken<tokenSignPayload>(token);
 
       // validation the email u want to reset
       const emailSchema = z.object({
@@ -56,25 +58,23 @@ export class PasswordResetController {
 
       //check if the current user email is the same with the email sent  to reset password.
       // this is to prevent user from resetting other user passwords
+      // if (tokenDecoded.email !== ValidatedEmail.email) {
+      //   next(
+      //     new GlobalError(
+      //       "Forbidden",
+      //       "You are not allowed to reset other user password",
+      //       403,
+      //       true
+      //     )
+      //   );
+      //   return;
+      // }
 
-      if (tokenDecoded.email !== ValidatedEmail.email) {
-        next(
-          new GlobalError(
-            "Forbidden",
-            "You are not allowed to reset other user password",
-            403,
-            true
-          )
-        );
-        return;
-      }
       // Check if email exists in database
-      const verifyEmailInDb = await this.prisma.user.findUnique({
+      const verifyEmailInDb = await prisma.user.findUnique({
         where: { email: ValidatedEmail.email },
         select: { email: true, password: true },
       });
-
-      console.log(verifyEmailInDb);
 
       if (!verifyEmailInDb) {
         next(
@@ -91,13 +91,13 @@ export class PasswordResetController {
 
       //create token and new password form link
       const reset_token = await createToken(3600, ValidatedEmail);
-      const resetPasswordUrl = `${env.FRONTEND_URL}/reset-password?token=${reset_token}`;
+      const resetPasswordUrl = `${env.FRONTEND_URL}/auth/forget-password?type=set-newPassword&token=${reset_token}`;
       const linkObj = {
         firstname: validationResult.data?.email,
         link: resetPasswordUrl,
       };
 
-      await sendEmailWithTemplate("josephuzuegbu55@gmail.com", linkObj, 2);
+      await sendEmailWithTemplate(validationResult.data.email, linkObj, 2);
       res.status(200).json({
         success: true,
         message:
@@ -169,7 +169,7 @@ export class PasswordResetController {
         next(
           new GlobalError(
             "UnauthorizedPasswordReset",
-            "Security bridge: You are not the user who make the password request",
+            "Security bridge: You are not the user who make the password request.",
             401,
             true
           )
