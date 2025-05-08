@@ -6,14 +6,16 @@ export const TransactionTypeEnum = z.enum([
   "PHYSICAL_PRODUCT",
   "ONLINE_PRODUCT",
   "SERVICE",
+  "RENTAL",
+  "MILESTONE_BASED_PROJECT" 
 ]);
+
 export const StatusEnum = z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
 
 export const TransactionSchema = z.object({
-  amount: z.number().int(),
+  amount: z.coerce.number().int(),
   transaction_description: z.string().max(200),
-  user_id: z.number().positive().optional(),
-  // status: StatusEnum.default("ONGOING"),
+  user_id: z.coerce.number().positive().optional(),
   pay_escrow_fee: EscrowFeePayerEnum,
   additional_agreement: z.string().max(200),
   pay_shipping_cost: EscrowFeePayerEnum,
@@ -27,15 +29,23 @@ export const TransactionSchema = z.object({
   receiver_no: z.string().min(1),
   receiver_address: z.string().nullable(),
   reciever_role: RoleEnum,
-  // link_expires: z.boolean().default(false),
-  // txn_link: z.string().min(1),
   terms: z.string().nullable(),
   transactionType: TransactionTypeEnum,
-  // transactionToken: z.string(),
-  inspection_duration: z.number().int().positive(),
-  expiresAt: z.number(),
-  approveStatus: z.boolean().optional(),
-  // created_at: z.date().default(new Date()),
+  inspection_duration: z.coerce.number().int().positive(),
+  expiresAt: z.coerce.number(),
+  isApproved: z.coerce.boolean().optional(),
+  files: z
+    .array(
+      z.object({
+        fileName: z.string(),
+        fileType: z.enum(["image", "pdf", "doc", "other"]),
+        fileUrl: z.string().url(),
+      })
+    )
+    .max(2)
+    .optional(),
 });
+
+
 
 export type TransactionType = z.infer<typeof TransactionSchema>;

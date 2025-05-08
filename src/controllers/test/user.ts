@@ -41,3 +41,12 @@ export const createUser = async (req: Request, res: Response, NextFunction: Next
         return NextFunction(error);
     }
 };
+
+
+
+export function demo(req: Request, res: Response){
+    res.json({
+        message: "Here is a demo route"
+    })
+
+}
