@@ -71,6 +71,7 @@ export class PasswordResetController {
       // }
 
       // Check if email exists in database
+
       const verifyEmailInDb = await prisma.user.findUnique({
         where: { email: ValidatedEmail.email },
         select: { email: true, password: true },
@@ -91,7 +92,11 @@ export class PasswordResetController {
 
       //create token and new password form link
       const reset_token = await createToken(3600, ValidatedEmail);
-      const resetPasswordUrl = `${env.FRONTEND_URL}/auth/forget-password?type=set-newPassword&token=${reset_token}`;
+      const resetPasswordUrl = `${
+        env.FRONTEND_URL
+      }/auth/forget-password?type=set-newPassword&token=${encodeURIComponent(
+        reset_token
+      )}&email=${encodeURIComponent(ValidatedEmail.email)}`;
       const linkObj = {
         firstname: validationResult.data?.email,
         link: resetPasswordUrl,
@@ -135,6 +140,7 @@ export class PasswordResetController {
       // note: the current user email should come from the token for security reason
       // used the email payload here because the token is unavailable here for testing
       const { token, newPassword, email } = req.body;
+      // console.log(token, newPassword, email);
 
       const passwordSchema = z.object({
         newPassword: z
@@ -179,7 +185,7 @@ export class PasswordResetController {
 
       //MAKE SURE THE USER IS NOT SENDING THE SAME PASSWORD as of old one
       //the db password of the current user
-      const dbCredential = await this.prisma.user.findUnique({
+      const dbCredential = await prisma.user.findUnique({
         where: { email: email },
       });
 
@@ -196,7 +202,6 @@ export class PasswordResetController {
         return;
       }
 
-      console.log("hello", dbCredential);
       //check if the new password and old password match
       const password_compare = await comparePassword(
         newPassword,
@@ -216,7 +221,7 @@ export class PasswordResetController {
 
       //hash password
       const hash_Password = await hashPassword(newPassword);
-      await this.prisma.user.update({
+      await prisma.user.update({
         where: {
           email: email,
         },
