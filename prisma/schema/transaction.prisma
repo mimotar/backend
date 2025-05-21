@@ -1,10 +1,10 @@
 model Transaction {
   id                      Int             @id @default(autoincrement())
   amount                  Int
-  user_id                 Int?            @unique
+  user_id                 Int?            
   additional_agreement    String          @db.VarChar(200)
   creator_fullname        String
-  creator_email           String          @unique
+  creator_email           String          
   creator_no              String
   creator_address         String?
   receiver_fullname       String
@@ -24,11 +24,14 @@ model Transaction {
   status                  StatusEnum      @default(ONGOING)
   expiresAt               DateTime
   transactionToken        String          @unique
-  reciever_email          String          @unique
+  reciever_email          String         
   dispute                 Dispute?
   user                    User?           @relation(fields: [user_id], references: [id])
   approveStatus           Boolean         @default(false)
+
+  files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
 }
+
 
 
 
@@ -48,13 +51,17 @@ enum TransactionType {
   PHYSICAL_PRODUCT
   ONLINE_PRODUCT
   SERVICE
+  RENTAL
+  MILESTONE_BASED_PROJECT
 }
 
 enum StatusEnum {
-  ONGOING
-  DISPUTE
-  CANCEL
-  COMPLETED
+  CREATED   // Newly created, awaiting approval
+  APPROVED  // Approved and ready to proceed, yet to make payment
+  ONGOING   // Currently in progress, payment made and is open
+  COMPLETED // Successfully finished
+  DISPUTE   // Transaction is in dispute
+  REJECTED  // Denied approval
+  CANCELED  // Manually canceled before completion
 }
-
 

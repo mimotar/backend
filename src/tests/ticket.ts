@@ -1,4 +1,4 @@
-import { Ticket } from "../controllers/ticket";
+import { Ticket } from "../controllers/ticket.controller";
 import { PrismaClient } from "@prisma/client";
 import { createToken } from "../utils/createToken";
 import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
