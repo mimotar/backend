@@ -28,7 +28,7 @@ export const loginWithEmailService = async (email: string, password: string) => 
       };
     }
 
-    const token = await createToken(60 * 60, {
+    const token = await createToken("3d", {
       id: user.id,
       email: user.email,
       firstName: user.firstName,
