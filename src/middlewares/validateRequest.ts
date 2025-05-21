@@ -1,5 +1,7 @@
+import { Transaction } from './../types/user';
 import { NextFunction, Request, Response } from 'express';
 import { body, ValidationChain, validationResult } from 'express-validator';
+import { prisma } from '../config/db';
 
 export const registerValidation: ValidationChain[] = [
   body('email').isEmail().withMessage('Invalid email format'),
@@ -64,3 +66,5 @@ export const handleValidationErrors = (req: Request, res: Response, next: NextFu
   }
   next();
 };
+
+

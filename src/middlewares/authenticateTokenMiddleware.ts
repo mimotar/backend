@@ -23,6 +23,7 @@ export async function authenticateTokenMiddleware(
 
     const decoded = await VerifyToken(token);
     req.user = decoded;
+    // console.log("USER DETAIL",decoded)
 
     next();
   } catch (error: unknown) {

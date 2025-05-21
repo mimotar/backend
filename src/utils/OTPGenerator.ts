@@ -1,4 +1,4 @@
-export function generateSixDigitString(): string {
+export function OTPGenerator(): string {
     let result = "";
   
     for (let i = 0; i < 6; i++) {

@@ -1,10 +1,10 @@
 model Transaction {
   id                      Int             @id @default(autoincrement())
   amount                  Int
-  user_id                 Int?            @unique
+  user_id                 Int?
   additional_agreement    String          @db.VarChar(200)
   creator_fullname        String
-  creator_email           String          @unique
+  creator_email           String
   creator_no              String
   creator_address         String?
   receiver_fullname       String
@@ -21,17 +21,17 @@ model Transaction {
   pay_escrow_fee          EscrowFeePayer
   pay_shipping_cost       EscrowFeePayer
   creator_role            Role
-  status                  StatusEnum      @default(ONGOING)
+  status                  StatusEnum      @default(CREATED)
   expiresAt               DateTime
   transactionToken        String          @unique
-  reciever_email          String          @unique
+  reciever_email          String
   dispute                 Dispute?
   user                    User?           @relation(fields: [user_id], references: [id])
   approveStatus           Boolean         @default(false)
+  otp                     String?
+  otp_created_at        DateTime?
+  files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
 }
-
-
-
 
 enum EscrowFeePayer {
   BUYER
@@ -48,13 +48,17 @@ enum TransactionType {
   PHYSICAL_PRODUCT
   ONLINE_PRODUCT
   SERVICE
+  RENTAL
+  MILESTONE_BASED_PROJECT
 }
 
 enum StatusEnum {
-  ONGOING
-  DISPUTE
-  CANCEL
-  COMPLETED
+  CREATED
+  APPROVED
+  ONGOING 
+  COMPLETED 
+  DISPUTE 
+  REJECTED 
+  CANCELED
+  EXPIRED
 }
-
-
