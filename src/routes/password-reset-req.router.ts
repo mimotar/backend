@@ -13,7 +13,7 @@ passwordResetReqRouter.post(
 );
 
 passwordResetReqRouter.post(
-  "/password-reset",
+  "/",
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   PasswordResetControllerImpl.passwordReset
 );

@@ -174,41 +174,6 @@ export const approveTransactionController = async (
 
 
 
-export const validateTransactionOtpController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<Response | void> => {  
-  const { otp } = req.body;
-  const { id } = req.params;
-  
-  try {
-    const validateTransaction = await validateTransactionOtpService(
-      Number(id),
-      otp
-    );
-    if (!validateTransaction) {
-      throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
-    }
-    res.status(200).json({
-      message: "Transaction validated successfully",
-      data: validateTransaction,
-    });
-    next();
-  } catch (error) {
-    console.error("Error validating OTP:", error);
-    if (error instanceof GlobalError) {
-      return res.status(error.statusCode).json({
-        message: error.message,
-        name: error.name,
-        operational: error.operational,
-      });
-    }
-    return res.status(500).json({ message: "Internal server error" });
-    
-  }}
-
-
 export const requestTokenToValidateTransactionController = async (req: Request, res: Response): Promise<Response | void> => {
   const id = req.params.id;
   try {

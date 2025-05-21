@@ -1,10 +1,10 @@
 import { RequestHandler, Router } from "express";
 
-import prisma from "../utils/prisma";
 import createRateLimiterMiddleware from "../utils/loginLimiter";
 import { validateSchema } from "../middlewares/validations/allroute.validation";
 import { TransactionSchema } from "../zod/TicketSchema";
-import { approveTransactionController, createTransactionController, getAUserTransactionsController, requestTokenToValidateTransactionController, validateTransactionOtpController } from "../controllers/ticket.controller";
+import { approveTransactionController, createTransactionController, getAUserTransactionsController, requestTokenToValidateTransactionController } from "../controllers/ticket.controller";
+
 import { upload } from "../config/cloudinary";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware";
 
@@ -18,7 +18,6 @@ ticketRouter.put(
   "/approve/:id",
   authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
-  validateTransactionOtpController as RequestHandler,
   approveTransactionController as RequestHandler
 );
 
