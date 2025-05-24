@@ -9,6 +9,7 @@ import { passwordResetReqRouter } from "./password-reset-req.router";
 import { settingRouter } from "./setting.route";
 import { validateSchema } from "../middlewares/validations/allroute.validation";
 import { TransactionSchema } from "../zod/TicketSchema";
+import paymentRouter from "./payment.route";
 
 
 const router = Router();
@@ -33,5 +34,8 @@ router.use("/setting", settingRouter);
 
 router.use("/dispute", disputeRouter);
 router.post("/user", createUser as RequestHandler);
+
+// router.use("/payment", paymentRouter);
+router.use("/payment", paymentRouter)
 
 export default router;

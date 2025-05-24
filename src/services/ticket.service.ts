@@ -4,7 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
 import { createToken } from "../utils/createToken";
 import { env } from "../config/env";
-import { sendEmail, sendEmailWithTemplate } from "./emailService";
+import { sendEmailWithTemplate } from "./emailService";
 import { OTPGenerator } from "../utils/OTPGenerator";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
 
@@ -144,6 +144,34 @@ export const validateTransactionOtpService = async (id: number, otp: string) => 
   return transaction;
 };
 
+export const deleteTransactionService = async (id: number) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id },
+  });
+  if (!transaction) {
+    throw new Error("Transaction not found");
+  }
+  
+  const deletedTransaction = await prisma.transaction.delete({
+    where: { id },
+  });
+  if (!deletedTransaction) {
+    throw new Error("Failed to delete transaction");
+  }
+  return deletedTransaction;
+}
+
+export const deleteAllTransactionService = async () => {
+  const transactions = await prisma.transaction.findMany();
+  if (!transactions) {
+    throw new Error("No transactions found");
+  }
+  const deletedTransactions = await prisma.transaction.deleteMany();
+  if (!deletedTransactions) {
+    throw new Error("Failed to delete transactions");
+  } 
+  return deletedTransactions;
+}
 
 
 
