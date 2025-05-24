@@ -7,6 +7,7 @@ import { approveTransactionController, createTransactionController, getAUserTran
 
 import { upload } from "../config/cloudinary";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware";
+import { deleteAllTransactionController, deleteTransactionController } from "../controllers/payment/initiatePaymentController";
 
 const ticketRouter = Router();
 
@@ -35,5 +36,9 @@ ticketRouter.get(
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   getAUserTransactionsController as RequestHandler
 );
+
+ticketRouter.delete("/:id", deleteTransactionController as RequestHandler);
+ticketRouter.delete("/", deleteAllTransactionController as RequestHandler);
+
 
 export default ticketRouter;

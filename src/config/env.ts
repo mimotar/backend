@@ -29,4 +29,13 @@ export const env = {
   CLOUD_NAME: process.env.CLOUD_NAME,
   API_KEY: process.env.API_KEY,
   API_SECRET: process.env.API_SECRET,
+
+  FLW_API_SECRET_KEY: process.env.FLW_API_SECRET,
+  FLW_ENCRYPTION_KEY: process.env.FLW_ENCRYPTION_KEY,
+  FLW_BASE_URL: process.env.FLW_BASE_URL,
+  FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
+  FLW_WEBHOOK_URL: process.env.FLW_WEBHOOK_URL,
+  FLW_WEBHOOK_SECRET: process.env.FLW_WEBHOOK_SECRET,
 };
+
+

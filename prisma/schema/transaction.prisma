@@ -22,6 +22,7 @@ model Transaction {
   pay_shipping_cost       EscrowFeePayer
   creator_role            Role
   status                  StatusEnum      @default(CREATED)
+  currency                CurrencyEnum    @default(NGN)
   expiresAt               DateTime
   transactionToken        String          @unique
   reciever_email          String
@@ -29,8 +30,23 @@ model Transaction {
   user                    User?           @relation(fields: [user_id], references: [id])
   approveStatus           Boolean         @default(false)
   otp                     String?
-  otp_created_at        DateTime?
+  otp_created_at          DateTime?
   files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
+  payment_id              Int?
+  payment                 Payment?
+}
+
+model Payment {
+  id                    Int           @id @default(autoincrement())
+  transaction_id        Int           @unique
+  transaction_reference String        @unique
+  amount                Int
+  payment_method        PaymentMethod @default(ATM_CARD)
+  status                PaymentStatus @default(PENDING)
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  transaction           Transaction   @relation(fields: [transaction_id], references: [id])
+  title                 String        @db.VarChar(200)
 }
 
 enum EscrowFeePayer {
@@ -52,13 +68,38 @@ enum TransactionType {
   MILESTONE_BASED_PROJECT
 }
 
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 enum StatusEnum {
   CREATED
   APPROVED
-  ONGOING 
-  COMPLETED 
-  DISPUTE 
-  REJECTED 
+  ONGOING
+  COMPLETED
+  DISPUTE
+  REJECTED
   CANCELED
   EXPIRED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  ATM_CARD
+  INTERNET_BANKING
+  APPLE_PAY
+  GOOGLE_PAY
+  USSD
+}
+
+enum CurrencyEnum {
+  USD
+  GBP
+  NGN
+  GHS
+  KES
+  RWF
 }
