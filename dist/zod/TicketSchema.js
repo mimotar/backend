@@ -8,13 +8,14 @@ exports.TransactionTypeEnum = zod_1.z.enum([
     "PHYSICAL_PRODUCT",
     "ONLINE_PRODUCT",
     "SERVICE",
+    "RENTAL",
+    "MILESTONE_BASED_PROJECT"
 ]);
 exports.StatusEnum = zod_1.z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
 exports.TransactionSchema = zod_1.z.object({
-    amount: zod_1.z.number().int(),
+    amount: zod_1.z.coerce.number().int(),
     transaction_description: zod_1.z.string().max(200),
-    user_id: zod_1.z.number().positive().optional(),
-    // status: StatusEnum.default("ONGOING"),
+    user_id: zod_1.z.coerce.number().positive().optional(),
     pay_escrow_fee: exports.EscrowFeePayerEnum,
     additional_agreement: zod_1.z.string().max(200),
     pay_shipping_cost: exports.EscrowFeePayerEnum,
@@ -28,13 +29,17 @@ exports.TransactionSchema = zod_1.z.object({
     receiver_no: zod_1.z.string().min(1),
     receiver_address: zod_1.z.string().nullable(),
     reciever_role: exports.RoleEnum,
-    // link_expires: z.boolean().default(false),
-    // txn_link: z.string().min(1),
     terms: zod_1.z.string().nullable(),
     transactionType: exports.TransactionTypeEnum,
-    // transactionToken: z.string(),
-    inspection_duration: zod_1.z.number().int().positive(),
-    expiresAt: zod_1.z.number(),
-    approveStatus: zod_1.z.boolean().optional(),
-    // created_at: z.date().default(new Date()),
+    inspection_duration: zod_1.z.coerce.number().int().positive(),
+    expiresAt: zod_1.z.coerce.number(),
+    isApproved: zod_1.z.coerce.boolean().optional(),
+    files: zod_1.z
+        .array(zod_1.z.object({
+        fileName: zod_1.z.string(),
+        fileType: zod_1.z.enum(["image", "pdf", "doc", "other"]),
+        fileUrl: zod_1.z.string().url(),
+    }))
+        .max(2)
+        .optional(),
 });

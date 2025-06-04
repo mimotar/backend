@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createDisputeService, getAllUserDisputes, getDisputeById } from "../services/dispute.service";
-import { cloudinaryConfig } from "../config/cloudinary";
+
 import { validationResult } from "express-validator";
 
 export const createDisputeController = async (req: any, res: any) => {
