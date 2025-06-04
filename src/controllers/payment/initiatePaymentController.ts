@@ -32,7 +32,7 @@ export const initiatePaymentController = async (
       .status(400)
       .json({
         message:
-          "Transaction is not in a valid state for payment, ensure it is approved by counte party",
+          "Transaction is not in a valid state for payment, ensure it is approved by counter party",
       });
     return;
   }
