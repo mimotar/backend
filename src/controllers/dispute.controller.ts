@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { createDisputeService, getAllUserDisputes, getDisputeById } from "../services/dispute.service";
 
 import { validationResult } from "express-validator";
+import { uploadToCloudinary } from "../config/cloudinary";
 
 export const createDisputeController = async (req: any, res: any) => {
     const {id } = req.user;
@@ -28,19 +29,11 @@ const errors = validationResult(req);
     let evidenceId = "";
 
     if (file) {
-        const uploadResult = await cloudinaryConfig.uploader.upload_stream({
-            folder: "dispute-evidence",
-            resource_type: "auto",
-        },
-        async(error: Error | null, result: { secure_url: string; public_id: string } | undefined) => {
-            if (error) {
-            console.error("Error uploading file to Cloudinary:", error);
-             res.status(500).json({ message: "Error uploading file", success: false });
-             return
-            }
+        try {
+            const result: any = await uploadToCloudinary(file);
             if (result) {
-            evidenceUrl = result.secure_url;
-            evidenceId = result.public_id;
+                evidenceUrl = result.secure_url;
+                evidenceId = result.public_id;
             }
             const disputeData = {
                 userId: id,
@@ -53,17 +46,19 @@ const errors = validationResult(req);
             }
             const disputeResult = await createDisputeService(disputeData);
             if (disputeResult.status !== 201) {
-                 res.status(disputeResult.status).json({ message: disputeResult.message, success: false });
-                    return;
+                res.status(disputeResult.status).json({ message: disputeResult.message, success: false });
+                return;
             }
             res.status(201).json({
                 message: "Dispute created successfully",
                 data: disputeResult,
                 success: true
             });
+        } catch (error) {
+            console.error("Error uploading file to Cloudinary:", error);
+            res.status(500).json({ message: "Error uploading file", success: false });
+            return;
         }
-        )
-        file.stream.pipe(uploadResult);
     } else {
         const disputeData = {
             userId: id,

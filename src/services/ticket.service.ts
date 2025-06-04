@@ -5,8 +5,8 @@ import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
 import { createToken } from "../utils/createToken";
 import { env } from "../config/env";
 import { sendEmailWithTemplate } from "./emailService";
-import { OTPGenerator } from "../utils/OTPGenerator";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { generateSixDigitString } from "../utils/OTPGenerator";
 
 export const createTransactionService = async (data: TransactionType) => {
   const { files, expiresAt, creator_email, reciever_email, ...rest } = data;
@@ -106,7 +106,7 @@ export const requestTokenToValidateTransactionService = async (id: number) => {
   if (transaction.status === "EXPIRED") {
     throw new Error("Transaction expired");
   }
-  const otp =  OTPGenerator();
+  const otp =  generateSixDigitString();
   const updatedTransaction = await prisma.transaction.update({
     where: {
       id,
