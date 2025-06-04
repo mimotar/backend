@@ -18,8 +18,6 @@ import {
 } from "../services/ticket.service";
 import { env } from "../config/env";
 import { sendEmailWithTemplate } from "../services/emailService";
-import { OTPGenerator } from "../utils/OTPGenerator";
-import { getALlUsersService } from "../services/auth/users.service";
 
 export const createTransactionController = async (
   req: Request,
