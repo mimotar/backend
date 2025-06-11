@@ -20,5 +20,38 @@ model User {
   setting            Setting?
   otp String?
   otpCreatedAt DateTime?
+  earnings          Earnings[]
+  totalEarnings     Float          @default(0)
+  walletTransactions WalletTransaction[]
+  walletBalance     Float          @default(0)
 }
 
+
+
+
+model Earnings {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  amount         Float
+  createdAt      DateTime     @default(now())
+  description    String?
+  transaction_id Int          @unique
+  user           User         @relation(fields: [userId], references: [id])
+  transaction    Transaction  @relation(fields: [transaction_id], references: [id])
+}
+
+
+model WalletTransaction {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  type        WalletTransactionType
+  amount      Float
+  description String?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+enum WalletTransactionType {
+  INFLOW
+  OUTFLOW
+}
