@@ -34,6 +34,7 @@ model Transaction {
   files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
   payment_id              Int?
   payment                 Payment?
+  earnings                Earnings?
 }
 
 model Payment {
