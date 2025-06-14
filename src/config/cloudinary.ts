@@ -39,7 +39,7 @@ export const upload = multer({ storage });
 
 
 
-
+// Deleting files with their ids
 export async function deleteCloudinaryFiles(publicIds: string[]) {
   const deletions = publicIds.map(id => 
     cloudinary.uploader.destroy(id)
