@@ -15,7 +15,7 @@ export const createTransactionService = async (data: TransactionType) => {
     reciever_email,
   };
 
-  const frontendUrl = env.FRONTEND_URL;
+  const frontendUrl = `${env.FRONTEND_URL}/approve-transaction`;
   const parseDayToExpireToDate = convertDayToExpireDate(expiresAt);
   const expiresIn = expiresAt * 24 * 60 * 60 * 1000;
   const transactionToken = await createToken(expiresIn, LinkJwtPayload);
@@ -29,7 +29,7 @@ export const createTransactionService = async (data: TransactionType) => {
       expiresAt: new Date(parseDayToExpireToDate),
       files: files?.length ? JSON.stringify(files) : undefined,
       transactionToken: "",
-      txn_link: ``,
+      txn_link: frontendUrl,
     },
   });
 };

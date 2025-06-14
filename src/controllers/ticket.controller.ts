@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
-import { TransactionSchema, TransactionType } from "../zod/TicketSchema";
+
+import {  Request, Response } from "express";
+import { TransactionType } from "../zod/TicketSchema";
 import { createToken } from "../utils/createToken";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
 import { JwtPayload } from "jsonwebtoken";
-import VerifyToken from "../utils/verifyToken";
-import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
 import prisma from "../utils/prisma";
 import { uploadToCloudinary } from "../config/cloudinary";
 import {
@@ -93,6 +91,8 @@ export const createTransactionController = async (
       },
     });
 
+    console.log("FRONTEND", env.FRONTEND_URL)
+    console.log("LINK", transaction.txn_link)
     res.status(201).json({
       message: "Transaction created successfully",
       data: transaction,
@@ -121,6 +121,7 @@ export const createTransactionController = async (
       },
       7
     );
+    
     return;
   } catch (error) {
     console.error("Transaction creation error:", error);
