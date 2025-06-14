@@ -1,150 +1,124 @@
-import { Request, Response } from "express";
-import { createDisputeService, getAllUserDisputes, getDisputeById } from "../services/dispute.service";
+import { NextFunction, Request, Response } from "express";
 
-import { validationResult } from "express-validator";
 import { uploadToCloudinary } from "../config/cloudinary";
+import { DisputeSchema } from "../zod/Dispute.zod";
+import disputeService from "../services/dispute.service";
 
-export const createDisputeController = async (req: any, res: any) => {
-    const {id } = req.user;
-    const {transactionId, reason, description, resolutionOption} = req.body;
-    
-const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-     res.status(400).json({
-      status: 400,
-      message: "Validation errors",
-      data: errors.array(),
-      success: false
+const CreateDisputeController = async (
+  req: Request,
+  res: Response
+) => {
+  const user = req.user;
+  try {
+    const files = (req.files as Express.Multer.File[]) || [];
+
+    let evidenceUrl: string[] = [];
+    let evidenceId: string[] = [];
+
+    if (files.length) {
+      const uploads = await Promise.all(
+        files.map((file) => uploadToCloudinary(file))
+      );
+      evidenceUrl = uploads.map((u) => (u as any).url);
+      evidenceId = uploads.map((u) => (u as any).public_id);
+    }
+
+    const parsed = DisputeSchema.parse({
+      transactionId: parseInt(req.body.transactionId),
+      reason: req.body.reason,
+      description: req.body.description,
+      resolutionOption: req.body.resolutionOption,
+      evidenceUrl,
+      evidenceId,
     });
-    return;
+
+    console.log("Parsed dispute data:", parsed);
+
+    const dispute = await disputeService.createDispute(parsed, (user as any)?.id);
+    res.status(201).json({
+      message: "Dispute created successfully",
+      status: "success",
+      payload: req.body,
+      dispute,
+    });
+  } catch (error) {
+    console.error("Error in DisputeController:", error);
+    res
+      .status(500)
+      .json({
+        error: "Error creating dispute",
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
   }
-
-    if(!id){
-         res.status(400).json({ message: "User ID is required", success: false });
-         return;
-    }
-
-    const file = req.file;
-    let evidenceUrl = "";
-    let evidenceId = "";
-
-    if (file) {
-        try {
-            const result: any = await uploadToCloudinary(file);
-            if (result) {
-                evidenceUrl = result.secure_url;
-                evidenceId = result.public_id;
-            }
-            const disputeData = {
-                userId: id,
-                orderId: transactionId,
-                reason,
-                resolutionOption,
-                description,
-                evidenceUrl,
-                evidenceId
-            }
-            const disputeResult = await createDisputeService(disputeData);
-            if (disputeResult.status !== 201) {
-                res.status(disputeResult.status).json({ message: disputeResult.message, success: false });
-                return;
-            }
-            res.status(201).json({
-                message: "Dispute created successfully",
-                data: disputeResult,
-                success: true
-            });
-        } catch (error) {
-            console.error("Error uploading file to Cloudinary:", error);
-            res.status(500).json({ message: "Error uploading file", success: false });
-            return;
-        }
-    } else {
-        const disputeData = {
-            userId: id,
-            orderId: transactionId,
-            reason,
-            resolutionOption,
-            description,
-            evidenceUrl,
-            evidenceId
-        }
-        const disputeResult = await createDisputeService(disputeData);
-        if (disputeResult.status !== 201) {
-             res.status(disputeResult.status).json({ message: disputeResult.message, success: false });
-                return;
-        }
-        res.status(201).json({
-            message: "Dispute created successfully",
-            data: disputeResult,
-            success: true
-        });
-    
-    }
-}
+};
 
 
-export const getDisputeController = async (req: any, res: any) => {
-    try{
-        const {userId } = req.user;
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is required" });
-        }
-
-        const result = await getAllUserDisputes(userId);
-        res.status(201).json({
-            message: "Dispute created successfully",
-            data: result,
-            sucess: true
-        })
-
-    } catch (error) {
-        console.error("Error creating dispute:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-export const getSingleDisputeController = async (req: Request, res: Response) => {
-    const { disputeId } = req.params;
-    if (!disputeId) {
-        return res.status(400).json({ message: "Dispute ID is required" });
-    }
-    try{
-        const result = await getDisputeById(Number(disputeId));
-        res.status(201).json({
-            message: "Dispute fetched successfully",
-            data: result,
-            sucess: true
-        })
-
-    } catch (error) {
-        console.error("Error creating dispute:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-}
+const DeleteDisputeController  = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.params;
+  try {
+    const deletedDispute = await disputeService.deleteDispute(parseInt(id));
+    res.status(200).json({
+      message: "Dispute deleted successfully",
+      status: "success",
+      payload: deletedDispute,
+    });
+  } catch (error) {
+    console.error("Error in DeleteDisputeController:", error);
+    res.status(500).json({
+      error: "Error deleting dispute",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
 
 
-export const getUserDisputeController = async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    if (!userId) {
-        return res.status(400).json({ message: "User ID is required" });
-    }
-    try{
-        const result = await getAllUserDisputes(Number(userId));
-        res.status(201).json({
-            message: "Dispute fetched successfully",
-            data: result,
-            sucess: true
-        })
+const GetUserDisputesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+  try {
+    const disputes = await disputeService.getUserDisputes((user as any).id);
+    res.status(200).json({
+      message: "User disputes retrieved successfully",
+      status: "success",
+      data: disputes,
+    });
+  } catch (error) {
+    console.error("Error in GetUserDisputesController:", error);
+    res.status(500).json({
+      error: "Error retrieving user disputes",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
 
-    } catch (error) {
-        console.error("Error creating dispute:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-}
+const GetDisputeByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const dispute = await disputeService.getDisputeById(parseInt(id));
+    res.status(200).json({
+      message: "Dispute retrieved successfully",
+      status: "success",
+      payload: dispute,
+    });
+  } catch (error) {
+    console.error("Error in GetDisputeById:", error);   
+    res.status(500).json({
+      error: "Error retrieving dispute",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
 
 
 
-
-
-
+export { CreateDisputeController, DeleteDisputeController, GetUserDisputesController, GetDisputeByIdController };

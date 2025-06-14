@@ -1,12 +1,12 @@
-model Transactionstatus {
-  id      Int      @unique
-  label   Label
-  dispute Dispute?
-}
+// model Transactionstatus {
+//   id      Int      @unique
+//   label   Label
+//   dispute Dispute?
+// }
 
-enum Label {
-  ongoing
-  dispute
-  cancel
-  completed
-}
+// enum Label {
+//   ongoing
+//   dispute
+//   cancel
+//   completed
+// }

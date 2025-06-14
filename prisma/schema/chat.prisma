@@ -2,9 +2,42 @@ model Chat {
   id               Int      @id @default(autoincrement())
   content          String
   timestamp        DateTime @default(now())
-  sender_user_id   Int
-  receiver_user_id Int
-  receiver         User     @relation("receiver", fields: [receiver_user_id], references: [id])
-  sender           User     @relation("Sender", fields: [sender_user_id], references: [id])
   dispute          Dispute?
+  participants     ChatrParticipants[]
+  messages        Message[]
+}
+
+
+model ChatrParticipants {
+  id Int @id @default(autoincrement())
+  userId Int
+  chatId Int
+  role ChatRole @default(USER)
+  user User @relation(fields: [userId], references: [id])
+  chat Chat @relation(fields: [chatId], references: [id])
+
+  @@unique([userId, chatId]) 
+  @@index([chatId]) 
+}
+
+
+model Message {
+  id Int @id @default(autoincrement())
+  chatId Int
+  senderId Int
+  content String?
+  fileUrl String?
+  fileType String?
+  createdAt DateTime @default(now())
+  chat Chat @relation(fields: [chatId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@index([chatId]) 
+}
+
+
+
+enum ChatRole {
+  USER
+  ADMIN
 }

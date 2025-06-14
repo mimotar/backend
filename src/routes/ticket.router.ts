@@ -37,6 +37,7 @@ ticketRouter.get(
   getAUserTransactionsController as RequestHandler
 );
 
+
 ticketRouter.delete("/:id", deleteTransactionController as RequestHandler);
 ticketRouter.delete("/", deleteAllTransactionController as RequestHandler);
 

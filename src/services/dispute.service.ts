@@ -1,170 +1,159 @@
-import { UpdateDisputeInput } from "../types/dispute";
+import { deleteCloudinaryFiles } from "../config/cloudinary";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { getTransactionParticipants } from "../utils/payment/getTransactionParticipants";
 import prisma from "../utils/prisma";
+import { DisputeType } from "../zod/Dispute.zod";
 
-export async function createDisputeService(data: any) {
-  try {
-    const {
-      userId,
-      orderId,
-      evidenceUrl,
-      evidenceId,
-      description,
-      reason,
-      resolutionOption,
-    } = data;
+class DisputeService {
+  async createDispute(data: DisputeType, userId: number) {
+    const { transactionId, reason, description, resolutionOption } = data;
 
-    if (!userId || !orderId || !reason) {
-      return { status: 400, message: "All fields are required" };
-    }
-
-    const order = await prisma.transaction.findUnique({
-      where: {
-        id: orderId,
-      },
-      include: {
-        user: true,
-      },
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: Number(transactionId) },
     });
 
-    if (!order) {
-      return { status: 404, message: "Order not found" };
+    const fourDaysLater = new Date();
+    fourDaysLater.setDate(fourDaysLater.getDate() + 4);
+
+    if (!transaction) {
+      throw new Error("Transaction not found");
     }
 
-    const isCreator =
-      order.creator_email === userId || order.user?.id === userId;
-    const isReceiver = order.reciever_email === userId;
 
-    if (!isCreator && !isReceiver) {
-      return {
-        status: 403,
-        message:
-          "Unauthorized: You must be either the sender or receiver of this transaction to create a dispute",
-      };
+    if(transaction.status === "DISPUTE") {
+
+      // throw new Error("Dispute already exists for this transaction");
+      throw new GlobalError(
+        "Dispute already exists for this transaction",
+        "DISPUTE_ALREADY_EXISTS FOR THIS TRANSACTION",
+        400,
+        false
+      );
     }
 
-    const disputeData = {
-      reason,
-      resolutionOption,
-      description,
-      evidenceUrl,
-      evidenceId,
-      orderId,
-      userId,
-    };
+    if (
+      transaction.status !== "ONGOING" &&
+      transaction.status !== "COMPLETED"
+    ) {
+      throw new Error(
+        "Dispute can only be created for ongoing or completed transactions"
+      );
+    }
 
-    const dispute = await prisma.dispute.create({
-      data: disputeData,
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
     });
-    return {
-      status: 201,
-      data: dispute,
-      message: "Dispute created successfully",
-    };
-  } catch (error) {
-    console.error("Error creating dispute:", error);
-    return { status: 500, message: "Internal server error" };
-  }
+    const participants = await getTransactionParticipants(transactionId);
+
+    if (
+      !participants.buyer.userId ||
+      !participants.seller.userId ||
+      !participants.creatorId
+    ) {
+      throw new Error(
+        "One or more users involved in the transaction have not signed up yet."
+      );
+    }
+
+    if (
+      participants.buyer.email !== user?.email &&
+      participants.seller.email !== user?.email
+    ) {
+      throw new Error("User is not a participant in this transaction");
+    }
+
+try {
+
+  const payload = {
+            transactionId,
+            reason,
+            description,
+            resolutionOption,
+            evidenceUrl: data.evidenceUrl ?? undefined,
+            evidenceId: data.evidenceId ?? undefined,
+            status: data.status ?? "ongoing",
+            elapsesAt: fourDaysLater,
+            creatorId: userId,
+            buyerId: participants?.buyer.userId,
+            sellerId: participants?.seller.userId,
+          }
+  
+   
+    const dispute = await prisma.$transaction(
+      [
+        prisma.dispute.create({
+          data: payload
+        }),
+        prisma.transaction.update({
+          where: { id: transactionId },
+          data: { status: "DISPUTE" },
+        }),
+      ]
+    )
+    return dispute;
+} catch (error) {
+  console.log(error)
+  throw new Error(`Error creating dispute ${error}`)
 }
+  }
 
-export async function getDisputeById(disputeId: number) {
-  try {
+  async deleteDispute(disputeId: number) {
     const dispute = await prisma.dispute.findUnique({
-      where: {
-        id: disputeId,
-      },
-      include: {
-        user: true,
-        transaction: true,
-      },
+      where: { id: disputeId },
     });
 
     if (!dispute) {
-      return { status: 404, message: "Dispute not found" };
+      throw new Error("Dispute not found");
     }
 
-    return { status: 200, data: dispute };
-  } catch (error) {
-    console.error("Error fetching dispute:", error);
-    return { status: 500, message: "Internal server error" };
+    if (dispute.evidenceId && dispute.evidenceId.length > 0) {
+      try {
+        await deleteCloudinaryFiles(dispute.evidenceId);
+      } catch (error) {
+        console.error("Error deleting evidence files:", error);
+      }
+    }
+    await prisma.$transaction([
+      prisma.transaction.update({
+        where: { id: dispute.transactionId },
+        data: { status: "ONGOING" },
+      }),
+      prisma.dispute.delete({
+        where: { id: disputeId },
+      }),
+      
+    ])
   }
-}
 
-export async function getAllUserDisputes(userId: number) {
-  try {
+  async getDisputeById(disputeId: number) {
+    const dispute = await prisma.dispute.findUnique({
+      where: { id: disputeId },
+    });
+
+    if (!dispute) {
+      throw new Error("Dispute not found");
+    }
+
+    return dispute;
+  }
+
+  async getUserDisputes(userId: number) {
     const disputes = await prisma.dispute.findMany({
       where: {
         OR: [
-          {
-            sender_userId: userId,
-          },
-          {
-            receiver_userId: userId,
-          },
+          { buyerId: userId },
+          { sellerId: userId },
+          { creatorId: userId },
         ],
       },
       include: {
-        user: true,
         transaction: true,
       },
     });
 
-    return {
-      status: 200,
-      data: disputes,
-      message: "Disputes fetched successfully",
-    };
-  } catch (error) {
-    console.error("Error fetching disputes:", error);
-    return { status: 500, message: "Internal server error" };
+
+    return disputes;
   }
 }
 
-// export async function updateDisputeStatus(input: UpdateDisputeInput, status: string, reason: string) {
-//     try {
-//         const { disputeId, userId, data } = input;
-
-//         if (!disputeId || !userId || !status) {
-//             return { status: 400, message: "All fields are required" };
-//         }
-
-//         const existingDispute = await prisma.dispute.findUnique({
-//             where: { id: disputeId },
-//             include: {
-//               transaction: true
-//             }
-//           });
-
-//           if (!existingDispute) {
-//             throw new Error(`Dispute with ID ${disputeId} not found`);
-//           }
-
-//           if (existingDispute.sender_userId !== userId && existingDispute.receiver_userId !== userId) {
-//             throw new Error('You are not authorized to update this dispute');
-//           }
-
-//           const updatedDispute = await prisma.dispute.update({
-//             where: { id: disputeId },
-//             data: {
-//               description: data.description,
-//               reason: data.reason,
-//               resolutionOption: data.resolutionOption,
-//               evidence: data.evidence,
-//               statusId: data.statusId,
-//               elapsed: new Date()
-//             },
-//             include: {
-//               transaction: true,
-//               status: true,
-//               user: true,
-//               receiver: true,
-//               chat: true
-//             }
-//           });
-
-//         return { status: 200, data: updatedDispute, message: "Dispute status updated successfully" };
-//     } catch (error) {
-//         console.error("Error updating dispute status:", error);
-//         return { status: 500, message: "Internal server error" };
-
-//     }
-// }
+export default new DisputeService();

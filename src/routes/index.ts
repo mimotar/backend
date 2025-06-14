@@ -10,6 +10,7 @@ import { settingRouter } from "./setting.route";
 import { validateSchema } from "../middlewares/validations/allroute.validation";
 import { TransactionSchema } from "../zod/TicketSchema";
 import paymentRouter from "./payment.route";
+import authRouter from "./auth/index"
 
 
 const router = Router();
@@ -19,6 +20,7 @@ router.get("/", (req, res) => {
 
 router.use("/auth", signupRouter);
 router.use("/user", userRouter);
+router.use("/users", authRouter);
 
 router.post("/middleware", (req, res) => {
   res.send("middleware");
