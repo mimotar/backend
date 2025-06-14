@@ -10,10 +10,6 @@ model User {
   lastName           String
   provider           String?
   subject            String?
-  Receiver           Chat[]         @relation("receiver")
-  Sender             Chat[]         @relation("Sender")
-  disputeReceiver_id Dispute?       @relation("receiver_userId")
-  disputeSender_id   Dispute?       @relation("sender_userId")
   notification       Notification[]
   profile            Profile?
   transaction        Transaction[]
@@ -24,6 +20,13 @@ model User {
   totalEarnings     Float          @default(0)
   walletTransactions WalletTransaction[]
   walletBalance     Float          @default(0)
+  chats             ChatrParticipants[]
+  messages          Message[]
+
+  disputesCreated    Dispute[]           @relation("DisputeCreator")
+  disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
+  disputesAsSeller   Dispute[]           @relation("DisputeSeller")
+  
 }
 
 

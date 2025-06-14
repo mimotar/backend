@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 import { env } from "../config/env";
+import multer from "multer";
 
 
 cloudinary.config({
@@ -32,8 +33,16 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
 
 
 
-import multer from "multer";
-
 const storage = multer.memoryStorage();
 
 export const upload = multer({ storage });
+
+
+
+// Deleting files with their ids
+export async function deleteCloudinaryFiles(publicIds: string[]) {
+  const deletions = publicIds.map(id => 
+    cloudinary.uploader.destroy(id)
+  );
+  await Promise.all(deletions);
+}

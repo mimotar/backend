@@ -5,19 +5,18 @@ interface ParticipantDetails {
   email: string;
   phonenumber: string;
   address: string | null;
+  userId: number | null; // 👈 Added
 }
 
 interface TransactionParticipants {
   buyer: ParticipantDetails;
   seller: ParticipantDetails;
+  creatorId: number | null; // 👈 Added for dispute creator
 }
 
 export async function getTransactionParticipants(transactionId: number): Promise<TransactionParticipants> {
-  // Fetch transaction from database
   const transaction = await prisma.transaction.findFirst({
-    where: {
-      id: transactionId
-    },
+    where: { id: transactionId },
     select: {
       creator_fullname: true,
       creator_email: true,
@@ -35,33 +34,41 @@ export async function getTransactionParticipants(transactionId: number): Promise
     throw new Error(`Transaction with ID ${transactionId} not found`);
   }
 
-  console.log("Transaction ID", transactionId);
+  // Try to find users by their email (they may or may not exist)
+  const [creatorUser, receiverUser] = await Promise.all([
+    prisma.user.findUnique({ where: { email: transaction.creator_email } }),
+    prisma.user.findUnique({ where: { email: transaction.reciever_email } }),
+  ]);
 
   const creatorDetails: ParticipantDetails = {
     fullname: transaction.creator_fullname,
     email: transaction.creator_email,
     phonenumber: transaction.creator_no,
-    address: transaction.creator_address
+    address: transaction.creator_address,
+    userId: creatorUser?.id ?? null,
   };
 
   const receiverDetails: ParticipantDetails = {
     fullname: transaction.receiver_fullname,
     email: transaction.reciever_email,
     phonenumber: transaction.receiver_no,
-    address: transaction.receiver_address
+    address: transaction.receiver_address,
+    userId: receiverUser?.id ?? null,
   };
 
-  if (transaction.creator_role === 'BUYER') {
-    return {
-      buyer: creatorDetails,
-      seller: receiverDetails
-    };
-  } else {
-    // creator_role is 'SELLER'
-    return {
-      buyer: receiverDetails,
-      seller: creatorDetails
-    };
-  }
-}
+  const participants =
+    transaction.creator_role === 'BUYER'
+      ? {
+          buyer: creatorDetails,
+          seller: receiverDetails,
+        }
+      : {
+          buyer: receiverDetails,
+          seller: creatorDetails,
+        };
 
+  return {
+    ...participants,
+    creatorId: creatorUser?.id ?? null,
+  };
+}
