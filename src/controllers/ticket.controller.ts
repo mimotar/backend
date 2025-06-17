@@ -103,7 +103,7 @@ export const createTransactionController = async (
         transaction_description,
         receiver_fullname,
         amount,
-        link: transaction.txn_link,
+        link: `${transaction.txn_link}/${token}`,
         creator_fullname,
         inspection_duration,
         expiresAt,
