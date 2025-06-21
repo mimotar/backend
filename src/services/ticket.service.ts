@@ -35,22 +35,24 @@ export const createTransactionService = async (data: TransactionType) => {
 };
 
 export const getTransactionByIdService = async (id: number) => {
-  const transaction = await prisma.transaction.findUnique({
+  try {
+    const transaction = await prisma.transaction.findUnique({
     where: {
       id,
-    },
-    select: {
-      id: true,
-      receiver_fullname: true,
-      reciever_email: true,
-      status: true,
     },
   });
 
   if (!transaction) {
     throw new Error("Transaction not found");
   }
-  return transaction;
+  const {otp,otp_created_at, ...rest} = transaction;
+
+  return rest;
+  } catch (error) {
+    console.error("Error fetching transaction by ID:", error);
+    throw new GlobalError("Error fetching transaction", "Error", 404, true);
+    
+  }
 };
 
 export const checkAndExpireAllTransactionService = async (id: number) => {

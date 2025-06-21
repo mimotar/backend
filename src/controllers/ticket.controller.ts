@@ -11,6 +11,7 @@ import {
   checkAndExpireAllTransactionService,
   createTransactionService,
   getAUserTransactionService,
+  getTransactionByIdService,
   requestTokenToValidateTransactionService,
   validateTransactionOtpService,
 } from "../services/ticket.service";
@@ -168,6 +169,19 @@ export const approveTransactionController = async (
     });
   }
 };
+
+
+export const getTransactionByIdCotroller = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  const { id } = req.params;
+  const transaction = await getTransactionByIdService(Number(id))
+  res.status(200).json({
+    message: "Transaction retrieved successfully",
+    data: transaction,
+  });
+}
 
 
 
