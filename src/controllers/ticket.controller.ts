@@ -182,11 +182,10 @@ export const rejectTransactionController = async (
     // Validate OTP (throws if invalid or expired)
     await validateTransactionOtpService(Number(id), otp);
 
-    // Approve the transaction (throws if already approved or expired)
     const approved = await rejectTransactionService(Number(id));
 
     return res.status(200).json({
-      message: "Transaction has been rejected",
+      message: "Transaction has been rejected successfully",
       data: approved,
     });
 
