@@ -3,7 +3,7 @@ import { RequestHandler, Router } from "express";
 import createRateLimiterMiddleware from "../utils/loginLimiter";
 import { validateSchema } from "../middlewares/validations/allroute.validation";
 import { TransactionSchema } from "../zod/TicketSchema";
-import { approveTransactionController, createTransactionController, getAUserTransactionsController, getTransactionByIdCotroller, requestTokenToValidateTransactionController } from "../controllers/ticket.controller";
+import { approveTransactionController, createTransactionController, getAUserTransactionsController, getTransactionByIdCotroller, rejectTransactionController, requestTokenToValidateTransactionController } from "../controllers/ticket.controller";
 
 import { upload } from "../config/cloudinary";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware";
@@ -20,6 +20,13 @@ ticketRouter.put(
   authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   approveTransactionController as RequestHandler
+);
+
+ticketRouter.put(
+  "/reject/:id",
+  authenticateTokenMiddleware,
+  createRateLimiterMiddleware(10 * 60 * 1000, 10),
+  rejectTransactionController as RequestHandler
 );
 
 // Request Token to Validate Transaction
