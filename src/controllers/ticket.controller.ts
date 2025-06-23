@@ -12,6 +12,7 @@ import {
   createTransactionService,
   getAUserTransactionService,
   getTransactionByIdService,
+  rejectTransactionService,
   requestTokenToValidateTransactionService,
   validateTransactionOtpService,
 } from "../services/ticket.service";
@@ -149,6 +150,43 @@ export const approveTransactionController = async (
 
     return res.status(200).json({
       message: "Transaction approved successfully",
+      data: approved,
+    });
+
+  } catch (error: any) {
+    console.error("Transaction approval error:", error);
+
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        name: error.name,
+        operational: error.operational,
+      });
+    }
+
+    return res.status(500).json({
+      message: error.message || "Internal server error",
+      success: false,
+    });
+  }
+};
+export const rejectTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  const { id } = req.params;
+  const { otp } = req.body;
+
+  try {
+    
+    // Validate OTP (throws if invalid or expired)
+    await validateTransactionOtpService(Number(id), otp);
+
+    // Approve the transaction (throws if already approved or expired)
+    const approved = await rejectTransactionService(Number(id));
+
+    return res.status(200).json({
+      message: "Transaction has been rejected",
       data: approved,
     });
 

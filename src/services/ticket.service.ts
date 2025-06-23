@@ -96,6 +96,29 @@ export const approveTransactionService = async (id: number) => {
   return updatedTransaction;
 };
 
+export const rejectTransactionService = async (id: number) => {
+  await checkAndExpireAllTransactionService(id);
+
+  const transaction = await getTransactionByIdService(id);
+  if (!transaction) {
+    throw new Error("Transaction not found");
+  }
+  if (transaction.status === "APPROVED") {
+    throw new Error("Transaction already approved");
+  }
+  if (transaction.status === "EXPIRED") {
+    throw new Error("Transaction expired");
+  }
+  const updatedTransaction = await prisma.transaction.update({
+    where: {
+      id,
+    },
+    data: {
+      status: "REJECTED",
+    },
+  });
+  return updatedTransaction;
+}
 
 
 export const requestTokenToValidateTransactionService = async (id: number) => {
