@@ -247,7 +247,6 @@ export const requestTokenToValidateTransactionController = async (req: Request, 
         operational: error.operational,
       });
     }
-    return res.status(500).json({ message: "Internal server error" });
   }
 }
 

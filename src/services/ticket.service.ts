@@ -126,7 +126,8 @@ export const requestTokenToValidateTransactionService = async (id: number) => {
     where: { id },
   })
   if (!transaction) {
-    throw new Error("Transaction not found");
+    throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
+
   }
   if (transaction.status === "EXPIRED") {
     throw new Error("Transaction expired");
