@@ -1,14 +1,15 @@
-import { prisma } from "../../config/db";
-import { initializeFlutterwavePaymentService } from "../../services/payment/initializePayment";
+import { prisma } from "../../config/db.js";
+import { initializeFlutterwavePaymentService } from "../../services/payment/initializePayment.js";
 import { Request, Response } from "express";
-import { env } from "../../config/env";
-import { GlobalError } from "../../middlewares/error/GlobalErrorHandler";
+import { env } from "../../config/env.js";
+import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
 import axios from "axios";
-import { sendEmailWithTemplate } from "../../services/emailService";
-import { getTransactionParticipants } from "../../utils/payment/getTransactionParticipants";
-import { deleteAllTransactionService, deleteTransactionService } from "../../services/ticket.service";
-import { mapFlutterwavePaymentTypeToEnum } from "./normalizepaymentType";
-import { PaymentStatus } from "@prisma/client";
+import { sendEmailWithTemplate } from "../../services/emailService.js";
+import { getTransactionParticipants } from "../../utils/payment/getTransactionParticipants.js";
+import { deleteAllTransactionService, deleteTransactionService } from "../../services/ticket.service.js";
+import { mapFlutterwavePaymentTypeToEnum } from "./normalizepaymentType.js";
+import { PaymentStatus, Prisma } from "../../generated/prisma/client.js";
+// import PaymentStatus from "@prisma/client";
 
 export const initiatePaymentController = async (
   req: Request,

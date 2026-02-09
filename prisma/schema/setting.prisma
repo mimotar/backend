@@ -1,28 +1,28 @@
-model Setting {
-  user_id                Int                    @unique
-  id                     Int                    @id @default(autoincrement())
-  defaultCurrency        DefaultCurrency        @default(NGN)
-  notificationPreference NotificationPreference @default(EMAIL)
-  securityQuestions      Json                   
-  twoFactorAuth          Boolean                @default(false)
-  accountStatus          AccountStatus?         @default(ACTIVE)
-  user                   User                   @relation(fields: [user_id], references: [id])
-}
+// model Setting {
+//   user_id                Int                    @unique
+//   id                     Int                    @id @default(autoincrement())
+//   defaultCurrency        DefaultCurrency        @default(NGN)
+//   notificationPreference NotificationPreference @default(EMAIL)
+//   securityQuestions      Json                   
+//   twoFactorAuth          Boolean                @default(false)
+//   accountStatus          AccountStatus?         @default(ACTIVE)
+//   user                   User                   @relation(fields: [user_id], references: [id])
+// }
 
-enum DefaultCurrency {
-  GBP
-  USD
-  NGN
-}
+// enum DefaultCurrency {
+//   GBP
+//   USD
+//   NGN
+// }
 
-enum NotificationPreference {
-  SMS
-  EMAIL
-  BOTH
-}
+// enum NotificationPreference {
+//   SMS
+//   EMAIL
+//   BOTH
+// }
 
-enum AccountStatus {
-  ACTIVE
-  DISABLED
-  DELETED
-}
+// enum AccountStatus {
+//   ACTIVE
+//   DISABLED
+//   DELETED
+// }

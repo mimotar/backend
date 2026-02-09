@@ -1,11 +1,11 @@
 
 import {  Request, Response } from "express";
-import { TransactionType } from "../zod/TicketSchema";
-import { createToken } from "../utils/createToken";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { TransactionType } from "../zod/TicketSchema.js";
+import { createToken } from "../utils/createToken.js";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import { JwtPayload } from "jsonwebtoken";
-import prisma from "../utils/prisma";
-import { uploadToCloudinary } from "../config/cloudinary";
+import prisma from "../utils/prisma.js";
+import { uploadToCloudinary } from "../config/cloudinary.js";
 import {
   approveTransactionService,
   checkAndExpireAllTransactionService,
@@ -15,9 +15,9 @@ import {
   rejectTransactionService,
   requestTokenToValidateTransactionService,
   validateTransactionOtpService,
-} from "../services/ticket.service";
-import { env } from "../config/env";
-import { sendEmailWithTemplate } from "../services/emailService";
+} from "../services/ticket.service.js";
+import { env } from "../config/env.js";
+import { sendEmailWithTemplate } from "../services/emailService.js";
 
 export const createTransactionController = async (
   req: Request,

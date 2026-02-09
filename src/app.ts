@@ -3,16 +3,16 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import routes from "./routes";
-import { GlobalErrorMiddleware } from "./middlewares/error/GlobalErrorMiddleware";
+import routes from "./routes/index.js";
+import { GlobalErrorMiddleware } from "./middlewares/error/GlobalErrorMiddleware.js";
 import passport from "passport";
 import session from "express-session";
 import dotenv from "dotenv";
-import { PassportConfig } from "./config/Passport";
-import { sessionConfig } from "./config/session";
+import { PassportConfig } from "./config/Passport.js";
+// import { sessionConfig } from "./config/session";
 dotenv.config();
 
-import { connectDB } from "./config/db";
+import { connectDB } from "./config/db.js";
 
 const app = express();
 

@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import prisma from "../utils/prisma";
+import { PrismaClient } from "../generated/prisma/client.js";
 import { NextFunction, Request, Response } from "express";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 // import { ISetting } from "../types/settingType";
-import { ISetting, SettingSchema } from "../zod/SettingSchema";
+import { ISetting, SettingSchema } from "../zod/SettingSchema.js";
 import { z } from "zod";
 
 export class SettingController {
@@ -83,7 +82,7 @@ export class SettingController {
     }
 
     try {
-      const updatedSetting = await prisma.setting.updateManyAndReturn({
+      const updatedSetting = await this.prismaClient.setting.updateManyAndReturn({
         where: { user_id: user_id },
         data: updateValue,
       });

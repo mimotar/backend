@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 // import prisma from "../utils/prisma";
 // import { prisma } from "../config/db";
-import { PrismaClient } from "@prisma/client";
-import { createToken } from "../utils/createToken";
-import { sendEmailWithTemplate } from "../services/emailService";
-import VerifyToken from "../utils/verifyToken";
-import { hashPassword } from "../utils/HashPassword";
-import { comparePassword } from "../utils/comparePassword";
-import { env } from "../config/env";
+// import { PrismaClient } from "@prisma/client";
+import { createToken } from "../utils/createToken.js";
+import { sendEmailWithTemplate } from "../services/emailService.js";
+import VerifyToken from "../utils/verifyToken.js";
+import { hashPassword } from "../utils/HashPassword.js";
+import { comparePassword } from "../utils/comparePassword.js";
+import { env } from "../config/env.js";
 import { JwtPayload } from "jsonwebtoken";
-import prisma from "../utils/prisma";
+import prisma from "../utils/prisma.js";
+import { PrismaClient } from "../generated/prisma/client.js";
 
 //interface for the verify token payload object
 interface EmailPayload extends JwtPayload {

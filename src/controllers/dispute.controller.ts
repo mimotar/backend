@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
-import { uploadToCloudinary } from "../config/cloudinary";
-import { DisputeSchema } from "../zod/Dispute.zod";
-import disputeService from "../services/dispute.service";
+import { uploadToCloudinary } from "../config/cloudinary.js";
+import { DisputeSchema } from "../zod/Dispute.zod.js";
+import disputeService from "../services/dispute.service.js";
 
 const CreateDisputeController = async (
   req: Request,
@@ -58,8 +58,9 @@ const DeleteDisputeController  = async (
   res: Response
 ) => {
   const { id } = req.params;
+  const disputeId = Array.isArray(id) ? id[0] : id;
   try {
-    const deletedDispute = await disputeService.deleteDispute(parseInt(id));
+    const deletedDispute = await disputeService.deleteDispute(parseInt(disputeId));
     res.status(200).json({
       message: "Dispute deleted successfully",
       status: "success",
@@ -103,8 +104,9 @@ const GetDisputeByIdController = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
+  const idStr = Array.isArray(id) ? id[0] : id;
   try {
-    const dispute = await disputeService.getDisputeById(parseInt(id));
+    const dispute = await disputeService.getDisputeById(parseInt(idStr));
     res.status(200).json({
       message: "Dispute retrieved successfully",
       status: "success",

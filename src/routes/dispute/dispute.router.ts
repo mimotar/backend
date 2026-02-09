@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { authenticateTokenMiddleware } from "../../middlewares/authenticateTokenMiddleware";
-import { DeleteDisputeController, CreateDisputeController, GetDisputeByIdController, GetUserDisputesController } from "../../controllers/dispute.controller";
-import { validateSchema } from "../../middlewares/validations/allroute.validation";
-import { DisputeSchema } from "../../zod/Dispute.zod";
-import { upload } from "../../config/cloudinary";
-import createRateLimiterMiddleware from "../../utils/loginLimiter";
+import { authenticateTokenMiddleware } from "../../middlewares/authenticateTokenMiddleware.js";
+import { DeleteDisputeController, CreateDisputeController, GetDisputeByIdController, GetUserDisputesController } from "../../controllers/dispute.controller.js";
+import { validateSchema } from "../../middlewares/validations/allroute.validation.js";
+import { DisputeSchema } from "../../zod/Dispute.zod.js";
+import { upload } from "../../config/cloudinary.js";
+import createRateLimiterMiddleware from "../../utils/loginLimiter.js";
 
 const disputeRouter = Router();
 

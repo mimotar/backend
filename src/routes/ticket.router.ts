@@ -1,13 +1,13 @@
 import { RequestHandler, Router } from "express";
 
-import createRateLimiterMiddleware from "../utils/loginLimiter";
-import { validateSchema } from "../middlewares/validations/allroute.validation";
-import { TransactionSchema } from "../zod/TicketSchema";
-import { approveTransactionController, createTransactionController, getAUserTransactionsController, getTransactionByIdCotroller, rejectTransactionController, requestTokenToValidateTransactionController } from "../controllers/ticket.controller";
+import createRateLimiterMiddleware from "../utils/loginLimiter.js";
+import { validateSchema } from "../middlewares/validations/allroute.validation.js";
+import { TransactionSchema } from "../zod/TicketSchema.js";
+import { approveTransactionController, createTransactionController, getAUserTransactionsController, getTransactionByIdCotroller, rejectTransactionController, requestTokenToValidateTransactionController } from "../controllers/ticket.controller.js";
 
-import { upload } from "../config/cloudinary";
-import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware";
-import { deleteAllTransactionController, deleteTransactionController } from "../controllers/payment/initiatePaymentController";
+import { upload } from "../config/cloudinary.js";
+import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware.js";
+import { deleteAllTransactionController, deleteTransactionController } from "../controllers/payment/initiatePaymentController.js";
 
 const ticketRouter = Router();
 

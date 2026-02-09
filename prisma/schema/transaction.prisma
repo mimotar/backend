@@ -1,106 +1,106 @@
-model Transaction {
-  id                      Int             @id @default(autoincrement())
-  amount                  Int
-  user_id                 Int?
-  additional_agreement    String          @db.VarChar(200)
-  creator_fullname        String
-  creator_email           String
-  creator_no              String
-  creator_address         String?
-  receiver_fullname       String
-  receiver_no             String
-  receiver_address        String?
-  link_expires            Boolean         @default(false)
-  txn_link                String
-  created_at              DateTime        @default(now())
-  inspection_duration     Int
-  reciever_role           Role
-  terms                   String?
-  transactionType         TransactionType
-  transaction_description String          @db.VarChar(200)
-  pay_escrow_fee          EscrowFeePayer
-  pay_shipping_cost       EscrowFeePayer
-  creator_role            Role
-  status                  StatusEnum      @default(CREATED)
-  currency                CurrencyEnum    @default(NGN)
-  expiresAt               DateTime
-  transactionToken        String          @unique
-  reciever_email          String
-  dispute                 Dispute? 
-  user                    User?           @relation(fields: [user_id], references: [id])
-  approveStatus           Boolean         @default(false)
-  otp                     String?
-  otp_created_at          DateTime?
-  files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
-  payment_id              Int?
-  payment                 Payment?
-  earnings                Earnings?
-}
+// model Transaction {
+//   id                      Int             @id @default(autoincrement())
+//   amount                  Int
+//   user_id                 Int?
+//   additional_agreement    String          @db.VarChar(200)
+//   creator_fullname        String
+//   creator_email           String
+//   creator_no              String
+//   creator_address         String?
+//   receiver_fullname       String
+//   receiver_no             String
+//   receiver_address        String?
+//   link_expires            Boolean         @default(false)
+//   txn_link                String
+//   created_at              DateTime        @default(now())
+//   inspection_duration     Int
+//   reciever_role           Role
+//   terms                   String?
+//   transactionType         TransactionType
+//   transaction_description String          @db.VarChar(200)
+//   pay_escrow_fee          EscrowFeePayer
+//   pay_shipping_cost       EscrowFeePayer
+//   creator_role            Role
+//   status                  StatusEnum      @default(CREATED)
+//   currency                CurrencyEnum    @default(NGN)
+//   expiresAt               DateTime
+//   transactionToken        String          @unique
+//   reciever_email          String
+//   dispute                 Dispute? 
+//   user                    User?           @relation(fields: [user_id], references: [id])
+//   approveStatus           Boolean         @default(false)
+//   otp                     String?
+//   otp_created_at          DateTime?
+//   files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
+//   payment_id              Int?
+//   payment                 Payment?
+//   earnings                Earnings?
+// }
 
-model Payment {
-  id                    Int           @id @default(autoincrement())
-  transaction_id        Int           @unique
-  transaction_reference String        @unique
-  amount                Int
-  payment_method        PaymentMethod @default(ATM_CARD)
-  status                PaymentStatus @default(PENDING)
-  created_at            DateTime      @default(now())
-  updated_at            DateTime      @updatedAt
-  transaction           Transaction   @relation(fields: [transaction_id], references: [id])
-  title                 String        @db.VarChar(200)
-}
+// model Payment {
+//   id                    Int           @id @default(autoincrement())
+//   transaction_id        Int           @unique
+//   transaction_reference String        @unique
+//   amount                Int
+//   payment_method        PaymentMethod @default(ATM_CARD)
+//   status                PaymentStatus @default(PENDING)
+//   created_at            DateTime      @default(now())
+//   updated_at            DateTime      @updatedAt
+//   transaction           Transaction   @relation(fields: [transaction_id], references: [id])
+//   title                 String        @db.VarChar(200)
+// }
 
-enum EscrowFeePayer {
-  BUYER
-  SELLER
-  BOTH
-}
+// enum EscrowFeePayer {
+//   BUYER
+//   SELLER
+//   BOTH
+// }
 
-enum Role {
-  BUYER
-  SELLER
-}
+// enum Role {
+//   BUYER
+//   SELLER
+// }
 
-enum TransactionType {
-  PHYSICAL_PRODUCT
-  ONLINE_PRODUCT
-  SERVICE
-  RENTAL
-  MILESTONE_BASED_PROJECT
-}
+// enum TransactionType {
+//   PHYSICAL_PRODUCT
+//   ONLINE_PRODUCT
+//   SERVICE
+//   RENTAL
+//   MILESTONE_BASED_PROJECT
+// }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
+// enum PaymentStatus {
+//   PENDING
+//   COMPLETED
+//   FAILED
+//   REFUNDED
+// }
 
-enum StatusEnum {
-  CREATED
-  APPROVED
-  ONGOING
-  COMPLETED
-  DISPUTE
-  REJECTED
-  CANCELED
-  EXPIRED
-}
+// enum StatusEnum {
+//   CREATED
+//   APPROVED
+//   ONGOING
+//   COMPLETED
+//   DISPUTE
+//   REJECTED
+//   CANCELED
+//   EXPIRED
+// }
 
-enum PaymentMethod {
-  BANK_TRANSFER
-  ATM_CARD
-  INTERNET_BANKING
-  APPLE_PAY
-  GOOGLE_PAY
-  USSD
-}
+// enum PaymentMethod {
+//   BANK_TRANSFER
+//   ATM_CARD
+//   INTERNET_BANKING
+//   APPLE_PAY
+//   GOOGLE_PAY
+//   USSD
+// }
 
-enum CurrencyEnum {
-  USD
-  GBP
-  NGN
-  GHS
-  KES
-  RWF
-}
+// enum CurrencyEnum {
+//   USD
+//   GBP
+//   NGN
+//   GHS
+//   KES
+//   RWF
+// }

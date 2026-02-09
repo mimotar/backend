@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-import { hashPassword } from "../utils/HashPassword";
-import { generateSixDigitString } from "../utils/OTPGenerator";
-import { sendEmailWithTemplate } from "./emailService";
+import { PrismaClient } from "../generated/prisma/client.js";
+import { hashPassword } from "../utils/HashPassword.js";
+import { generateSixDigitString } from "../utils/OTPGenerator.js";
+import { sendEmailWithTemplate } from "./emailService.js";
+import prisma from "../utils/prisma.js";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export const registerUserWithEmail = async (data: any) => {
   const {email, password, firstName, lastName} = data;

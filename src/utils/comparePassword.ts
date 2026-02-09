@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 
 export function comparePassword(
   plainPassword: string,

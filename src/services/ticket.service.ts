@@ -1,12 +1,12 @@
-import { TransactionType } from "./../zod/TicketSchema";
-import { prisma } from "../config/db";
+import { TransactionType } from "./../zod/TicketSchema.js";
+import { prisma } from "../config/db.js";
 import { JwtPayload } from "jsonwebtoken";
-import { convertDayToExpireDate } from "../utils/convertDayToExpireDate";
-import { createToken } from "../utils/createToken";
-import { env } from "../config/env";
-import { sendEmailWithTemplate } from "./emailService";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
-import { generateSixDigitString } from "../utils/OTPGenerator";
+import { convertDayToExpireDate } from "../utils/convertDayToExpireDate.js";
+import { createToken } from "../utils/createToken.js";
+import { env } from "../config/env.js";
+import { sendEmailWithTemplate } from "./emailService.js";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+import { generateSixDigitString } from "../utils/OTPGenerator.js";
 
 export const createTransactionService = async (data: TransactionType) => {
   const { files, expiresAt, creator_email, reciever_email, ...rest } = data;

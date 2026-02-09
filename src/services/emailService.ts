@@ -1,7 +1,7 @@
-import apiInstance from "../config/brevo";
-import { env } from "../config/env";
-import { getEmailTemplate } from "../emails/templates";
-import { EmailType } from "../emails/templates/emailTypes";
+import apiInstance from "../config/brevo.js";
+import { env } from "../config/env.js";
+import { getEmailTemplate } from "../emails/templates/index.js";
+import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import axios from "axios";
 
 export async function sendEmail(

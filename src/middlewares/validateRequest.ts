@@ -1,7 +1,7 @@
-import { Transaction } from './../types/user';
+import { Transaction } from './../types/user.js';
 import { NextFunction, Request, Response } from 'express';
 import { body, ValidationChain, validationResult } from 'express-validator';
-import { prisma } from '../config/db';
+import { prisma } from '../config/db.js';
 
 export const registerValidation: ValidationChain[] = [
   body('email').isEmail().withMessage('Invalid email format'),

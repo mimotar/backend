@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { sendEmailWithTemplate } from "../../services/emailService";
+import { sendEmailWithTemplate } from "../../services/emailService.js";
 
 class emailControllers {
   async welcome(req: Request, res: Response) {

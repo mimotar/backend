@@ -1,43 +1,43 @@
-model Dispute{
-    id Int @id @default(autoincrement())
-    transactionId Int @unique
-    transaction Transaction @relation(fields: [transactionId], references: [id])
-    status disputeStatus @default(ongoing)
-    createdAt DateTime? @default(now())
-    elapsesAt DateTime? 
-    chat Chat? @relation(fields: [chatId], references: [id])
-    chatId Int? @unique
-    description     String
-    reason          String
-    resolutionOption ResolutionOption
-    evidenceUrl String[]
-    evidenceId String[]
-    buyerId Int
-    buyer User @relation("DisputeBuyer", fields: [buyerId], references: [id])
-    sellerId Int
-    seller User @relation("DisputeSeller", fields: [sellerId], references: [id])
-    creator         User      @relation("DisputeCreator", fields: [creatorId], references: [id])
-    creatorId       Int
+// model Dispute{
+//     id Int @id @default(autoincrement())
+//     transactionId Int @unique
+//     transaction Transaction @relation(fields: [transactionId], references: [id])
+//     status disputeStatus @default(ongoing)
+//     createdAt DateTime? @default(now())
+//     elapsesAt DateTime? 
+//     chat Chat? @relation(fields: [chatId], references: [id])
+//     chatId Int? @unique
+//     description     String
+//     reason          String
+//     resolutionOption ResolutionOption
+//     evidenceUrl String[]
+//     evidenceId String[]
+//     buyerId Int
+//     buyer User @relation("DisputeBuyer", fields: [buyerId], references: [id])
+//     sellerId Int
+//     seller User @relation("DisputeSeller", fields: [sellerId], references: [id])
+//     creator         User      @relation("DisputeCreator", fields: [creatorId], references: [id])
+//     creatorId       Int
   
   
-    @@unique([transactionId, chatId])
-}
+//     @@unique([transactionId, chatId])
+// }
 
 
 
-enum ResolutionOption {
-REFUND_ONLY
-REPLACEMENT_ONLY
-REFUND_OR_REPLACEMENT
-PARTIAL_REPAYMENT
-RESEND_PRODUCT
-REPEAT_SERVICE
-CANCEL_TRANSACTION
-OTHERS
-}
+// enum ResolutionOption {
+// REFUND_ONLY
+// REPLACEMENT_ONLY
+// REFUND_OR_REPLACEMENT
+// PARTIAL_REPAYMENT
+// RESEND_PRODUCT
+// REPEAT_SERVICE
+// CANCEL_TRANSACTION
+// OTHERS
+// }
 
-enum disputeStatus {
-  ongoing
-  cancel
-  closed
-}
+// enum disputeStatus {
+//   ongoing
+//   cancel
+//   closed
+// }

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { env } from "../config/env";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
+import { env } from "../config/env.js";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 
 export function createToken(
   expires: SignOptions["expiresIn"],

@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
-import { env } from "../config/env";
+import { env } from "../config/env.js";
 import multer from "multer";
 
 

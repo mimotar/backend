@@ -1,8 +1,9 @@
-import { deleteCloudinaryFiles } from "../config/cloudinary";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
-import { getTransactionParticipants } from "../utils/payment/getTransactionParticipants";
-import prisma from "../utils/prisma";
-import { DisputeType } from "../zod/Dispute.zod";
+import { deleteCloudinaryFiles } from "../config/cloudinary.js";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+import { getTransactionParticipants } from "../utils/payment/getTransactionParticipants.js";
+import prisma from "../utils/prisma.js";
+// import { prisma } from "../config/db.js";
+import { DisputeType } from "../zod/Dispute.zod.js";
 
 class DisputeService {
   async createDispute(data: DisputeType, userId: number) {

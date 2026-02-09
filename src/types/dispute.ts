@@ -1,4 +1,4 @@
-import { ResolutionOption } from "@prisma/client";
+import { ResolutionOption } from "../generated/prisma/client.js";
 
 export interface UpdateDisputeInput {
   disputeId: number;

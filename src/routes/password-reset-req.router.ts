@@ -1,7 +1,7 @@
 import { Router } from "express";
-import createRateLimiterMiddleware from "../utils/loginLimiter";
-import { PasswordResetController } from "../controllers/emailResetController";
-import prisma from "../utils/prisma";
+import createRateLimiterMiddleware from "../utils/loginLimiter.js";
+import { PasswordResetController } from "../controllers/emailResetController.js";
+import prisma from "../utils/prisma.js";
 
 export const passwordResetReqRouter = Router();
 const PasswordResetControllerImpl = new PasswordResetController(prisma);

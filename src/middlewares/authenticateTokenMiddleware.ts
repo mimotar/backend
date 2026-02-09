@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import VerifyToken from "../utils/verifyToken";
-import { GlobalError } from "./error/GlobalErrorHandler";
+import VerifyToken from "../utils/verifyToken.js";
+import { GlobalError } from "./error/GlobalErrorHandler.js";
 
 export async function authenticateTokenMiddleware(
   req: Request,

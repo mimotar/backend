@@ -1,8 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { env } from "../../config/env";
+import { env } from "../../config/env.js";
 // import { socialAuthCallback } from "../../config/Passport";
-import socialAuth from "../../controllers/test/socialAuth";
+import socialAuth from "../../controllers/test/socialAuth.js";
 
 const signupRouter = Router();
 

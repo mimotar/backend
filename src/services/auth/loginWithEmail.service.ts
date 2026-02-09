@@ -1,6 +1,6 @@
-import prisma from "../../utils/prisma";
-import { comparePassword } from "../../utils/comparePassword";
-import { createToken } from "../../utils/createToken";
+import prisma from "../../utils/prisma.js";
+import { comparePassword } from "../../utils/comparePassword.js";
+import { createToken } from "../../utils/createToken.js";
 
 export const loginWithEmailService = async (email: string, password: string) => {
   try {

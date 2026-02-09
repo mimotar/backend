@@ -1,9 +1,9 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as FacebookStrategy } from "passport-facebook";
-import prisma from "../utils/prisma";
-import JWTService from "../utils/JWTService";
-import { env } from "../config/env";
+import prisma from "../utils/prisma.js";
+import JWTService from "../utils/JWTService.js";
+import { env } from "../config/env.js";
 import { Request, Response } from "express";
 
 declare module "express-session" {
@@ -11,7 +11,7 @@ declare module "express-session" {
     authMode?: string;
   }
 }
-import { User } from "../types/user";
+import { User } from "../types/user.js";
 
 export const HandleSocialAuth = async (
   profile: any,

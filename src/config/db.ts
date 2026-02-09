@@ -1,13 +1,14 @@
-import { PrismaClient } from "@prisma/client";
-import { env } from "./env";
+import 'dotenv/config';
+// import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '../../prisma/schema/generated/prisma/client';
+import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: env.DATABASE_URL,
-    },
-  },
-});
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+})
+
+export const prisma = new PrismaClient({ adapter });
 
 async function connectDB() {
   try {
@@ -19,4 +20,4 @@ async function connectDB() {
   }
 }
 
-export { prisma, connectDB };
+export { connectDB };

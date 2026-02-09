@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { hashPassword } from "../../utils/HashPassword";
-import { generateSixDigitString } from "../../utils/OTPGenerator";
-import prisma from "../../utils/prisma";
-import { sendEmailWithTemplate } from "../emailService";
+import { Prisma } from "../../generated/prisma/client.js";
+import { hashPassword } from "../../utils/HashPassword.js";
+import { generateSixDigitString } from "../../utils/OTPGenerator.js";
+import prisma from "../../utils/prisma.js";
+import { sendEmailWithTemplate } from "../emailService.js";
 
 
 

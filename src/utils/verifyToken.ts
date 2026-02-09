@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
-import { env } from "../config/env";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+import { env } from "../config/env.js";
 
 export default async function VerifyToken<T extends JwtPayload = JwtPayload>(
   token: string

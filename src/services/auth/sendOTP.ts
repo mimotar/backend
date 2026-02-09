@@ -1,7 +1,7 @@
 
-import { generateSixDigitString } from "../../utils/OTPGenerator";
-import prisma from "../../utils/prisma";
-import { sendEmailWithTemplate } from "../emailService";
+import { generateSixDigitString } from "../../utils/OTPGenerator.js";
+import prisma from "../../utils/prisma.js";
+import { sendEmailWithTemplate } from "../emailService.js";
 
 
 export const resendOTPToEmail = async (email: string): Promise<{

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
-import { env } from "../config/env";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+import { env } from "../config/env.js";
 
 export function hashPassword(plainPassword: string): Promise<string> {
   const saltRounds = env.saltRounds;

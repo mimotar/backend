@@ -17,10 +17,10 @@
 // }
 
 
-import { EmailType } from "./emailTypes";
-import getPasswordResetEmail from "./resetPassword";
-import getWelcomeEmail from "./welcomeEmail";
-import getVerifyEmailTemplate from "./verifyEmail";
+import { EmailType } from "./emailTypes.brevo.js";
+import getPasswordResetEmail from "./resetPassword.js";
+import getWelcomeEmail from "./welcomeEmail.js";
+import getVerifyEmailTemplate from "./verifyEmail.js";
 
 export function getEmailTemplate(type: EmailType, params: Record<string, any>) {
     switch (type) {

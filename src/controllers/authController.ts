@@ -1,18 +1,18 @@
 import { Request, Response , NextFunction, RequestHandler} from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { prisma } from "../config/db";
+import { prisma } from "../config/db.js";
 import { validationResult } from "express-validator";
-import { sendEmail } from "../services/emailService";
-import { EmailType } from "../emails/templates/emailTypes";
+import { sendEmail } from "../services/emailService.js";
+import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import crypto from "crypto";
 import axios from "axios";
-import { env } from "../config/env";
-import { hashPassword } from "../utils/HashPassword";
-import { getALlUsersService, registerUserWithEmailService } from "../services/auth/users.service";
-import { verifyOTPService } from "../services/auth/verifyOTP.service";
-import { resendOTPToEmail } from "../services/auth/sendOTP";
-import { loginWithEmailService } from "../services/auth/loginWithEmail.service";
+import { env } from "../config/env.js";
+// import { hashPassword } from "../utils/HashPassword.js";
+import { getALlUsersService, registerUserWithEmailService } from "../services/auth/users.service.js";
+import { verifyOTPService } from "../services/auth/verifyOTP.service.js";
+import { resendOTPToEmail } from "../services/auth/sendOTP.js";
+import { loginWithEmailService } from "../services/auth/loginWithEmail.service.js";
 
 // export const register = async (req: Request, res: Response): Promise<void> => {
 //   const errors = validationResult(req);

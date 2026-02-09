@@ -1,60 +1,60 @@
 
-model User {
-  id                 Int            @id @default(autoincrement())
-  email              String         @unique
-  password           String
-  createdAt          DateTime       @default(now())
-  verified           Boolean        @default(false)
-  verificationToken  String?
-  firstName          String
-  lastName           String
-  provider           String?
-  subject            String?
-  notification       Notification[]
-  profile            Profile?
-  transaction        Transaction[]
-  setting            Setting?
-  otp String?
-  otpCreatedAt DateTime?
-  earnings          Earnings[]
-  totalEarnings     Float          @default(0)
-  walletTransactions WalletTransaction[]
-  walletBalance     Float          @default(0)
-  chats             ChatrParticipants[]
-  messages          Message[]
+// model User {
+//   id                 Int            @id @default(autoincrement())
+//   email              String         @unique
+//   password           String
+//   createdAt          DateTime       @default(now())
+//   verified           Boolean        @default(false)
+//   verificationToken  String?
+//   firstName          String
+//   lastName           String
+//   provider           String?
+//   subject            String?
+//   notification       Notification[]
+//   profile            Profile?
+//   transaction        Transaction[]
+//   setting            Setting?
+//   otp String?
+//   otpCreatedAt DateTime?
+//   earnings          Earnings[]
+//   totalEarnings     Float          @default(0)
+//   walletTransactions WalletTransaction[]
+//   walletBalance     Float          @default(0)
+//   chats             ChatrParticipants[]
+//   messages          Message[]
 
-  disputesCreated    Dispute[]           @relation("DisputeCreator")
-  disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
-  disputesAsSeller   Dispute[]           @relation("DisputeSeller")
+//   disputesCreated    Dispute[]           @relation("DisputeCreator")
+//   disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
+//   disputesAsSeller   Dispute[]           @relation("DisputeSeller")
   
-}
+// }
 
 
 
 
-model Earnings {
-  id             Int          @id @default(autoincrement())
-  userId         Int
-  amount         Float
-  createdAt      DateTime     @default(now())
-  description    String?
-  transaction_id Int          @unique
-  user           User         @relation(fields: [userId], references: [id])
-  transaction    Transaction  @relation(fields: [transaction_id], references: [id])
-}
+// model Earnings {
+//   id             Int          @id @default(autoincrement())
+//   userId         Int
+//   amount         Float
+//   createdAt      DateTime     @default(now())
+//   description    String?
+//   transaction_id Int          @unique
+//   user           User         @relation(fields: [userId], references: [id])
+//   transaction    Transaction  @relation(fields: [transaction_id], references: [id])
+// }
 
 
-model WalletTransaction {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  type        WalletTransactionType
-  amount      Float
-  description String?
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
-}
+// model WalletTransaction {
+//   id          Int       @id @default(autoincrement())
+//   userId      Int
+//   type        WalletTransactionType
+//   amount      Float
+//   description String?
+//   createdAt   DateTime  @default(now())
+//   user        User      @relation(fields: [userId], references: [id])
+// }
 
-enum WalletTransactionType {
-  INFLOW
-  OUTFLOW
-}
+// enum WalletTransactionType {
+//   INFLOW
+//   OUTFLOW
+// }

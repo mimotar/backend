@@ -1,9 +1,341 @@
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["prismaSchemaFolder"]
+  provider = "prisma-client"
+  output   = "../../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url = env("DATABASE_URL")
 }
+
+
+model Transaction {
+  id                      Int             @id @default(autoincrement())
+  amount                  Int
+  user_id                 Int?
+  additional_agreement    String          @db.VarChar(200)
+  creator_fullname        String
+  creator_email           String
+  creator_no              String
+  creator_address         String?
+  receiver_fullname       String
+  receiver_no             String
+  receiver_address        String?
+  link_expires            Boolean         @default(false)
+  txn_link                String
+  created_at              DateTime        @default(now())
+  inspection_duration     Int
+  reciever_role           Role
+  terms                   String?
+  transactionType         TransactionType
+  transaction_description String          @db.VarChar(200)
+  pay_escrow_fee          EscrowFeePayer
+  pay_shipping_cost       EscrowFeePayer
+  creator_role            Role
+  status                  StatusEnum      @default(CREATED)
+  currency                CurrencyEnum    @default(NGN)
+  expiresAt               DateTime
+  transactionToken        String          @unique
+  reciever_email          String
+  dispute                 Dispute? 
+  user                    User?           @relation(fields: [user_id], references: [id])
+  approveStatus           Boolean         @default(false)
+  otp                     String?
+  otp_created_at          DateTime?
+  files                   Json?           @db.Json // Allows up to 2 files with details like name, type, and URL
+  payment_id              Int?
+  payment                 Payment?
+  earnings                Earnings?
+}
+
+model Payment {
+  id                    Int           @id @default(autoincrement())
+  transaction_id        Int           @unique
+  transaction_reference String        @unique
+  amount                Int
+  payment_method        PaymentMethod @default(ATM_CARD)
+  status                PaymentStatus @default(PENDING)
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  transaction           Transaction   @relation(fields: [transaction_id], references: [id])
+  title                 String        @db.VarChar(200)
+}
+
+enum EscrowFeePayer {
+  BUYER
+  SELLER
+  BOTH
+}
+
+enum Role {
+  BUYER
+  SELLER
+}
+
+enum TransactionType {
+  PHYSICAL_PRODUCT
+  ONLINE_PRODUCT
+  SERVICE
+  RENTAL
+  MILESTONE_BASED_PROJECT
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum StatusEnum {
+  CREATED
+  APPROVED
+  ONGOING
+  COMPLETED
+  DISPUTE
+  REJECTED
+  CANCELED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  ATM_CARD
+  INTERNET_BANKING
+  APPLE_PAY
+  GOOGLE_PAY
+  USSD
+}
+
+enum CurrencyEnum {
+  USD
+  GBP
+  NGN
+  GHS
+  KES
+  RWF
+}
+
+
+
+
+model User {
+  id                 Int            @id @default(autoincrement())
+  email              String         @unique
+  password           String
+  createdAt          DateTime       @default(now())
+  verified           Boolean        @default(false)
+  verificationToken  String?
+  firstName          String
+  lastName           String
+  provider           String?
+  subject            String?
+  notification       Notification[]
+  profile            Profile?
+  transaction        Transaction[]
+  setting            Setting?
+  otp String?
+  otpCreatedAt DateTime?
+  earnings          Earnings[]
+  totalEarnings     Float          @default(0)
+  walletTransactions WalletTransaction[]
+  walletBalance     Float          @default(0)
+  chats             ChatrParticipants[]
+  messages          Message[]
+
+  disputesCreated    Dispute[]           @relation("DisputeCreator")
+  disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
+  disputesAsSeller   Dispute[]           @relation("DisputeSeller")
+  
+}
+
+
+
+
+model Earnings {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  amount         Float
+  createdAt      DateTime     @default(now())
+  description    String?
+  transaction_id Int          @unique
+  user           User         @relation(fields: [userId], references: [id])
+  transaction    Transaction  @relation(fields: [transaction_id], references: [id])
+}
+
+
+model WalletTransaction {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  type        WalletTransactionType
+  amount      Float
+  description String?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+enum WalletTransactionType {
+  INFLOW
+  OUTFLOW
+}
+
+
+model Dispute{
+    id Int @id @default(autoincrement())
+    transactionId Int @unique
+    transaction Transaction @relation(fields: [transactionId], references: [id])
+    status disputeStatus @default(ongoing)
+    createdAt DateTime? @default(now())
+    elapsesAt DateTime? 
+    chat Chat? @relation(fields: [chatId], references: [id])
+    chatId Int? @unique
+    description     String
+    reason          String
+    resolutionOption ResolutionOption
+    evidenceUrl String[]
+    evidenceId String[]
+    buyerId Int
+    buyer User @relation("DisputeBuyer", fields: [buyerId], references: [id])
+    sellerId Int
+    seller User @relation("DisputeSeller", fields: [sellerId], references: [id])
+    creator         User      @relation("DisputeCreator", fields: [creatorId], references: [id])
+    creatorId       Int
+  
+  
+    @@unique([transactionId, chatId])
+}
+
+
+
+enum ResolutionOption {
+REFUND_ONLY
+REPLACEMENT_ONLY
+REFUND_OR_REPLACEMENT
+PARTIAL_REPAYMENT
+RESEND_PRODUCT
+REPEAT_SERVICE
+CANCEL_TRANSACTION
+OTHERS
+}
+
+enum disputeStatus {
+  ongoing
+  cancel
+  closed
+}
+
+
+
+model Chat {
+  id               Int      @id @default(autoincrement())
+  content          String
+  timestamp        DateTime @default(now())
+  dispute          Dispute?
+  participants     ChatrParticipants[]
+  messages        Message[]
+}
+
+
+model ChatrParticipants {
+  id Int @id @default(autoincrement())
+  userId Int
+  chatId Int
+  role ChatRole @default(USER)
+  user User @relation(fields: [userId], references: [id])
+  chat Chat @relation(fields: [chatId], references: [id])
+
+  @@unique([userId, chatId]) 
+  @@index([chatId]) 
+}
+
+
+model Message {
+  id Int @id @default(autoincrement())
+  chatId Int
+  senderId Int
+  content String?
+  fileUrl String?
+  fileType String?
+  createdAt DateTime @default(now())
+  chat Chat @relation(fields: [chatId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@index([chatId]) 
+}
+
+
+
+enum ChatRole {
+  USER
+  ADMIN
+}
+
+
+
+
+model Profile {
+  id                Int     @id @default(autoincrement())
+  address           String?
+  phone_no          String?
+  avatar            String?
+  bio               String? @db.VarChar(100)
+  verification_no   String?
+  verification_type String?
+  next_kin          String?
+  next_email        String?
+  next_no           String?
+  user_id           Int     @unique
+  user              User    @relation(fields: [user_id], references: [id])
+}
+
+
+
+model Setting {
+  user_id                Int                    @unique
+  id                     Int                    @id @default(autoincrement())
+  defaultCurrency        DefaultCurrency        @default(NGN)
+  notificationPreference NotificationPreference @default(EMAIL)
+  securityQuestions      Json                   
+  twoFactorAuth          Boolean                @default(false)
+  accountStatus          AccountStatus?         @default(ACTIVE)
+  user                   User                   @relation(fields: [user_id], references: [id])
+}
+
+enum DefaultCurrency {
+  GBP
+  USD
+  NGN
+}
+
+enum NotificationPreference {
+  SMS
+  EMAIL
+  BOTH
+}
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
+
+
+model Notification {
+  id               Int      @id @default(autoincrement())
+  sender_user_id   Int
+  receiver_user_id Int
+  timestamp        DateTime @default(now())
+  content          String?
+  link             String?
+  avatar           String
+  read             Read
+  user             User     @relation(fields: [sender_user_id], references: [id])
+}
+
+enum Read {
+  read
+  unread
+}
+

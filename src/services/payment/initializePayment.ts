@@ -1,11 +1,11 @@
 import axios from "axios";
-import { env } from "../../config/env";
-import { GlobalError } from "../../middlewares/error/GlobalErrorHandler";
-import { prisma } from "../../config/db";
-import { CurrencyEnum } from "../../types/payment";
-import { generateTransactionReference } from "../../utils/payment/generateTransactionReference";
-import { calculateEscrowPayment, EscrowFeePayer } from "../../utils/payment/calculateAmountToPay";
-import { checkAndExpireAllTransactionService } from "../ticket.service";
+import { env } from "../../config/env.js";
+import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
+import { prisma } from "../../config/db.js";
+import { CurrencyEnum } from "../../types/payment/index.js";
+import { generateTransactionReference } from "../../utils/payment/generateTransactionReference.js";
+import { calculateEscrowPayment, EscrowFeePayer } from "../../utils/payment/calculateAmountToPay.js";
+import { checkAndExpireAllTransactionService } from "../ticket.service.js";
 
 
 interface FlutterwaveCustomer {

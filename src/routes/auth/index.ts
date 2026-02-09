@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
-import socialAuth from "../../controllers/test/socialAuth";
-import { getAllUsersController, loginWithEmailController, registerUserWithEmailController, resendOTPController, verifyOTPController } from "../../controllers/authController";
+import socialAuth from "../../controllers/test/socialAuth.js";
+import { getAllUsersController, loginWithEmailController, registerUserWithEmailController, resendOTPController, verifyOTPController } from "../../controllers/authController.js";
 
 
 const userRouter = Router();

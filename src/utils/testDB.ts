@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma/client.js";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { execSync } from 'child_process';
 import dotenv from "dotenv";
 dotenv.config();
@@ -8,14 +9,10 @@ export const testDB = async () => {
     const TEST_DATABASE_URL = process.env.TEST_DATABASE_URL;
     const schemaName = `test_${TEST_DATABASE_URL?.split('/').pop()}`;
     
-    const prisma = new PrismaClient({
-        datasources: {
-            db: {
-                url: TEST_DATABASE_URL,
-                // schema: schemaName,
-            },
-        },
+    const adapter = new PrismaPg({
+        connectionString: TEST_DATABASE_URL!,
     });
+    const prisma = new PrismaClient({ adapter });
   
     try {
         await prisma.$executeRawUnsafe(`CREATE SCHEMA ${schemaName}`);

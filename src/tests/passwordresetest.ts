@@ -1,13 +1,13 @@
-import { PasswordResetController } from "../controllers/emailResetController";
-import { PrismaClient } from "@prisma/client";
+import { PasswordResetController } from "../controllers/emailResetController.js";
+import { PrismaClient } from "../generated/prisma/client.js";
 import { Request, Response, NextFunction } from "express";
-import { GlobalError } from "../middlewares/error/GlobalErrorHandler";
-import { createToken } from "../utils/createToken";
-import { sendEmailWithTemplate } from "../services/emailService";
-import VerifyToken from "../utils/verifyToken";
-import { hashPassword } from "../utils/HashPassword";
-import { comparePassword } from "../utils/comparePassword";
-import { env } from "../config/env";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+import { createToken } from "../utils/createToken.js";
+import { sendEmailWithTemplate } from "../services/emailService.js";
+import VerifyToken from "../utils/verifyToken.js";
+import { hashPassword } from "../utils/HashPassword.js";
+import { comparePassword } from "../utils/comparePassword.js";
+import { env } from "../config/env.js";
 
 jest.mock("../utils/verifyToken");
 jest.mock("../services/emailService");

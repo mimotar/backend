@@ -1,4 +1,5 @@
-import { PaymentMethod } from "@prisma/client";
+import { PaymentMethod } from "../../generated/prisma/enums.js";
+
 
 export function mapFlutterwavePaymentTypeToEnum(type: string): PaymentMethod {
   const normalized = type.toLowerCase();

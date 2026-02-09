@@ -1,16 +1,16 @@
 import { RequestHandler, Router } from "express";
 // import emailRouter from "./emailRoute";
-import signupRouter from "./auth/signup";
-import { createUser, demo } from "../controllers/test/user";
-import disputeRouter from "./dispute/dispute.router";
-import userRouter from "./userRoutes";
-import ticketRouter from "./ticket.router";
-import { passwordResetReqRouter } from "./password-reset-req.router";
-import { settingRouter } from "./setting.route";
-import { validateSchema } from "../middlewares/validations/allroute.validation";
-import { TransactionSchema } from "../zod/TicketSchema";
-import paymentRouter from "./payment.route";
-import authRouter from "./auth/index"
+import signupRouter from "./auth/signup.js";
+import { createUser, demo } from "../controllers/test/user.js";
+import disputeRouter from "./dispute/dispute.router.js";
+import userRouter from "./userRoutes.js";
+import ticketRouter from "./ticket.router.js";
+import { passwordResetReqRouter } from "./password-reset-req.router.js";
+import { settingRouter } from "./setting.route.js";
+import { validateSchema } from "../middlewares/validations/allroute.validation.js";
+import { TransactionSchema } from "../zod/TicketSchema.js";
+import paymentRouter from "./payment.route.js";
+import authRouter from "./auth/index.js"
 
 
 const router = Router();

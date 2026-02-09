@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { SettingController } from "../controllers/SettingController";
-import prisma from "../utils/prisma";
+import { SettingController } from "../controllers/SettingController.js";
+import prisma from "../utils/prisma.js";
 
 export const settingRouter = Router();
 const SettingControllerImpl = new SettingController(prisma);
