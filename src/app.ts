@@ -13,6 +13,7 @@ import { PassportConfig } from "./config/Passport.js";
 dotenv.config();
 
 import { connectDB } from "./config/db.js";
+import { setupSwagger } from "./config/swagger.js";
 
 const app = express();
 
@@ -51,5 +52,7 @@ PassportConfig();
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", routes);
 app.use(GlobalErrorMiddleware);
+
+setupSwagger(app);
 
 export default app;
