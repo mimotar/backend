@@ -176,17 +176,38 @@ Welcome to the **Mimotar API** documentation. This API supports:
       SettingFindBody: {
         type: "object",
         required: ["id"],
-        properties: { id: { type: "integer", description: "User ID" } },
+        properties: { id: { type: "integer", description: "User ID whose settings to fetch" } },
       },
       SettingUpdateBody: {
         type: "object",
         required: ["user_id", "field"],
         properties: {
-          user_id: { type: "integer" },
-          field: {
-            type: "object",
-            description: "Partial setting fields to update (e.g. defaultCurrency, notificationPreference)",
-          },
+          user_id: { type: "integer", description: "User ID whose settings to update" },
+          field: { $ref: "#/components/schemas/SettingUpdateField" },
+        },
+      },
+      SettingUpdateField: {
+        type: "object",
+        description: "Partial setting fields to update. Only include fields you want to change.",
+        properties: {
+          defaultCurrency: { type: "string", enum: ["GBP", "USD", "NGN"], description: "Preferred display currency" },
+          notificationPreference: { type: "string", enum: ["SMS", "EMAIL", "BOTH"], description: "How to receive notifications" },
+          securityQuestions: { type: "array", items: { type: "string" }, maxItems: 4, description: "Security question answers (exactly 4)" },
+          twoFactorAuth: { type: "boolean", description: "Whether 2FA is enabled" },
+          accountStatus: { type: "string", enum: ["ACTIVE", "DISABLED", "DELETED"], description: "Account status" },
+        },
+      },
+      Setting: {
+        type: "object",
+        description: "User settings record",
+        properties: {
+          id: { type: "integer", description: "Setting record ID" },
+          user_id: { type: "integer", description: "User ID" },
+          defaultCurrency: { type: "string", enum: ["GBP", "USD", "NGN"] },
+          notificationPreference: { type: "string", enum: ["SMS", "EMAIL", "BOTH"] },
+          securityQuestions: { type: "array", items: { type: "string" } },
+          twoFactorAuth: { type: "boolean" },
+          accountStatus: { type: "string", enum: ["ACTIVE", "DISABLED", "DELETED"] },
         },
       },
       // Create user (test/simple)
@@ -720,7 +741,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/setting": {
       get: {
         summary: "Get user settings",
-        description: "Returns settings for the user. Send user ID in request body: `{ \"id\": <user_id> }`.",
+        description: "Returns the settings for the given user (currency, notification preference, 2FA, account status, etc.). Send the user ID in the request body as `{ \"id\": <user_id> }`. Response shape: `{ message, data: Setting | null, success }`.",
         tags: ["Settings"],
         requestBody: {
           content: {
@@ -728,13 +749,30 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "200": { description: "User settings" },
-          "400": { description: "Bad request" },
+          "200": {
+            description: "Settings fetched successfully; `data` is the setting record or null",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "setting fetch successfully" },
+                    data: { $ref: "#/components/schemas/Setting" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Bad request (e.g. missing id)" },
+          "500": { description: "Internal server error" },
         },
       },
+    },
+    "/api/setting/update": {
       put: {
-        summary: "Update settings",
-        description: "Update user settings. Send `user_id` and `field` (object with fields to update, e.g. defaultCurrency, notificationPreference, twoFactorAuth).",
+        summary: "Update user settings",
+        description: "Updates one or more setting fields for the given user. Send `user_id` and `field` (object with only the keys you want to update: defaultCurrency, notificationPreference, securityQuestions, twoFactorAuth, accountStatus). Valid enums: defaultCurrency — GBP, USD, NGN; notificationPreference — SMS, EMAIL, BOTH; accountStatus — ACTIVE, DISABLED, DELETED. Response: `{ message, data: updatedSetting[], success }`.",
         tags: ["Settings"],
         requestBody: {
           content: {
@@ -742,8 +780,23 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "200": { description: "Settings updated" },
-          "400": { description: "Validation error" },
+          "200": {
+            description: "Settings updated successfully; `data` is the updated setting record(s)",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "setting update successfully" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Setting" } },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Validation error (e.g. invalid field values or Zod schema failure)" },
+          "500": { description: "Internal server error" },
         },
       },
     },

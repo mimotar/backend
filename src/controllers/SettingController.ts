@@ -5,9 +5,15 @@ import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import { ISetting, SettingSchema } from "../zod/SettingSchema.js";
 import { z } from "zod";
 
+/**
+ * Controller for the settings API mounted at `/api/setting`.
+ * GET /: expects body `{ id: user_id }` — returns that user's settings.
+ * PUT /update: expects body `{ user_id, field }` — updates settings (field is partial ISetting).
+ */
 export class SettingController {
   constructor(private readonly prismaClient: PrismaClient) {}
 
+  /** GET /api/setting — fetches settings by user id (body: { id }). */
   async find(req: Request, res: Response, next: NextFunction) {
     const payload = req.body;
 
@@ -48,6 +54,7 @@ export class SettingController {
     }
   }
 
+  /** PUT /api/setting/update — updates settings (body: { user_id, field }); field is partial ISetting. */
   async update(req: Request, res: Response, next: NextFunction) {
     const payload = req.body;
     let user_id: number = Number(payload.user_id);
