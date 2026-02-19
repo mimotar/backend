@@ -800,6 +800,67 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    // Consolidated settings API (authenticated; user from JWT)
+    "/api/settings": {
+      get: {
+        summary: "Get current user settings",
+        description: "Returns the settings for the authenticated user (currency, notification preference, 2FA, account status, etc.). Requires JWT. Response: `{ message, data: Setting | null, success }`.",
+        tags: ["Settings"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Settings fetched successfully; `data` is the setting record or null",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Settings fetched successfully" },
+                    data: { $ref: "#/components/schemas/Setting" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized (missing or invalid JWT)" },
+          "500": { description: "Internal server error" },
+        },
+      },
+      put: {
+        summary: "Update current user settings",
+        description: "Updates one or more setting fields for the authenticated user. Send only the fields you want to change in the body (e.g. `defaultCurrency`, `notificationPreference`, `securityQuestions`, `twoFactorAuth`, `accountStatus`). Creates a settings record if none exists. Requires JWT. Valid enums: defaultCurrency — GBP, USD, NGN; notificationPreference — SMS, EMAIL, BOTH; accountStatus — ACTIVE, DISABLED, DELETED.",
+        tags: ["Settings"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/SettingUpdateField" },
+              example: { defaultCurrency: "NGN", notificationPreference: "EMAIL" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Settings updated successfully; `data` is the updated setting record",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Settings updated successfully" },
+                    data: { $ref: "#/components/schemas/Setting" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized (missing or invalid JWT)" },
+          "500": { description: "Internal server error" },
+        },
+      },
+    },
   },
 };
 

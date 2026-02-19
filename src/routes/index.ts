@@ -11,6 +11,7 @@ import { validateSchema } from "../middlewares/validations/allroute.validation.j
 import { TransactionSchema } from "../zod/TicketSchema.js";
 import paymentRouter from "./payment.route.js";
 import authRouter from "./auth/index.js"
+import settingsRouter from "./settings/settings.route.js";
 
 
 const router = Router();
@@ -36,6 +37,8 @@ router.use("/setting", settingRouter);
 
 router.use("/dispute", disputeRouter);
 router.post("/user", createUser as RequestHandler);
+
+router.use("/settings", settingsRouter);
 
 // router.use("/payment", paymentRouter);
 router.use("/payment", paymentRouter)

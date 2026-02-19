@@ -24,34 +24,22 @@ export class SettingsService {
         }
         return user
     }
-    private async updateSettings(payload: Prisma.SettingUpdateInput) {
+    /**
+     * Updates settings for the current user. Accepts a partial payload; only supplied
+     * fields are updated. Creates a settings record if none exists (upsert).
+     */
+    async updateSettings(payload: Prisma.SettingUpdateInput) {
         const user = await this.getUser()
-        return this.prisma.setting.update({
+        return this.prisma.setting.upsert({
             where: {
                 user_id: user.id
             },
-            data: payload,
+            create: {
+                user_id: user.id,
+                securityQuestions: (payload.securityQuestions as Prisma.InputJsonValue) ?? [],
+            },
+            update: payload,
         })
-    }
-
-    /** Updates transaction-related settings (e.g. defaultCurrency). */
-    async TransactionSettings(payload: Prisma.SettingUpdateInput) {
-        return this.updateSettings(payload)
-    }
-
-    /** Updates security settings (e.g. twoFactorAuth). */
-    async SecuritySettings(payload: Prisma.SettingUpdateInput) {
-        return this.updateSettings(payload)
-    }
-
-    /** Updates notification preference (SMS, EMAIL, BOTH). */
-    async NotificationSettings(payload: Prisma.SettingUpdateInput) {
-        return this.updateSettings(payload)
-    }
-
-    /** Updates account management settings (e.g. accountStatus). */
-    async ManageAccountSettings(payload: Prisma.SettingUpdateInput) {
-        return this.updateSettings(payload)
     }
 
     /** Returns the settings record for the current user, or null if none. */
