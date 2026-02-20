@@ -13,6 +13,7 @@ import paymentRouter from "./payment.route.js";
 import authRouter from "./auth/index.js"
 import settingsRouter from "./settings/settings.route.js";
 import tokenVerifyRouter from "./helpers/tokenVerify.route.js";
+import contactRouter from "./contact/contact.route.js";
 
 
 const router = Router();
@@ -44,5 +45,7 @@ router.use("/settings", settingsRouter);
 router.use("/token", tokenVerifyRouter);
 // router.use("/payment", paymentRouter);
 router.use("/payment", paymentRouter)
+
+router.use("/contact", contactRouter);
 
 export default router;

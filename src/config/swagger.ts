@@ -23,6 +23,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 - **Payments** – Initialize payments and handle webhooks
 - **Settings** – User preferences (currency, notifications, 2FA)
 - **Password reset** – Request and confirm password reset via email
+- **Contacts** – Submit and manage contact form entries
 - **Helpers** – Token verification (validate JWT without using Authorization header)
 
 **Base path:** All endpoints are prefixed with \`/api\` (e.g. \`/api/user\`, \`/api/ticket\`).
@@ -228,6 +229,37 @@ Welcome to the **Mimotar API** documentation. This API supports:
           lastName: { type: "string" },
           email: { type: "string", format: "email" },
           password: { type: "string" },
+        },
+      },
+      // Contact (contact form)
+      ContactCreateBody: {
+        type: "object",
+        required: ["email", "name", "message"],
+        properties: {
+          email: { type: "string", format: "email" },
+          name: { type: "string" },
+          message: { type: "string", maxLength: 300, description: "Contact message" },
+        },
+      },
+      ContactUpdateBody: {
+        type: "object",
+        description: "Partial contact fields to update. Only include fields you want to change.",
+        properties: {
+          email: { type: "string", format: "email" },
+          name: { type: "string" },
+          message: { type: "string", maxLength: 300 },
+        },
+      },
+      Contact: {
+        type: "object",
+        description: "Contact form entry",
+        properties: {
+          id: { type: "integer", description: "Contact ID" },
+          email: { type: "string", format: "email" },
+          name: { type: "string" },
+          message: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
         },
       },
     },
@@ -920,6 +952,174 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
           "401": { description: "Unauthorized (missing or invalid JWT)" },
           "500": { description: "Internal server error" },
+        },
+      },
+    },
+
+    // ----- Contact (contact form) -----
+    "/api/contact": {
+      post: {
+        summary: "Create contact",
+        description: "Submit a new contact form entry (email, name, message).",
+        tags: ["Contacts"],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/ContactCreateBody" } },
+          },
+        },
+        responses: {
+          "201": {
+            description: "Contact created",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Contact created" },
+                    data: { $ref: "#/components/schemas/Contact" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "500": { description: "Failed to create contact" },
+        },
+      },
+      get: {
+        summary: "Get all contacts",
+        description: "Returns all contact form entries.",
+        tags: ["Contacts"],
+        responses: {
+          "200": {
+            description: "List of contacts",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Contacts fetched" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Contact" } },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "500": { description: "Failed to fetch contacts" },
+        },
+      },
+      delete: {
+        summary: "Delete all contacts",
+        description: "Deletes all contact form entries. Returns count of deleted records.",
+        tags: ["Contacts"],
+        responses: {
+          "200": {
+            description: "All contacts deleted",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "All contacts deleted" },
+                    data: { type: "object", description: "Delete result (e.g. count)" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "500": { description: "Failed to delete contacts" },
+        },
+      },
+    },
+    "/api/contact/{id}": {
+      get: {
+        summary: "Get contact by ID",
+        description: "Returns a single contact form entry by ID.",
+        tags: ["Contacts"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Contact ID" },
+        ],
+        responses: {
+          "200": {
+            description: "Contact found",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Contact fetched" },
+                    data: { $ref: "#/components/schemas/Contact" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid contact id" },
+          "404": { description: "Contact not found" },
+          "500": { description: "Failed to fetch contact" },
+        },
+      },
+      put: {
+        summary: "Update contact",
+        description: "Update an existing contact form entry by ID.",
+        tags: ["Contacts"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Contact ID" },
+        ],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/ContactUpdateBody" } },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Contact updated",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Contact updated" },
+                    data: { $ref: "#/components/schemas/Contact" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid contact id" },
+          "404": { description: "Contact not found" },
+          "500": { description: "Failed to update contact" },
+        },
+      },
+      delete: {
+        summary: "Delete contact",
+        description: "Delete a single contact form entry by ID.",
+        tags: ["Contacts"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Contact ID" },
+        ],
+        responses: {
+          "200": {
+            description: "Contact deleted",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Contact deleted" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid contact id" },
+          "404": { description: "Contact not found" },
+          "500": { description: "Failed to delete contact" },
         },
       },
     },

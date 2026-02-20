@@ -77,3 +77,8 @@ export type Setting = Prisma.SettingModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model Contact
+ * 
+ */
+export type Contact = Prisma.ContactModel

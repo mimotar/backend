@@ -11,7 +11,7 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const prisma =
+const prisma: PrismaClient =
   global.prisma ??
   new PrismaClient({
     adapter
