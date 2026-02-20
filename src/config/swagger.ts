@@ -23,6 +23,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 - **Payments** – Initialize payments and handle webhooks
 - **Settings** – User preferences (currency, notifications, 2FA)
 - **Password reset** – Request and confirm password reset via email
+- **Helpers** – Token verification (validate JWT without using Authorization header)
 
 **Base path:** All endpoints are prefixed with \`/api\` (e.g. \`/api/user\`, \`/api/ticket\`).
 
@@ -208,6 +209,14 @@ Welcome to the **Mimotar API** documentation. This API supports:
           securityQuestions: { type: "array", items: { type: "string" } },
           twoFactorAuth: { type: "boolean" },
           accountStatus: { type: "string", enum: ["ACTIVE", "DISABLED", "DELETED"] },
+        },
+      },
+      // Token verification (helpers)
+      VerifyTokenBody: {
+        type: "object",
+        required: ["token"],
+        properties: {
+          token: { type: "string", description: "JWT to verify (e.g. from login or stored client-side)" },
         },
       },
       // Create user (test/simple)
@@ -800,6 +809,59 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    // ----- Helpers (token verification) -----
+    "/api/token/verify-token": {
+      post: {
+        summary: "Verify token",
+        description: "Validates a JWT and returns the decoded payload (e.g. user id, email, exp). Use this to check if a stored token is still valid before calling protected routes. Does not require the Authorization header — send the token in the request body.",
+        tags: ["Helpers"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/VerifyTokenBody" } },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Token verified; decoded payload returned in data",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "number", example: 200 },
+                    message: { type: "string", example: "Token verified" },
+                    data: {
+                      type: "object",
+                      description: "Decoded JWT payload (e.g. id, email, iat, exp)",
+                      additionalProperties: true,
+                    },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "401": {
+            description: "Missing token or invalid/expired token",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "number", example: 401 },
+                    message: { type: "string", example: "Authorization token required" },
+                    data: { type: "object", nullable: true },
+                    success: { type: "boolean", example: false },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
     // Consolidated settings API (authenticated; user from JWT)
     "/api/settings": {
       get: {
