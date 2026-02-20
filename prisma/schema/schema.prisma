@@ -339,3 +339,18 @@ enum Read {
   unread
 }
 
+
+model Contact {
+  id Int @id @default(autoincrement())
+  email String
+  name String
+  message String @db.VarChar(300)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email]) 
+  @@index([name]) 
+  @@index([message]) 
+  @@index([createdAt]) 
+  @@index([updatedAt]) 
+}
