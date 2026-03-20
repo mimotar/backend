@@ -102,7 +102,7 @@ export const PaymentWebhookController = async (
   }
 
   const payload = req.body;
-  const baseUrl = env.FLW_BASE_URL;
+  const baseUrl = "https://api.flutterwave.com/v3/";
 
   const user = await getTransactionParticipants(payload.meta?.transaction_id);
 

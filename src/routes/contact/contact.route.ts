@@ -10,4 +10,4 @@ contactRouter.put("/:id", contactController.update);
 contactRouter.delete("/:id", contactController.delete);
 contactRouter.delete("/", contactController.deleteAll);
 
-export default contactRouter;
+export default contactRouter; 
