@@ -134,7 +134,7 @@ export const initializeFlutterwavePaymentService = async (
       amount: buyerTotalPayment,
       currency: currency as any,
       tx_ref: transaction_reference,
-      redirect_url: `https://4808-102-89-42-219.ngrok-free.app/payment/success`,
+      redirect_url: `${process.env.FRONTEND_URL}/payment/success`,
       customer: {
         email: user.email,
         name: user.name,
