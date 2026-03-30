@@ -221,7 +221,12 @@ export const getAUserTransactionService = async (userEmail: string) => {
       amount: true,
       transaction_description: true,
       files: true,
-      status: true
+      status: true,
+      creator_address: true,
+      creator_fullname: true,
+      currency: true,
+      dispute: true
+
     },
     orderBy: {
       created_at: 'desc'

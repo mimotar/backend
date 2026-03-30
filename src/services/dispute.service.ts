@@ -129,6 +129,9 @@ try {
   async getDisputeById(disputeId: number) {
     const dispute = await prisma.dispute.findUnique({
       where: { id: disputeId },
+      include: {
+        transaction: true
+      }
     });
 
     if (!dispute) {
