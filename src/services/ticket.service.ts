@@ -225,8 +225,20 @@ export const getAUserTransactionService = async (userEmail: string) => {
       creator_address: true,
       creator_fullname: true,
       currency: true,
-      dispute: true
-
+      dispute: true,
+      payment: true,
+      earnings: true,
+      inspection_duration: true,
+      reciever_role: true,
+      terms: true,
+      transactionType: true,
+      pay_escrow_fee: true,
+      pay_shipping_cost: true,
+      creator_role: true,
+      receiver_address: true,
+      receiver_no: true,
+      expiresAt: true,
+      link_expires: true,
     },
     orderBy: {
       created_at: 'desc'

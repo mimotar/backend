@@ -151,7 +151,16 @@ try {
         ],
       },
       include: {
-        transaction: true,
+        transaction: {
+          include: {
+            payment: true,
+            earnings: true,
+          }
+        },
+        buyer: true,
+        seller: true,
+        creator: true,
+        chat: true
       },
     });
 
