@@ -65,19 +65,20 @@ class DisputeService {
 
 try {
 
-  const payload = {
-            transactionId,
-            reason,
-            description,
-            resolutionOption,
-            evidenceUrl: data.evidenceUrl ?? undefined,
-            evidenceId: data.evidenceId ?? undefined,
-            status: data.status ?? "ongoing",
-            elapsesAt: fourDaysLater,
-            creatorId: userId,
-            buyerId: participants?.buyer.userId,
-            sellerId: participants?.seller.userId,
-          }
+    const payload = {
+      transactionId,
+      reason,
+      description,
+      resolutionOption,
+      // Prisma expects String[]; always provide arrays (possibly empty).
+      evidenceUrl: data.evidenceUrl ?? [],
+      evidenceId: data.evidenceId ?? [],
+      status: data.status ?? "ongoing",
+      elapsesAt: fourDaysLater,
+      creatorId: userId,
+      buyerId: participants?.buyer.userId,
+      sellerId: participants?.seller.userId,
+    };
   
    
     const dispute = await prisma.$transaction(

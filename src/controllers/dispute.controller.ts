@@ -12,15 +12,24 @@ const CreateDisputeController = async (
   try {
     const files = (req.files as Express.Multer.File[]) || [];
 
-    let evidenceUrl: string[] = [];
-    let evidenceId: string[] = [];
+    // Allow clients to send pre-existing evidence references in the body.
+    // If files are uploaded too, we append them below.
+    let evidenceUrl: string[] = Array.isArray(req.body.evidenceUrl)
+      ? req.body.evidenceUrl
+      : [];
+    let evidenceId: string[] = Array.isArray(req.body.evidenceId)
+      ? req.body.evidenceId
+      : [];
 
     if (files.length) {
       const uploads = await Promise.all(
         files.map((file) => uploadToCloudinary(file))
       );
-      evidenceUrl = uploads.map((u) => (u as any).url);
-      evidenceId = uploads.map((u) => (u as any).public_id);
+      const uploadedEvidenceUrls = uploads.map((u) => (u as any).url);
+      const uploadedEvidenceIds = uploads.map((u) => (u as any).public_id);
+
+      evidenceUrl = [...evidenceUrl, ...uploadedEvidenceUrls];
+      evidenceId = [...evidenceId, ...uploadedEvidenceIds];
     }
 
     const parsed = DisputeSchema.parse({
