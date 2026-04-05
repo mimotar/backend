@@ -272,3 +272,72 @@ export const getAUserTransactionsController = async (req: Request, res: Response
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+import {
+  resolveTransactionService,
+  acceptResolutionService,
+  rejectResolutionService
+} from "../services/ticket.service.js";
+
+export const resolveTransactionController = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const id = Number(req.params.id);
+    const userId = (req.user as { id: number })?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const updatedTransaction = await resolveTransactionService(id, user.email);
+
+    res.status(200).json({
+      message: "Transaction resolution requested successfully",
+      data: updatedTransaction,
+    });
+  } catch (error: any) {
+    console.error("resolveTransactionController error:", error);
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const acceptResolutionController = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const id = Number(req.params.id);
+    const updatedTransaction = await acceptResolutionService(id);
+
+    res.status(200).json({
+      message: "Transaction closure accepted successfully",
+      data: updatedTransaction,
+    });
+  } catch (error: any) {
+    console.error("acceptResolutionController error:", error);
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const rejectResolutionController = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const id = Number(req.params.id);
+    const updatedTransaction = await rejectResolutionService(id);
+
+    res.status(200).json({
+      message: "Transaction closure rejected successfully (Moved to DISPUTE)",
+      data: updatedTransaction,
+    });
+  } catch (error: any) {
+    console.error("rejectResolutionController error:", error);
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

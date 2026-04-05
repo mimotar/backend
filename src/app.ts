@@ -13,6 +13,7 @@ dotenv.config();
 
 import { connectDB } from "./config/db.js";
 import { setupSwagger } from "./config/swagger.js";
+import "./config/bullmq.js";
 
 const app = express();
 

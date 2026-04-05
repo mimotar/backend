@@ -3,7 +3,17 @@ import { RequestHandler, Router } from "express";
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
 import { TransactionSchema } from "../zod/TicketSchema.js";
-import { approveTransactionController, createTransactionController, getAUserTransactionsController, getTransactionByIdCotroller, rejectTransactionController, requestTokenToValidateTransactionController } from "../controllers/ticket.controller.js";
+import {
+  approveTransactionController,
+  createTransactionController,
+  getAUserTransactionsController,
+  getTransactionByIdCotroller,
+  rejectTransactionController,
+  requestTokenToValidateTransactionController,
+  resolveTransactionController,
+  acceptResolutionController,
+  rejectResolutionController
+} from "../controllers/ticket.controller.js";
 
 import { upload } from "../config/cloudinary.js";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware.js";
@@ -28,6 +38,10 @@ ticketRouter.put(
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   rejectTransactionController as RequestHandler
 );
+
+ticketRouter.put("/:id/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
+ticketRouter.put("/:id/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
+ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
 
 // Request Token to Validate Transaction
 ticketRouter.post("/:id/request-token", 

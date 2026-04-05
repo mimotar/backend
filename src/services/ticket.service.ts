@@ -248,3 +248,125 @@ export const getAUserTransactionService = async (userEmail: string) => {
   return transactions;
 };
 
+export const closeATransactionService = async (userId: number, transactionId: number) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+  });
+  if (!transaction) {
+    throw new Error("Transaction not found");
+  }
+  
+  
+  const updatedTransaction = await prisma.transaction.update({
+    where: { id: transactionId },
+    data: { status: "COMPLETED" },
+  });
+  if (!updatedTransaction) {
+    throw new Error("Failed to close transaction");
+  }
+  return updatedTransaction;
+}
+
+import { transactionClosureQueue } from "../config/bullmq.js";
+import { sendEmail } from "./emailService.js";
+import { EmailType } from "../emails/templates/emailTypes.brevo.js";
+
+export const resolveTransactionService = async (transactionId: number, initiatorEmail: string) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+  });
+  
+  if (!transaction) throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
+  if (transaction.status !== "ONGOING") throw new GlobalError("Transaction is not ongoing", "InvalidStatusError", 400, true);
+
+  // Identify who is who
+  const isCreatorInitiator = transaction.creator_email === initiatorEmail;
+  const counterpartyEmail = isCreatorInitiator ? transaction.reciever_email : transaction.creator_email;
+  const initiatorName = isCreatorInitiator ? transaction.creator_fullname : transaction.receiver_fullname;
+  const counterpartyName = isCreatorInitiator ? transaction.receiver_fullname : transaction.creator_fullname;
+
+  const updatedTransaction = await prisma.transaction.update({
+    where: { id: transactionId },
+    data: { status: "PENDING_CLOSURE" },
+  });
+
+  // Delay for 24h
+  await transactionClosureQueue.add(
+    `closure-${transactionId}`,
+    { transactionId },
+    { delay: 24 * 60 * 60 * 1000, jobId: `closure-${transactionId}` }
+  );
+
+  // Send Emails
+  await sendEmail(initiatorEmail, EmailType.TRANSACTION_PENDING_CLOSURE_INITIATOR, {
+    name: initiatorName,
+    transactionId: transaction.transactionToken,
+  });
+
+  await sendEmail(counterpartyEmail, EmailType.TRANSACTION_PENDING_CLOSURE_COUNTERPARTY, {
+    name: counterpartyName,
+    transactionId: transaction.transactionToken,
+  });
+
+  return updatedTransaction;
+};
+
+export const acceptResolutionService = async (transactionId: number) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+  });
+
+  if (!transaction) throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
+  if (transaction.status !== "PENDING_CLOSURE") throw new GlobalError("Transaction is not pending closure", "InvalidStatusError", 400, true);
+
+  const updatedTransaction = await prisma.transaction.update({
+    where: { id: transactionId },
+    data: { status: "COMPLETED" },
+  });
+
+  // Remove scheduled job
+  await transactionClosureQueue.remove(`closure-${transactionId}`);
+
+  // Send emails
+  await sendEmail(transaction.creator_email, EmailType.TRANSACTION_COMPLETED, {
+    name: transaction.creator_fullname,
+    transactionId: transaction.transactionToken,
+    autoCompleted: false,
+  });
+  await sendEmail(transaction.reciever_email, EmailType.TRANSACTION_COMPLETED, {
+    name: transaction.receiver_fullname,
+    transactionId: transaction.transactionToken,
+    autoCompleted: false,
+  });
+
+  return updatedTransaction;
+};
+
+export const rejectResolutionService = async (transactionId: number) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+  });
+
+  if (!transaction) throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
+  if (transaction.status !== "PENDING_CLOSURE") throw new GlobalError("Transaction is not pending closure", "InvalidStatusError", 400, true);
+
+  const updatedTransaction = await prisma.transaction.update({
+    where: { id: transactionId },
+    data: { status: "DISPUTE" },
+  });
+
+  // Remove scheduled job
+  await transactionClosureQueue.remove(`closure-${transactionId}`);
+
+  // Send emails
+  await sendEmail(transaction.creator_email, EmailType.TRANSACTION_DISPUTED, {
+    name: transaction.creator_fullname,
+    transactionId: transaction.transactionToken,
+  });
+  await sendEmail(transaction.reciever_email, EmailType.TRANSACTION_DISPUTED, {
+    name: transaction.receiver_fullname,
+    transactionId: transaction.transactionToken,
+  });
+
+  return updatedTransaction;
+};

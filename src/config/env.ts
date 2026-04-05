@@ -36,6 +36,8 @@ export const env = {
   FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
   FLW_WEBHOOK_URL: process.env.FLW_WEBHOOK_URL,
   FLW_WEBHOOK_SECRET: process.env.FLW_WEBHOOK_SECRET,
+
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 

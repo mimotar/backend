@@ -21,6 +21,12 @@ import { EmailType } from "./emailTypes.brevo.js";
 import getPasswordResetEmail from "./resetPassword.js";
 import getWelcomeEmail from "./welcomeEmail.js";
 import getVerifyEmailTemplate from "./verifyEmail.js";
+import {
+    getTransactionCompletedEmail,
+    getTransactionDisputedEmail,
+    getTransactionPendingClosureCounterpartyEmail,
+    getTransactionPendingClosureInitiatorEmail
+} from "./transactionEmails.js";
 
 export function getEmailTemplate(type: EmailType, params: Record<string, any>) {
     switch (type) {
@@ -30,6 +36,14 @@ export function getEmailTemplate(type: EmailType, params: Record<string, any>) {
             return getPasswordResetEmail(params.resetLink);
         case EmailType.VERIFY_EMAIL:
             return getVerifyEmailTemplate(params.verificationLink);
+        case EmailType.TRANSACTION_PENDING_CLOSURE_INITIATOR:
+            return getTransactionPendingClosureInitiatorEmail(params.name, params.transactionId);
+        case EmailType.TRANSACTION_PENDING_CLOSURE_COUNTERPARTY:
+            return getTransactionPendingClosureCounterpartyEmail(params.name, params.transactionId);
+        case EmailType.TRANSACTION_COMPLETED:
+            return getTransactionCompletedEmail(params.name, params.transactionId, params.autoCompleted);
+        case EmailType.TRANSACTION_DISPUTED:
+            return getTransactionDisputedEmail(params.name, params.transactionId);
         default:
             throw new Error("Invalid email type");
     }
