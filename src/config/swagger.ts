@@ -645,6 +645,51 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/ticket/{id}/resolve": {
+      put: {
+        summary: "Resolve/End transaction",
+        description: "Initiates the closure of a transaction. Moves the status to PENDING_CLOSURE and gives the counter-party 24 hours to respond. Requires authentication.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Transaction resolution requested" },
+          "400": { description: "Transaction is not ongoing" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
+    "/api/ticket/{id}/accept-resolution": {
+      put: {
+        summary: "Accept transaction resolution",
+        description: "Accepts the closure request made by the initiator. Changes the status to COMPLETED and cancels the 24-hour auto-completion timer.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Transaction closure accepted" },
+          "400": { description: "Transaction is not pending closure" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
+    "/api/ticket/{id}/reject-resolution": {
+      put: {
+        summary: "Reject transaction resolution",
+        description: "Rejects the closure request and moves the transaction to DISPUTE status. Cancels the 24-hour auto-completion timer.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Transaction closure rejected (Moved to dispute)" },
+          "400": { description: "Transaction is not pending closure" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
     "/api/ticket/{id}/request-token": {
       post: {
         summary: "Request validation token",
