@@ -216,8 +216,8 @@ export type ChatrParticipantsWhereInput = {
   userId?: Prisma.IntFilter<"ChatrParticipants"> | number
   chatId?: Prisma.IntFilter<"ChatrParticipants"> | number
   role?: Prisma.EnumChatRoleFilter<"ChatrParticipants"> | $Enums.ChatRole
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chat?: Prisma.XOR<Prisma.ChatScalarRelationFilter, Prisma.ChatWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ChatrParticipantsOrderByWithRelationInput = {
@@ -225,8 +225,8 @@ export type ChatrParticipantsOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   chat?: Prisma.ChatOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ChatrParticipantsWhereUniqueInput = Prisma.AtLeast<{
@@ -238,8 +238,8 @@ export type ChatrParticipantsWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"ChatrParticipants"> | number
   chatId?: Prisma.IntFilter<"ChatrParticipants"> | number
   role?: Prisma.EnumChatRoleFilter<"ChatrParticipants"> | $Enums.ChatRole
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chat?: Prisma.XOR<Prisma.ChatScalarRelationFilter, Prisma.ChatWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId_chatId">
 
 export type ChatrParticipantsOrderByWithAggregationInput = {
@@ -266,8 +266,8 @@ export type ChatrParticipantsScalarWhereWithAggregatesInput = {
 
 export type ChatrParticipantsCreateInput = {
   role?: $Enums.ChatRole
-  user: Prisma.UserCreateNestedOneWithoutChatsInput
   chat: Prisma.ChatCreateNestedOneWithoutParticipantsInput
+  user: Prisma.UserCreateNestedOneWithoutChatsInput
 }
 
 export type ChatrParticipantsUncheckedCreateInput = {
@@ -279,8 +279,8 @@ export type ChatrParticipantsUncheckedCreateInput = {
 
 export type ChatrParticipantsUpdateInput = {
   role?: Prisma.EnumChatRoleFieldUpdateOperationsInput | $Enums.ChatRole
-  user?: Prisma.UserUpdateOneRequiredWithoutChatsNestedInput
   chat?: Prisma.ChatUpdateOneRequiredWithoutParticipantsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutChatsNestedInput
 }
 
 export type ChatrParticipantsUncheckedUpdateInput = {
@@ -581,8 +581,8 @@ export type ChatrParticipantsSelect<ExtArgs extends runtime.Types.Extensions.Int
   userId?: boolean
   chatId?: boolean
   role?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatrParticipants"]>
 
 export type ChatrParticipantsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -590,8 +590,8 @@ export type ChatrParticipantsSelectCreateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   chatId?: boolean
   role?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatrParticipants"]>
 
 export type ChatrParticipantsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -599,8 +599,8 @@ export type ChatrParticipantsSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   chatId?: boolean
   role?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatrParticipants"]>
 
 export type ChatrParticipantsSelectScalar = {
@@ -612,23 +612,23 @@ export type ChatrParticipantsSelectScalar = {
 
 export type ChatrParticipantsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "chatId" | "role", ExtArgs["result"]["chatrParticipants"]>
 export type ChatrParticipantsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ChatrParticipantsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ChatrParticipantsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.ChatDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $ChatrParticipantsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ChatrParticipants"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     chat: Prisma.$ChatPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1029,8 +1029,8 @@ readonly fields: ChatrParticipantsFieldRefs;
  */
 export interface Prisma__ChatrParticipantsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   chat<T extends Prisma.ChatDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatDefaultArgs<ExtArgs>>): Prisma.Prisma__ChatClient<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

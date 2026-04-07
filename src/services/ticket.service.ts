@@ -252,6 +252,44 @@ export const getAUserTransactionService = async (userEmail: string) => {
 
   return transactions;
 };
+const payoutSellerEarnings = async (transaction: any) => {
+  const sellerEmail = transaction.creator_role === "SELLER" ? transaction.creator_email : transaction.reciever_email;
+  const sellerUser = await prisma.user.findUnique({ where: { email: sellerEmail } });
+  
+  if (sellerUser) {
+    await prisma.earnings.upsert({
+      where: { transaction_id: transaction.id },
+      create: {
+        userId: sellerUser.id,
+        amount: transaction.amount,
+        status: "PENDING",
+        transaction_id: transaction.id,
+        description: "Earnings from completed transaction",
+      },
+      update: {
+        status: "PENDING",
+        amount: transaction.amount,
+      }
+    });
+
+    await prisma.walletTransaction.create({
+      data: {
+        userId: sellerUser.id,
+        amount: transaction.amount,
+        type: "INFLOW",
+        description: `Payout for transaction #${transaction.id}`,
+      }
+    });
+
+    await prisma.user.update({
+      where: { id: sellerUser.id },
+      data: {
+        walletBalance: { increment: transaction.amount },
+        totalEarnings: { increment: transaction.amount },
+      }
+    });
+  }
+};
 
 export const closeATransactionService = async (userId: number, transactionId: number) => {
   const transaction = await prisma.transaction.findUnique({
@@ -269,6 +307,9 @@ export const closeATransactionService = async (userId: number, transactionId: nu
   if (!updatedTransaction) {
     throw new Error("Failed to close transaction");
   }
+
+  await payoutSellerEarnings(transaction);
+  
   return updatedTransaction;
 }
 
@@ -324,6 +365,8 @@ export const acceptResolutionService = async (transactionId: number) => {
     where: { id: transactionId },
     data: { status: "COMPLETED" },
   });
+
+  await payoutSellerEarnings(transaction);
 
   // Remove scheduled job
   await transactionClosureQueue.remove(`closure-${transactionId}`);

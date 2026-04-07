@@ -1441,15 +1441,15 @@ export const TransactionScalarFieldEnum = {
   pay_shipping_cost: 'pay_shipping_cost',
   creator_role: 'creator_role',
   status: 'status',
-  currency: 'currency',
   expiresAt: 'expiresAt',
   transactionToken: 'transactionToken',
   reciever_email: 'reciever_email',
   approveStatus: 'approveStatus',
+  files: 'files',
   otp: 'otp',
   otp_created_at: 'otp_created_at',
-  files: 'files',
-  payment_id: 'payment_id'
+  payment_id: 'payment_id',
+  currency: 'currency'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -1496,7 +1496,8 @@ export const EarningsScalarFieldEnum = {
   amount: 'amount',
   createdAt: 'createdAt',
   description: 'description',
-  transaction_id: 'transaction_id'
+  transaction_id: 'transaction_id',
+  status: 'status'
 } as const
 
 export type EarningsScalarFieldEnum = (typeof EarningsScalarFieldEnum)[keyof typeof EarningsScalarFieldEnum]
@@ -1517,18 +1518,18 @@ export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFi
 export const DisputeScalarFieldEnum = {
   id: 'id',
   transactionId: 'transactionId',
-  status: 'status',
-  createdAt: 'createdAt',
-  elapsesAt: 'elapsesAt',
   chatId: 'chatId',
   description: 'description',
-  reason: 'reason',
   resolutionOption: 'resolutionOption',
+  createdAt: 'createdAt',
+  elapsesAt: 'elapsesAt',
+  status: 'status',
+  reason: 'reason',
   evidenceUrl: 'evidenceUrl',
   evidenceId: 'evidenceId',
   buyerId: 'buyerId',
-  sellerId: 'sellerId',
-  creatorId: 'creatorId'
+  creatorId: 'creatorId',
+  sellerId: 'sellerId'
 } as const
 
 export type DisputeScalarFieldEnum = (typeof DisputeScalarFieldEnum)[keyof typeof DisputeScalarFieldEnum]
@@ -1569,10 +1570,6 @@ export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeo
 export const ProfileScalarFieldEnum = {
   id: 'id',
   address: 'address',
-  city: 'city',
-  country: 'country',
-  postal_code: 'postal_code',
-  id_number: 'id_number',
   phone_no: 'phone_no',
   avatar: 'avatar',
   bio: 'bio',
@@ -1581,7 +1578,11 @@ export const ProfileScalarFieldEnum = {
   next_kin: 'next_kin',
   next_email: 'next_email',
   next_no: 'next_no',
-  user_id: 'user_id'
+  user_id: 'user_id',
+  city: 'city',
+  country: 'country',
+  id_number: 'id_number',
+  postal_code: 'postal_code'
 } as const
 
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
@@ -1592,9 +1593,9 @@ export const SettingScalarFieldEnum = {
   id: 'id',
   defaultCurrency: 'defaultCurrency',
   notificationPreference: 'notificationPreference',
-  securityQuestions: 'securityQuestions',
   twoFactorAuth: 'twoFactorAuth',
-  accountStatus: 'accountStatus'
+  accountStatus: 'accountStatus',
+  securityQuestions: 'securityQuestions'
 } as const
 
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
@@ -1786,20 +1787,6 @@ export type ListEnumStatusEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
- * Reference to a field of type 'CurrencyEnum'
- */
-export type EnumCurrencyEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CurrencyEnum'>
-    
-
-
-/**
- * Reference to a field of type 'CurrencyEnum[]'
- */
-export type ListEnumCurrencyEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CurrencyEnum[]'>
-    
-
-
-/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -1810,6 +1797,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'CurrencyEnum'
+ */
+export type EnumCurrencyEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CurrencyEnum'>
+    
+
+
+/**
+ * Reference to a field of type 'CurrencyEnum[]'
+ */
+export type ListEnumCurrencyEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CurrencyEnum[]'>
     
 
 
@@ -1856,6 +1857,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'EarningStatus'
+ */
+export type EnumEarningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'EarningStatus[]'
+ */
+export type ListEnumEarningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'WalletTransactionType'
  */
 export type EnumWalletTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransactionType'>
@@ -1870,20 +1885,6 @@ export type ListEnumWalletTransactionTypeFieldRefInput<$PrismaModel> = FieldRefI
 
 
 /**
- * Reference to a field of type 'disputeStatus'
- */
-export type EnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'disputeStatus'>
-    
-
-
-/**
- * Reference to a field of type 'disputeStatus[]'
- */
-export type ListEnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'disputeStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'ResolutionOption'
  */
 export type EnumResolutionOptionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResolutionOption'>
@@ -1894,6 +1895,20 @@ export type EnumResolutionOptionFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'ResolutionOption[]'
  */
 export type ListEnumResolutionOptionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResolutionOption[]'>
+    
+
+
+/**
+ * Reference to a field of type 'disputeStatus'
+ */
+export type EnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'disputeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'disputeStatus[]'
+ */
+export type ListEnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'disputeStatus[]'>
     
 
 

@@ -51,12 +51,12 @@ export const StatusEnum = {
   CREATED: 'CREATED',
   APPROVED: 'APPROVED',
   ONGOING: 'ONGOING',
-  PENDING_CLOSURE: 'PENDING_CLOSURE',
   COMPLETED: 'COMPLETED',
   DISPUTE: 'DISPUTE',
   REJECTED: 'REJECTED',
   CANCELED: 'CANCELED',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  PENDING_CLOSURE: 'PENDING_CLOSURE'
 } as const
 
 export type StatusEnum = (typeof StatusEnum)[keyof typeof StatusEnum]
@@ -158,3 +158,12 @@ export const Read = {
 } as const
 
 export type Read = (typeof Read)[keyof typeof Read]
+
+
+export const EarningStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED'
+} as const
+
+export type EarningStatus = (typeof EarningStatus)[keyof typeof EarningStatus]

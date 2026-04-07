@@ -66,7 +66,6 @@ export type TransactionMinAggregateOutputType = {
   pay_shipping_cost: $Enums.EscrowFeePayer | null
   creator_role: $Enums.Role | null
   status: $Enums.StatusEnum | null
-  currency: $Enums.CurrencyEnum | null
   expiresAt: Date | null
   transactionToken: string | null
   reciever_email: string | null
@@ -74,6 +73,7 @@ export type TransactionMinAggregateOutputType = {
   otp: string | null
   otp_created_at: Date | null
   payment_id: number | null
+  currency: $Enums.CurrencyEnum | null
 }
 
 export type TransactionMaxAggregateOutputType = {
@@ -100,7 +100,6 @@ export type TransactionMaxAggregateOutputType = {
   pay_shipping_cost: $Enums.EscrowFeePayer | null
   creator_role: $Enums.Role | null
   status: $Enums.StatusEnum | null
-  currency: $Enums.CurrencyEnum | null
   expiresAt: Date | null
   transactionToken: string | null
   reciever_email: string | null
@@ -108,6 +107,7 @@ export type TransactionMaxAggregateOutputType = {
   otp: string | null
   otp_created_at: Date | null
   payment_id: number | null
+  currency: $Enums.CurrencyEnum | null
 }
 
 export type TransactionCountAggregateOutputType = {
@@ -134,15 +134,15 @@ export type TransactionCountAggregateOutputType = {
   pay_shipping_cost: number
   creator_role: number
   status: number
-  currency: number
   expiresAt: number
   transactionToken: number
   reciever_email: number
   approveStatus: number
+  files: number
   otp: number
   otp_created_at: number
-  files: number
   payment_id: number
+  currency: number
   _all: number
 }
 
@@ -187,7 +187,6 @@ export type TransactionMinAggregateInputType = {
   pay_shipping_cost?: true
   creator_role?: true
   status?: true
-  currency?: true
   expiresAt?: true
   transactionToken?: true
   reciever_email?: true
@@ -195,6 +194,7 @@ export type TransactionMinAggregateInputType = {
   otp?: true
   otp_created_at?: true
   payment_id?: true
+  currency?: true
 }
 
 export type TransactionMaxAggregateInputType = {
@@ -221,7 +221,6 @@ export type TransactionMaxAggregateInputType = {
   pay_shipping_cost?: true
   creator_role?: true
   status?: true
-  currency?: true
   expiresAt?: true
   transactionToken?: true
   reciever_email?: true
@@ -229,6 +228,7 @@ export type TransactionMaxAggregateInputType = {
   otp?: true
   otp_created_at?: true
   payment_id?: true
+  currency?: true
 }
 
 export type TransactionCountAggregateInputType = {
@@ -255,15 +255,15 @@ export type TransactionCountAggregateInputType = {
   pay_shipping_cost?: true
   creator_role?: true
   status?: true
-  currency?: true
   expiresAt?: true
   transactionToken?: true
   reciever_email?: true
   approveStatus?: true
+  files?: true
   otp?: true
   otp_created_at?: true
-  files?: true
   payment_id?: true
+  currency?: true
   _all?: true
 }
 
@@ -377,15 +377,15 @@ export type TransactionGroupByOutputType = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status: $Enums.StatusEnum
-  currency: $Enums.CurrencyEnum
   expiresAt: Date
   transactionToken: string
   reciever_email: string
   approveStatus: boolean
+  files: runtime.JsonValue | null
   otp: string | null
   otp_created_at: Date | null
-  files: runtime.JsonValue | null
   payment_id: number | null
+  currency: $Enums.CurrencyEnum
   _count: TransactionCountAggregateOutputType | null
   _avg: TransactionAvgAggregateOutputType | null
   _sum: TransactionSumAggregateOutputType | null
@@ -435,19 +435,19 @@ export type TransactionWhereInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFilter<"Transaction"> | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFilter<"Transaction"> | $Enums.Role
   status?: Prisma.EnumStatusEnumFilter<"Transaction"> | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   transactionToken?: Prisma.StringFilter<"Transaction"> | string
   reciever_email?: Prisma.StringFilter<"Transaction"> | string
   approveStatus?: Prisma.BoolFilter<"Transaction"> | boolean
+  files?: Prisma.JsonNullableFilter<"Transaction">
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  files?: Prisma.JsonNullableFilter<"Transaction">
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
   dispute?: Prisma.XOR<Prisma.DisputeNullableScalarRelationFilter, Prisma.DisputeWhereInput> | null
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type TransactionOrderByWithRelationInput = {
@@ -474,19 +474,19 @@ export type TransactionOrderByWithRelationInput = {
   pay_shipping_cost?: Prisma.SortOrder
   creator_role?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   transactionToken?: Prisma.SortOrder
   reciever_email?: Prisma.SortOrder
   approveStatus?: Prisma.SortOrder
+  files?: Prisma.SortOrderInput | Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otp_created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  files?: Prisma.SortOrderInput | Prisma.SortOrder
   payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  currency?: Prisma.SortOrder
   dispute?: Prisma.DisputeOrderByWithRelationInput
-  user?: Prisma.UserOrderByWithRelationInput
-  payment?: Prisma.PaymentOrderByWithRelationInput
   earnings?: Prisma.EarningsOrderByWithRelationInput
+  payment?: Prisma.PaymentOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -517,18 +517,18 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFilter<"Transaction"> | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFilter<"Transaction"> | $Enums.Role
   status?: Prisma.EnumStatusEnumFilter<"Transaction"> | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   reciever_email?: Prisma.StringFilter<"Transaction"> | string
   approveStatus?: Prisma.BoolFilter<"Transaction"> | boolean
+  files?: Prisma.JsonNullableFilter<"Transaction">
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  files?: Prisma.JsonNullableFilter<"Transaction">
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
   dispute?: Prisma.XOR<Prisma.DisputeNullableScalarRelationFilter, Prisma.DisputeWhereInput> | null
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "transactionToken">
 
 export type TransactionOrderByWithAggregationInput = {
@@ -555,15 +555,15 @@ export type TransactionOrderByWithAggregationInput = {
   pay_shipping_cost?: Prisma.SortOrder
   creator_role?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   transactionToken?: Prisma.SortOrder
   reciever_email?: Prisma.SortOrder
   approveStatus?: Prisma.SortOrder
+  files?: Prisma.SortOrderInput | Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otp_created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  files?: Prisma.SortOrderInput | Prisma.SortOrder
   payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  currency?: Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
   _avg?: Prisma.TransactionAvgOrderByAggregateInput
   _max?: Prisma.TransactionMaxOrderByAggregateInput
@@ -598,15 +598,15 @@ export type TransactionScalarWhereWithAggregatesInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerWithAggregatesFilter<"Transaction"> | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleWithAggregatesFilter<"Transaction"> | $Enums.Role
   status?: Prisma.EnumStatusEnumWithAggregatesFilter<"Transaction"> | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumWithAggregatesFilter<"Transaction"> | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   transactionToken?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   reciever_email?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   approveStatus?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
+  files?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
   otp?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
-  files?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
   payment_id?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
+  currency?: Prisma.EnumCurrencyEnumWithAggregatesFilter<"Transaction"> | $Enums.CurrencyEnum
 }
 
 export type TransactionCreateInput = {
@@ -631,19 +631,19 @@ export type TransactionCreateInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeCreateNestedOneWithoutTransactionInput
-  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
-  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
+  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateInput = {
@@ -670,18 +670,18 @@ export type TransactionUncheckedCreateInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutTransactionInput
-  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUpdateInput = {
@@ -706,19 +706,19 @@ export type TransactionUpdateInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUpdateOneWithoutTransactionNestedInput
-  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
-  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
+  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateInput = {
@@ -745,18 +745,18 @@ export type TransactionUncheckedUpdateInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutTransactionNestedInput
-  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateManyInput = {
@@ -783,15 +783,15 @@ export type TransactionCreateManyInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
 }
 
 export type TransactionUpdateManyMutationInput = {
@@ -816,15 +816,15 @@ export type TransactionUpdateManyMutationInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
 }
 
 export type TransactionUncheckedUpdateManyInput = {
@@ -851,15 +851,15 @@ export type TransactionUncheckedUpdateManyInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
 }
 
 export type TransactionCountOrderByAggregateInput = {
@@ -886,15 +886,15 @@ export type TransactionCountOrderByAggregateInput = {
   pay_shipping_cost?: Prisma.SortOrder
   creator_role?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   transactionToken?: Prisma.SortOrder
   reciever_email?: Prisma.SortOrder
   approveStatus?: Prisma.SortOrder
+  files?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
-  files?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
 }
 
 export type TransactionAvgOrderByAggregateInput = {
@@ -929,7 +929,6 @@ export type TransactionMaxOrderByAggregateInput = {
   pay_shipping_cost?: Prisma.SortOrder
   creator_role?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   transactionToken?: Prisma.SortOrder
   reciever_email?: Prisma.SortOrder
@@ -937,6 +936,7 @@ export type TransactionMaxOrderByAggregateInput = {
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
 }
 
 export type TransactionMinOrderByAggregateInput = {
@@ -963,7 +963,6 @@ export type TransactionMinOrderByAggregateInput = {
   pay_shipping_cost?: Prisma.SortOrder
   creator_role?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   transactionToken?: Prisma.SortOrder
   reciever_email?: Prisma.SortOrder
@@ -971,6 +970,7 @@ export type TransactionMinOrderByAggregateInput = {
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
 }
 
 export type TransactionSumOrderByAggregateInput = {
@@ -1036,10 +1036,6 @@ export type EnumStatusEnumFieldUpdateOperationsInput = {
   set?: $Enums.StatusEnum
 }
 
-export type EnumCurrencyEnumFieldUpdateOperationsInput = {
-  set?: $Enums.CurrencyEnum
-}
-
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
@@ -1050,6 +1046,10 @@ export type NullableIntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EnumCurrencyEnumFieldUpdateOperationsInput = {
+  set?: $Enums.CurrencyEnum
 }
 
 export type TransactionCreateNestedOneWithoutPaymentInput = {
@@ -1158,18 +1158,18 @@ export type TransactionCreateWithoutPaymentInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeCreateNestedOneWithoutTransactionInput
-  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutTransactionInput
+  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutPaymentInput = {
@@ -1196,15 +1196,15 @@ export type TransactionUncheckedCreateWithoutPaymentInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutTransactionInput
 }
@@ -1247,18 +1247,18 @@ export type TransactionUpdateWithoutPaymentInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUpdateOneWithoutTransactionNestedInput
-  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutTransactionNestedInput
+  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutPaymentInput = {
@@ -1285,15 +1285,15 @@ export type TransactionUncheckedUpdateWithoutPaymentInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutTransactionNestedInput
 }
@@ -1320,18 +1320,18 @@ export type TransactionCreateWithoutUserInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeCreateNestedOneWithoutTransactionInput
-  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutUserInput = {
@@ -1357,18 +1357,18 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutTransactionInput
-  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutUserInput = {
@@ -1424,15 +1424,15 @@ export type TransactionScalarWhereInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFilter<"Transaction"> | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFilter<"Transaction"> | $Enums.Role
   status?: Prisma.EnumStatusEnumFilter<"Transaction"> | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   transactionToken?: Prisma.StringFilter<"Transaction"> | string
   reciever_email?: Prisma.StringFilter<"Transaction"> | string
   approveStatus?: Prisma.BoolFilter<"Transaction"> | boolean
+  files?: Prisma.JsonNullableFilter<"Transaction">
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  files?: Prisma.JsonNullableFilter<"Transaction">
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  currency?: Prisma.EnumCurrencyEnumFilter<"Transaction"> | $Enums.CurrencyEnum
 }
 
 export type TransactionCreateWithoutEarningsInput = {
@@ -1457,18 +1457,18 @@ export type TransactionCreateWithoutEarningsInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeCreateNestedOneWithoutTransactionInput
-  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
+  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutEarningsInput = {
@@ -1495,15 +1495,15 @@ export type TransactionUncheckedCreateWithoutEarningsInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
 }
@@ -1546,18 +1546,18 @@ export type TransactionUpdateWithoutEarningsInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUpdateOneWithoutTransactionNestedInput
-  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
+  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutEarningsInput = {
@@ -1584,15 +1584,15 @@ export type TransactionUncheckedUpdateWithoutEarningsInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
 }
@@ -1619,18 +1619,18 @@ export type TransactionCreateWithoutDisputeInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
-  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
-  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
+  currency?: $Enums.CurrencyEnum
   earnings?: Prisma.EarningsCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
+  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutDisputeInput = {
@@ -1657,17 +1657,17 @@ export type TransactionUncheckedCreateWithoutDisputeInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
-  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  currency?: $Enums.CurrencyEnum
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutTransactionInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutDisputeInput = {
@@ -1708,18 +1708,18 @@ export type TransactionUpdateWithoutDisputeInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
-  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   earnings?: Prisma.EarningsUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
+  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutDisputeInput = {
@@ -1746,17 +1746,17 @@ export type TransactionUncheckedUpdateWithoutDisputeInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateManyUserInput = {
@@ -1782,15 +1782,15 @@ export type TransactionCreateManyUserInput = {
   pay_shipping_cost: $Enums.EscrowFeePayer
   creator_role: $Enums.Role
   status?: $Enums.StatusEnum
-  currency?: $Enums.CurrencyEnum
   expiresAt: Date | string
   transactionToken: string
   reciever_email: string
   approveStatus?: boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: string | null
   otp_created_at?: Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
 }
 
 export type TransactionUpdateWithoutUserInput = {
@@ -1815,18 +1815,18 @@ export type TransactionUpdateWithoutUserInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUpdateOneWithoutTransactionNestedInput
-  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutUserInput = {
@@ -1852,18 +1852,18 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutTransactionNestedInput
-  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateManyWithoutUserInput = {
@@ -1889,15 +1889,15 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
   creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
-  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
   reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
   approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
 }
 
 
@@ -1926,19 +1926,19 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   pay_shipping_cost?: boolean
   creator_role?: boolean
   status?: boolean
-  currency?: boolean
   expiresAt?: boolean
   transactionToken?: boolean
   reciever_email?: boolean
   approveStatus?: boolean
+  files?: boolean
   otp?: boolean
   otp_created_at?: boolean
-  files?: boolean
   payment_id?: boolean
+  currency?: boolean
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
-  user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
-  payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
   earnings?: boolean | Prisma.Transaction$earningsArgs<ExtArgs>
+  payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
+  user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1965,15 +1965,15 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   pay_shipping_cost?: boolean
   creator_role?: boolean
   status?: boolean
-  currency?: boolean
   expiresAt?: boolean
   transactionToken?: boolean
   reciever_email?: boolean
   approveStatus?: boolean
+  files?: boolean
   otp?: boolean
   otp_created_at?: boolean
-  files?: boolean
   payment_id?: boolean
+  currency?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2001,15 +2001,15 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   pay_shipping_cost?: boolean
   creator_role?: boolean
   status?: boolean
-  currency?: boolean
   expiresAt?: boolean
   transactionToken?: boolean
   reciever_email?: boolean
   approveStatus?: boolean
+  files?: boolean
   otp?: boolean
   otp_created_at?: boolean
-  files?: boolean
   payment_id?: boolean
+  currency?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2037,23 +2037,23 @@ export type TransactionSelectScalar = {
   pay_shipping_cost?: boolean
   creator_role?: boolean
   status?: boolean
-  currency?: boolean
   expiresAt?: boolean
   transactionToken?: boolean
   reciever_email?: boolean
   approveStatus?: boolean
+  files?: boolean
   otp?: boolean
   otp_created_at?: boolean
-  files?: boolean
   payment_id?: boolean
+  currency?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "currency" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "otp" | "otp_created_at" | "files" | "payment_id", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "files" | "otp" | "otp_created_at" | "payment_id" | "currency", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
-  user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
-  payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
   earnings?: boolean | Prisma.Transaction$earningsArgs<ExtArgs>
+  payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
+  user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }
 export type TransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
@@ -2066,9 +2066,9 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Transaction"
   objects: {
     dispute: Prisma.$DisputePayload<ExtArgs> | null
-    user: Prisma.$UserPayload<ExtArgs> | null
-    payment: Prisma.$PaymentPayload<ExtArgs> | null
     earnings: Prisma.$EarningsPayload<ExtArgs> | null
+    payment: Prisma.$PaymentPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2094,15 +2094,15 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     pay_shipping_cost: $Enums.EscrowFeePayer
     creator_role: $Enums.Role
     status: $Enums.StatusEnum
-    currency: $Enums.CurrencyEnum
     expiresAt: Date
     transactionToken: string
     reciever_email: string
     approveStatus: boolean
+    files: runtime.JsonValue | null
     otp: string | null
     otp_created_at: Date | null
-    files: runtime.JsonValue | null
     payment_id: number | null
+    currency: $Enums.CurrencyEnum
   }, ExtArgs["result"]["transaction"]>
   composites: {}
 }
@@ -2498,9 +2498,9 @@ readonly fields: TransactionFieldRefs;
 export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   dispute<T extends Prisma.Transaction$disputeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$disputeArgs<ExtArgs>>): Prisma.Prisma__DisputeClient<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  user<T extends Prisma.Transaction$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  payment<T extends Prisma.Transaction$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   earnings<T extends Prisma.Transaction$earningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$earningsArgs<ExtArgs>>): Prisma.Prisma__EarningsClient<runtime.Types.Result.GetResult<Prisma.$EarningsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  payment<T extends Prisma.Transaction$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.Transaction$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2553,15 +2553,15 @@ export interface TransactionFieldRefs {
   readonly pay_shipping_cost: Prisma.FieldRef<"Transaction", 'EscrowFeePayer'>
   readonly creator_role: Prisma.FieldRef<"Transaction", 'Role'>
   readonly status: Prisma.FieldRef<"Transaction", 'StatusEnum'>
-  readonly currency: Prisma.FieldRef<"Transaction", 'CurrencyEnum'>
   readonly expiresAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly transactionToken: Prisma.FieldRef<"Transaction", 'String'>
   readonly reciever_email: Prisma.FieldRef<"Transaction", 'String'>
   readonly approveStatus: Prisma.FieldRef<"Transaction", 'Boolean'>
+  readonly files: Prisma.FieldRef<"Transaction", 'Json'>
   readonly otp: Prisma.FieldRef<"Transaction", 'String'>
   readonly otp_created_at: Prisma.FieldRef<"Transaction", 'DateTime'>
-  readonly files: Prisma.FieldRef<"Transaction", 'Json'>
   readonly payment_id: Prisma.FieldRef<"Transaction", 'Int'>
+  readonly currency: Prisma.FieldRef<"Transaction", 'CurrencyEnum'>
 }
     
 
@@ -2977,22 +2977,22 @@ export type Transaction$disputeArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Transaction.user
+ * Transaction.earnings
  */
-export type Transaction$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Transaction$earningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the Earnings
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.EarningsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the Earnings
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.EarningsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
+  include?: Prisma.EarningsInclude<ExtArgs> | null
+  where?: Prisma.EarningsWhereInput
 }
 
 /**
@@ -3015,22 +3015,22 @@ export type Transaction$paymentArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Transaction.earnings
+ * Transaction.user
  */
-export type Transaction$earningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Transaction$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Earnings
+   * Select specific fields to fetch from the User
    */
-  select?: Prisma.EarningsSelect<ExtArgs> | null
+  select?: Prisma.UserSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Earnings
+   * Omit specific fields from the User
    */
-  omit?: Prisma.EarningsOmit<ExtArgs> | null
+  omit?: Prisma.UserOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EarningsInclude<ExtArgs> | null
-  where?: Prisma.EarningsWhereInput
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

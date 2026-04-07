@@ -59,9 +59,9 @@ export type SettingCountAggregateOutputType = {
   id: number
   defaultCurrency: number
   notificationPreference: number
-  securityQuestions: number
   twoFactorAuth: number
   accountStatus: number
+  securityQuestions: number
   _all: number
 }
 
@@ -99,9 +99,9 @@ export type SettingCountAggregateInputType = {
   id?: true
   defaultCurrency?: true
   notificationPreference?: true
-  securityQuestions?: true
   twoFactorAuth?: true
   accountStatus?: true
+  securityQuestions?: true
   _all?: true
 }
 
@@ -196,9 +196,9 @@ export type SettingGroupByOutputType = {
   id: number
   defaultCurrency: $Enums.DefaultCurrency
   notificationPreference: $Enums.NotificationPreference
-  securityQuestions: runtime.JsonValue
   twoFactorAuth: boolean
   accountStatus: $Enums.AccountStatus | null
+  securityQuestions: runtime.JsonValue
   _count: SettingCountAggregateOutputType | null
   _avg: SettingAvgAggregateOutputType | null
   _sum: SettingSumAggregateOutputType | null
@@ -229,9 +229,9 @@ export type SettingWhereInput = {
   id?: Prisma.IntFilter<"Setting"> | number
   defaultCurrency?: Prisma.EnumDefaultCurrencyFilter<"Setting"> | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFilter<"Setting"> | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonFilter<"Setting">
   twoFactorAuth?: Prisma.BoolFilter<"Setting"> | boolean
   accountStatus?: Prisma.EnumAccountStatusNullableFilter<"Setting"> | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonFilter<"Setting">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -240,9 +240,9 @@ export type SettingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   defaultCurrency?: Prisma.SortOrder
   notificationPreference?: Prisma.SortOrder
-  securityQuestions?: Prisma.SortOrder
   twoFactorAuth?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  securityQuestions?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -254,9 +254,9 @@ export type SettingWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SettingWhereInput | Prisma.SettingWhereInput[]
   defaultCurrency?: Prisma.EnumDefaultCurrencyFilter<"Setting"> | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFilter<"Setting"> | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonFilter<"Setting">
   twoFactorAuth?: Prisma.BoolFilter<"Setting"> | boolean
   accountStatus?: Prisma.EnumAccountStatusNullableFilter<"Setting"> | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonFilter<"Setting">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "user_id">
 
@@ -265,9 +265,9 @@ export type SettingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   defaultCurrency?: Prisma.SortOrder
   notificationPreference?: Prisma.SortOrder
-  securityQuestions?: Prisma.SortOrder
   twoFactorAuth?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  securityQuestions?: Prisma.SortOrder
   _count?: Prisma.SettingCountOrderByAggregateInput
   _avg?: Prisma.SettingAvgOrderByAggregateInput
   _max?: Prisma.SettingMaxOrderByAggregateInput
@@ -283,17 +283,17 @@ export type SettingScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Setting"> | number
   defaultCurrency?: Prisma.EnumDefaultCurrencyWithAggregatesFilter<"Setting"> | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceWithAggregatesFilter<"Setting"> | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonWithAggregatesFilter<"Setting">
   twoFactorAuth?: Prisma.BoolWithAggregatesFilter<"Setting"> | boolean
   accountStatus?: Prisma.EnumAccountStatusNullableWithAggregatesFilter<"Setting"> | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonWithAggregatesFilter<"Setting">
 }
 
 export type SettingCreateInput = {
   defaultCurrency?: $Enums.DefaultCurrency
   notificationPreference?: $Enums.NotificationPreference
-  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: boolean
   accountStatus?: $Enums.AccountStatus | null
+  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutSettingInput
 }
 
@@ -302,17 +302,17 @@ export type SettingUncheckedCreateInput = {
   id?: number
   defaultCurrency?: $Enums.DefaultCurrency
   notificationPreference?: $Enums.NotificationPreference
-  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: boolean
   accountStatus?: $Enums.AccountStatus | null
+  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingUpdateInput = {
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutSettingNestedInput
 }
 
@@ -321,9 +321,9 @@ export type SettingUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingCreateManyInput = {
@@ -331,17 +331,17 @@ export type SettingCreateManyInput = {
   id?: number
   defaultCurrency?: $Enums.DefaultCurrency
   notificationPreference?: $Enums.NotificationPreference
-  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: boolean
   accountStatus?: $Enums.AccountStatus | null
+  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingUpdateManyMutationInput = {
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingUncheckedUpdateManyInput = {
@@ -349,9 +349,9 @@ export type SettingUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingNullableScalarRelationFilter = {
@@ -364,9 +364,9 @@ export type SettingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   defaultCurrency?: Prisma.SortOrder
   notificationPreference?: Prisma.SortOrder
-  securityQuestions?: Prisma.SortOrder
   twoFactorAuth?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
+  securityQuestions?: Prisma.SortOrder
 }
 
 export type SettingAvgOrderByAggregateInput = {
@@ -444,18 +444,18 @@ export type NullableEnumAccountStatusFieldUpdateOperationsInput = {
 export type SettingCreateWithoutUserInput = {
   defaultCurrency?: $Enums.DefaultCurrency
   notificationPreference?: $Enums.NotificationPreference
-  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: boolean
   accountStatus?: $Enums.AccountStatus | null
+  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingUncheckedCreateWithoutUserInput = {
   id?: number
   defaultCurrency?: $Enums.DefaultCurrency
   notificationPreference?: $Enums.NotificationPreference
-  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: boolean
   accountStatus?: $Enums.AccountStatus | null
+  securityQuestions: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingCreateOrConnectWithoutUserInput = {
@@ -477,18 +477,18 @@ export type SettingUpdateToOneWithWhereWithoutUserInput = {
 export type SettingUpdateWithoutUserInput = {
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SettingUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   defaultCurrency?: Prisma.EnumDefaultCurrencyFieldUpdateOperationsInput | $Enums.DefaultCurrency
   notificationPreference?: Prisma.EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
-  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   twoFactorAuth?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountStatus?: Prisma.NullableEnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus | null
+  securityQuestions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -498,9 +498,9 @@ export type SettingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   defaultCurrency?: boolean
   notificationPreference?: boolean
-  securityQuestions?: boolean
   twoFactorAuth?: boolean
   accountStatus?: boolean
+  securityQuestions?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["setting"]>
 
@@ -509,9 +509,9 @@ export type SettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   defaultCurrency?: boolean
   notificationPreference?: boolean
-  securityQuestions?: boolean
   twoFactorAuth?: boolean
   accountStatus?: boolean
+  securityQuestions?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["setting"]>
 
@@ -520,9 +520,9 @@ export type SettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   defaultCurrency?: boolean
   notificationPreference?: boolean
-  securityQuestions?: boolean
   twoFactorAuth?: boolean
   accountStatus?: boolean
+  securityQuestions?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["setting"]>
 
@@ -531,12 +531,12 @@ export type SettingSelectScalar = {
   id?: boolean
   defaultCurrency?: boolean
   notificationPreference?: boolean
-  securityQuestions?: boolean
   twoFactorAuth?: boolean
   accountStatus?: boolean
+  securityQuestions?: boolean
 }
 
-export type SettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"user_id" | "id" | "defaultCurrency" | "notificationPreference" | "securityQuestions" | "twoFactorAuth" | "accountStatus", ExtArgs["result"]["setting"]>
+export type SettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"user_id" | "id" | "defaultCurrency" | "notificationPreference" | "twoFactorAuth" | "accountStatus" | "securityQuestions", ExtArgs["result"]["setting"]>
 export type SettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -557,9 +557,9 @@ export type $SettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: number
     defaultCurrency: $Enums.DefaultCurrency
     notificationPreference: $Enums.NotificationPreference
-    securityQuestions: runtime.JsonValue
     twoFactorAuth: boolean
     accountStatus: $Enums.AccountStatus | null
+    securityQuestions: runtime.JsonValue
   }, ExtArgs["result"]["setting"]>
   composites: {}
 }
@@ -988,9 +988,9 @@ export interface SettingFieldRefs {
   readonly id: Prisma.FieldRef<"Setting", 'Int'>
   readonly defaultCurrency: Prisma.FieldRef<"Setting", 'DefaultCurrency'>
   readonly notificationPreference: Prisma.FieldRef<"Setting", 'NotificationPreference'>
-  readonly securityQuestions: Prisma.FieldRef<"Setting", 'Json'>
   readonly twoFactorAuth: Prisma.FieldRef<"Setting", 'Boolean'>
   readonly accountStatus: Prisma.FieldRef<"Setting", 'AccountStatus'>
+  readonly securityQuestions: Prisma.FieldRef<"Setting", 'Json'>
 }
     
 
