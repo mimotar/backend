@@ -278,6 +278,10 @@ enum ChatRole {
 model Profile {
   id                Int     @id @default(autoincrement())
   address           String?
+  city              String?
+  country           String?
+  postal_code       String?
+  id_number         String?
   phone_no          String?
   avatar            String?
   bio               String? @db.VarChar(100)

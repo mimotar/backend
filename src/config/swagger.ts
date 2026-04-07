@@ -167,12 +167,29 @@ Welcome to the **Mimotar API** documentation. This API supports:
       },
       PasswordResetBody: {
         type: "object",
-        required: ["token", "newPassword", "email"],
+        required: ["otp", "newPassword", "email"],
         properties: {
-          token: { type: "string", description: "Token from reset email link" },
+          otp: { type: "string", description: "6-digit OTP sent to email" },
           newPassword: { type: "string", minLength: 8 },
           email: { type: "string", format: "email" },
         },
+      },
+      ChangePasswordRequestBody: {
+        type: "object",
+        required: ["oldPassword", "newPassword"],
+        properties: {
+          oldPassword: { type: "string" },
+          newPassword: { type: "string", minLength: 8 }
+        }
+      },
+      ChangePasswordVerifyBody: {
+        type: "object",
+        required: ["oldPassword", "newPassword", "otp"],
+        properties: {
+          oldPassword: { type: "string" },
+          newPassword: { type: "string", minLength: 8 },
+          otp: { type: "string" }
+        }
       },
       // Setting
       SettingFindBody: {
@@ -260,6 +277,32 @@ Welcome to the **Mimotar API** documentation. This API supports:
           message: { type: "string" },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      UpdateProfileBody: {
+        type: "object",
+        description: "Body to update the user profile",
+        properties: {
+          fullName: { type: "string" },
+          phone_no: { type: "string" },
+          address: { type: "string" },
+          city: { type: "string" },
+          country: { type: "string" },
+          postal_code: { type: "string" },
+          id_number: { type: "string" },
+        },
+      },
+      ProfileResponse: {
+        type: "object",
+        properties: {
+          fullName: { type: "string" },
+          email: { type: "string", format: "email" },
+          phone_no: { type: "string", nullable: true },
+          address: { type: "string", nullable: true },
+          city: { type: "string", nullable: true },
+          country: { type: "string", nullable: true },
+          postal_code: { type: "string", nullable: true },
+          id_number: { type: "string", nullable: true },
         },
       },
     },
@@ -522,7 +565,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/password-reset/confirm-email-password-reset": {
       post: {
         summary: "Confirm email for password reset",
-        description: "Sends a password reset link to the given email. Rate limited (10 requests per 10 minutes).",
+        description: "Sends a 6-digit OTP to the given email. Rate limited (10 requests per 10 minutes).",
         tags: ["Password reset"],
         requestBody: {
           content: {
@@ -530,15 +573,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "200": { description: "Reset email sent; check inbox" },
+          "200": { description: "Reset OTP sent; check inbox" },
           "404": { description: "Email not found" },
         },
       },
     },
     "/api/password-reset": {
       post: {
-        summary: "Set new password",
-        description: "Completes the password reset using the token and email from the reset link. New password must meet complexity rules (length, uppercase, lowercase, number, special character).",
+        summary: "Set new password (OTP)",
+        description: "Completes the password reset using the OTP and email. New password must meet complexity rules (length, uppercase, lowercase, number, special character).",
         tags: ["Password reset"],
         requestBody: {
           content: {
@@ -547,8 +590,46 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
         responses: {
           "200": { description: "Password reset successful" },
-          "400": { description: "Invalid token, same as old password, or validation error" },
-          "401": { description: "Token/email mismatch" },
+          "400": { description: "Invalid OTP, same as old password, or validation error" },
+          "401": { description: "Not registered user" },
+        },
+      },
+    },
+
+    // ----- Change Password (Authenticated) -----
+    "/api/user/change-password/request": {
+      post: {
+        summary: "Request a password change",
+        description: "Initiates a password change. Requires the correct current password and valid new password. Sends an OTP to confirm.",
+        tags: ["Users (Auth)"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/ChangePasswordRequestBody" } },
+          },
+        },
+        responses: {
+          "200": { description: "Change password request accepted, OTP sent" },
+          "400": { description: "Invalid credentials or new password matches old" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/api/user/change-password/verify": {
+      post: {
+        summary: "Verify and apply a password change",
+        description: "Verifies the change password request with the generated OTP, and sets the new password.",
+        tags: ["Users (Auth)"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/ChangePasswordVerifyBody" } },
+          },
+        },
+        responses: {
+          "200": { description: "Password successfully changed" },
+          "400": { description: "Invalid OTP, credentials, or expired OTP" },
+          "401": { description: "Unauthorized" },
         },
       },
     },
@@ -1165,6 +1246,62 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "400": { description: "Invalid contact id" },
           "404": { description: "Contact not found" },
           "500": { description: "Failed to delete contact" },
+        },
+      },
+    },
+    // ----- Profile -----
+    "/api/profile": {
+      get: {
+        summary: "Get user profile",
+        description: "Returns the authenticated user's profile.",
+        tags: ["Profile"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Profile Details",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: { $ref: "#/components/schemas/ProfileResponse" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+        },
+      },
+      put: {
+        summary: "Update user profile",
+        description: "Update the authenticated user's profile details.",
+        tags: ["Profile"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/UpdateProfileBody" } },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Profile updated successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: { $ref: "#/components/schemas/ProfileResponse" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
         },
       },
     },

@@ -1,48 +1,27 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
-// import prisma from "../utils/prisma";
-// import { prisma } from "../config/db";
-// import { PrismaClient } from "@prisma/client";
-import { createToken } from "../utils/createToken.js";
-import { sendEmailWithTemplate } from "../services/emailService.js";
-import VerifyToken from "../utils/verifyToken.js";
+import { sendEmail } from "../services/emailService.js";
+import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import { hashPassword } from "../utils/HashPassword.js";
 import { comparePassword } from "../utils/comparePassword.js";
-import { env } from "../config/env.js";
-import { JwtPayload } from "jsonwebtoken";
 import prisma from "../utils/prisma.js";
 import { PrismaClient } from "../generated/prisma/client.js";
+import { generateSixDigitString } from "../utils/OTPGenerator.js";
 
 //interface for the verify token payload object
-interface EmailPayload extends JwtPayload {
+interface EmailPayload {
   email: string;
 }
+
 export class PasswordResetController {
   private prisma: PrismaClient;
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
   }
+  
   async ConfirmEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const authHeader = req.headers.authorization;
-
-      //check if the request has authorization header
-      // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      //   next(new GlobalError("Unauthorized", "No token provided", 401, true));
-      //   return;
-      // }
-      // const token = authHeader.split(" ")[1];
-
-      //guessing this is the payload format that was used to signed the SIgn/login user token
-      interface tokenSignPayload extends JwtPayload {
-        userId: string;
-        email: string;
-      }
-
-      //verify the req token
-      // const tokenDecoded = await VerifyToken<tokenSignPayload>(token);
-
       // validation the email u want to reset
       const emailSchema = z.object({
         email: z.string().email(),
@@ -57,22 +36,7 @@ export class PasswordResetController {
       }
       const ValidatedEmail = validationResult.data as EmailPayload;
 
-      //check if the current user email is the same with the email sent  to reset password.
-      // this is to prevent user from resetting other user passwords
-      // if (tokenDecoded.email !== ValidatedEmail.email) {
-      //   next(
-      //     new GlobalError(
-      //       "Forbidden",
-      //       "You are not allowed to reset other user password",
-      //       403,
-      //       true
-      //     )
-      //   );
-      //   return;
-      // }
-
       // Check if email exists in database
-
       const verifyEmailInDb = await prisma.user.findUnique({
         where: { email: ValidatedEmail.email },
         select: { email: true, password: true },
@@ -91,24 +55,22 @@ export class PasswordResetController {
         return;
       }
 
-      //create token and new password form link
-      const reset_token = await createToken(3600, ValidatedEmail);
-      const resetPasswordUrl = `${
-        env.FRONTEND_URL
-      }/auth/forget-password?type=set-newPassword&token=${encodeURIComponent(
-        reset_token
-      )}&email=${encodeURIComponent(ValidatedEmail.email)}`;
-      const linkObj = {
-        firstname: validationResult.data?.email,
-        link: resetPasswordUrl,
-      };
+      // Generate OTP and save to DB
+      const otp = generateSixDigitString();
+      const otpCreatedAt = new Date();
 
-      await sendEmailWithTemplate(validationResult.data.email, linkObj, 2);
+      await prisma.user.update({
+        where: { email: ValidatedEmail.email },
+        data: { otp, otpCreatedAt }
+      });
+
+      // Send OTP implicitly
+      await sendEmail(validationResult.data.email, EmailType.PASSWORD_RESET_OTP, { otp });
+      
       res.status(200).json({
         success: true,
         message:
-          "Password reset request confirmed. Please check your email for further instructions.",
-        // email,
+          "Password reset request confirmed. Please check your email for your OTP.",
       });
       return;
     } catch (error: unknown) {
@@ -138,10 +100,7 @@ export class PasswordResetController {
 
   async passwordReset(req: Request, res: Response, next: NextFunction) {
     try {
-      // note: the current user email should come from the token for security reason
-      // used the email payload here because the token is unavailable here for testing
-      const { token, newPassword, email } = req.body;
-      // console.log(token, newPassword, email);
+      const { otp, newPassword, email } = req.body;
 
       const passwordSchema = z.object({
         newPassword: z
@@ -167,16 +126,15 @@ export class PasswordResetController {
         return;
       }
 
-      //validate the token
-      const tokenDecoded = await VerifyToken<EmailPayload>(token);
-      // console.log(tokenDecoded);
+      const dbCredential = await prisma.user.findUnique({
+        where: { email: email },
+      });
 
-      //making sure it was the user who make the password reset request
-      if (tokenDecoded.email !== email) {
+      if (!dbCredential) {
         next(
           new GlobalError(
-            "UnauthorizedPasswordReset",
-            "Security bridge: You are not the user who make the password request.",
+            "forbidden",
+            "Not registered User, try with a valid email",
             401,
             true
           )
@@ -184,19 +142,41 @@ export class PasswordResetController {
         return;
       }
 
-      //MAKE SURE THE USER IS NOT SENDING THE SAME PASSWORD as of old one
-      //the db password of the current user
-      const dbCredential = await prisma.user.findUnique({
-        where: { email: email },
-      });
-
-      // check if the user is already registered
-      if (!dbCredential) {
+      // Verify OTP
+      if (!otp || dbCredential.otp !== otp) {
         next(
           new GlobalError(
-            "forbidden",
-            "Not registered User, no try this nonsense again for your life",
-            401,
+            "InvalidOTP",
+            "The OTP provided is incorrect.",
+            400,
+            true
+          )
+        );
+        return;
+      }
+
+      const now = new Date();
+      if (
+        !dbCredential.otpCreatedAt ||
+        (now.getTime() - dbCredential.otpCreatedAt.getTime()) > 15 * 60 * 1000
+      ) {
+        next(
+          new GlobalError(
+            "ExpiredOTP",
+            "The OTP has expired. Please request a new one.",
+            400,
+            true
+          )
+        );
+        return;
+      }
+
+      if(!dbCredential.password) {
+        next(
+          new GlobalError(
+            "OAuthAccount",
+            "This account is linked via OAuth and does not have a password.",
+            400,
             true
           )
         );
@@ -206,13 +186,14 @@ export class PasswordResetController {
       //check if the new password and old password match
       const password_compare = await comparePassword(
         newPassword,
-        dbCredential?.password! //hashed already
+        dbCredential.password
       );
+
       if (password_compare) {
         next(
           new GlobalError(
             "SamePasswordError",
-            "new Password matches the old password. Insert a new unique password",
+            "New Password matches the old password. Insert a new unique password",
             400,
             true
           )
@@ -228,10 +209,12 @@ export class PasswordResetController {
         },
         data: {
           password: hash_Password,
+          otp: null,
+          otpCreatedAt: null
         },
       });
 
-      res.status(200).json({ success: true, msg: "password reset successful" });
+      res.status(200).json({ success: true, message: "Password reset successful" });
       return;
     } catch (error) {
       if (error instanceof GlobalError) {
@@ -249,7 +232,6 @@ export class PasswordResetController {
       if (error instanceof Error) {
         next(new GlobalError(error.name, error.message, 500, false));
         return;
-        // "Internal server Error"
       }
       next(
         new GlobalError("UnknownError", "Internal server Error", 500, false)

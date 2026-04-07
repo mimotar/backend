@@ -8,6 +8,11 @@ import { sendEmailWithTemplate } from "./emailService.js";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import { generateSixDigitString } from "../utils/OTPGenerator.js";
 
+import { transactionClosureQueue } from "../config/bullmq.js";
+import { sendEmail } from "./emailService.js";
+import { EmailType } from "../emails/templates/emailTypes.brevo.js";
+
+
 export const createTransactionService = async (data: TransactionType) => {
   const { files, expiresAt, creator_email, reciever_email, ...rest } = data;
   const LinkJwtPayload: JwtPayload = {
@@ -29,7 +34,7 @@ export const createTransactionService = async (data: TransactionType) => {
       expiresAt: new Date(parseDayToExpireToDate),
       files: files?.length ? JSON.stringify(files) : undefined,
       transactionToken: "",
-      txn_link: frontendUrl,
+      txn_link: `${frontendUrl}/${transactionToken}`,
     },
   });
 };
@@ -266,10 +271,6 @@ export const closeATransactionService = async (userId: number, transactionId: nu
   }
   return updatedTransaction;
 }
-
-import { transactionClosureQueue } from "../config/bullmq.js";
-import { sendEmail } from "./emailService.js";
-import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 
 export const resolveTransactionService = async (transactionId: number, initiatorEmail: string) => {
   const transaction = await prisma.transaction.findUnique({
