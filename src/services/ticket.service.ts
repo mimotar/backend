@@ -278,7 +278,7 @@ export const resolveTransactionService = async (transactionId: number, initiator
   });
   
   if (!transaction) throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
-  if (transaction.status !== "ONGOING") throw new GlobalError("Transaction is not ongoing", "InvalidStatusError", 400, true);
+  if (transaction.status !== "ONGOING" && transaction.status !== "DISPUTE") throw new GlobalError("InvalidStatusError", "Transaction is neither ongoing nor dispute", 400, true);
 
   // Identify who is who
   const isCreatorInitiator = transaction.creator_email === initiatorEmail;
