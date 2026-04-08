@@ -15,6 +15,7 @@ import settingsRouter from "./settings/settings.route.js";
 import tokenVerifyRouter from "./helpers/tokenVerify.route.js";
 import contactRouter from "./contact/contact.route.js";
 import profileRouter from "./profile.route.js";
+import dashboardRouter from "./dashboard.route.js";
 
 
 const router = Router();
@@ -49,5 +50,6 @@ router.use("/payment", paymentRouter)
 
 router.use("/contact", contactRouter);
 router.use("/profile", profileRouter);
+router.use("/dashboard", dashboardRouter);
 
 export default router;

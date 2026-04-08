@@ -1305,6 +1305,56 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    // ----- Dashboard -----
+    "/api/dashboard": {
+      get: {
+        summary: "Get dashboard summary",
+        description: "Returns escrow balance, total transactions, active disputes, categorised transaction counts, and transaction amounts over a specified timeframe.",
+        tags: ["Dashboard"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "months", in: "query", required: false, schema: { type: "integer" }, description: "Timeframe in months (e.g. 1, 2, 6, 12). If omitted, returns all-time data." }
+        ],
+        responses: {
+          "200": {
+            description: "Dashboard Summary Details",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        escrowBalance: { type: "number" },
+                        totalTransactions: { type: "integer" },
+                        openDisputes: { type: "integer" },
+                        transactionCount: {
+                          type: "object",
+                          properties: {
+                            ongoing: { type: "integer" },
+                            cancelled: { type: "integer" },
+                            completed: { type: "integer" }
+                          }
+                        },
+                        amountPerPeriod: {
+                          type: "object",
+                          additionalProperties: { type: "number" },
+                          description: "Transaction amount aggregated by YYYY-MM"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { description: "Unauthorized" }
+        }
+      }
+    },
   },
 };
 
