@@ -23,7 +23,8 @@ export interface Profile {
     id: number;
     address?: string | null;
     phone_no?: string | null;
-    avatar?: string | null;
+    avatarUrl?: string | null;
+    avatarPublicId?: string | null;
     bio?: string | null;
     verification_no?: string | null;
     verification_type?: string | null;

@@ -172,7 +172,8 @@ model Profile {
   id                Int     @id @default(autoincrement())
   address           String?
   phone_no          String?
-  avatar            String?
+  avatarUrl         String?
+  avatarPublicId    String?
   bio               String? @db.VarChar(100)
   verification_no   String?
   verification_type String?

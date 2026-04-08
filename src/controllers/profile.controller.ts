@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getProfileService, updateProfileService, UpdateProfileDto } from "../services/profile/profile.service.js";
+import { getProfileService, updateProfileService, uploadProfileImageService, UpdateProfileDto } from "../services/profile/profile.service.js";
 
 export const getProfileController = async (
   req: Request,
@@ -69,6 +69,47 @@ export const updateProfileController = async (
     });
   } catch (error) {
     console.error("Error in updateProfileController:", error);
+    res.status(500).json({
+      message: error instanceof Error ? error.message : "Internal server error",
+      success: false,
+    });
+  }
+};
+
+export const uploadAvatarController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as any;
+    const userId = user?.id || user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        message: "Unauthorized",
+        success: false,
+      });
+      return;
+    }
+
+    if (!req.file) {
+      res.status(400).json({
+        message: "No image file provided",
+        success: false,
+      });
+      return;
+    }
+
+    const result = await uploadProfileImageService(Number(userId), req.file);
+
+    res.status(200).json({
+      message: "Avatar uploaded successfully",
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error in uploadAvatarController:", error);
     res.status(500).json({
       message: error instanceof Error ? error.message : "Internal server error",
       success: false,

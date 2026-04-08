@@ -1,4 +1,5 @@
 import prisma from "../../utils/prisma.js";
+import { uploadToCloudinary, deleteCloudinaryFiles } from "../../config/cloudinary.js";
 
 export interface UpdateProfileDto {
   fullName?: string;
@@ -31,6 +32,7 @@ export const getProfileService = async (userId: number) => {
     country: user.profile?.country || null,
     postal_code: user.profile?.postal_code || null,
     id_number: user.profile?.id_number || null,
+    avatarUrl: user.profile?.avatarUrl || null,
   };
 };
 
@@ -84,4 +86,51 @@ export const updateProfileService = async (userId: number, data: UpdateProfileDt
   }
 
   return getProfileService(userId);
+};
+
+export const uploadProfileImageService = async (userId: number, file: Express.Multer.File) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { profile: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Delete existing avatar from cloudinary if it exists
+  if (user.profile && user.profile.avatarPublicId) {
+    try {
+      await deleteCloudinaryFiles([user.profile.avatarPublicId]);
+    } catch (error) {
+      console.error("Failed to delete existing avatar from Cloudinary", error);
+    }
+  }
+
+  // Upload new image
+  const uploadResult = await uploadToCloudinary(file, "profiles") as { url: string; public_id: string };
+
+  // Update or create profile
+  if (user.profile) {
+    await prisma.profile.update({
+      where: { user_id: userId },
+      data: {
+        avatarUrl: uploadResult.url,
+        avatarPublicId: uploadResult.public_id,
+      },
+    });
+  } else {
+    await prisma.profile.create({
+      data: {
+        user_id: userId,
+        avatarUrl: uploadResult.url,
+        avatarPublicId: uploadResult.public_id,
+      },
+    });
+  }
+
+  return {
+    avatarUrl: uploadResult.url,
+    avatarPublicId: uploadResult.public_id,
+  };
 };

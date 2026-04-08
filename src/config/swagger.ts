@@ -1305,6 +1305,37 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/profile/avatar": {
+      post: {
+        summary: "Upload profile avatar",
+        description: "Uploads an image file to be used as the user's profile avatar.",
+        tags: ["Profile"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "multipart/form-data": {
+              schema: {
+                type: "object",
+                properties: {
+                  avatar: {
+                    type: "string",
+                    format: "binary",
+                    description: "The image file to upload",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Avatar uploaded successfully",
+          },
+          "400": { description: "No image file provided" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
     // ----- Dashboard -----
     "/api/dashboard": {
       get: {
