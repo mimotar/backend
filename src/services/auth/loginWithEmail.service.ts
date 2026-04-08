@@ -6,6 +6,7 @@ export const loginWithEmailService = async (email: string, password: string) => 
   try {
     const user = await prisma.user.findUnique({
       where: { email },
+      include: { profile: true },
     });
     if (!user) {
       return {
@@ -45,6 +46,7 @@ export const loginWithEmailService = async (email: string, password: string) => 
             lastName: user.lastName,
             email: user.email,
             verified: user.verified,
+            profile: user.profile,
         }}
   } catch (error) {
     console.error("Error in login with email:", error);
