@@ -88,15 +88,14 @@ model User {
 }
 
 model Earnings {
-  id             Int           @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   userId         Int
   amount         Float
-  createdAt      DateTime      @default(now())
+  createdAt      DateTime    @default(now())
   description    String?
-  transaction_id Int           @unique
-  status         EarningStatus @default(PENDING)
-  transaction    Transaction   @relation(fields: [transaction_id], references: [id])
-  user           User          @relation(fields: [userId], references: [id])
+  transaction_id Int         @unique
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+  user           User        @relation(fields: [userId], references: [id])
 }
 
 model WalletTransaction {
@@ -172,8 +171,7 @@ model Profile {
   id                Int     @id @default(autoincrement())
   address           String?
   phone_no          String?
-  avatarUrl         String?
-  avatarPublicId    String?
+  avatar            String?
   bio               String? @db.VarChar(100)
   verification_no   String?
   verification_type String?
@@ -181,10 +179,6 @@ model Profile {
   next_email        String?
   next_no           String?
   user_id           Int     @unique
-  city              String?
-  country           String?
-  id_number         String?
-  postal_code       String?
   user              User    @relation(fields: [user_id], references: [id])
 }
 
@@ -261,7 +255,6 @@ enum StatusEnum {
   REJECTED
   CANCELED
   EXPIRED
-  PENDING_CLOSURE
 }
 
 enum PaymentMethod {
@@ -330,10 +323,4 @@ enum AccountStatus {
 enum Read {
   read
   unread
-}
-
-enum EarningStatus {
-  PENDING
-  PAID
-  FAILED
 }
