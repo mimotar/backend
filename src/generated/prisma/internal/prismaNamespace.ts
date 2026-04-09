@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.7.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.7.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -1496,8 +1496,7 @@ export const EarningsScalarFieldEnum = {
   amount: 'amount',
   createdAt: 'createdAt',
   description: 'description',
-  transaction_id: 'transaction_id',
-  status: 'status'
+  transaction_id: 'transaction_id'
 } as const
 
 export type EarningsScalarFieldEnum = (typeof EarningsScalarFieldEnum)[keyof typeof EarningsScalarFieldEnum]
@@ -1571,19 +1570,14 @@ export const ProfileScalarFieldEnum = {
   id: 'id',
   address: 'address',
   phone_no: 'phone_no',
-  avatarUrl: 'avatarUrl',
-  avatarPublicId: 'avatarPublicId',
+  avatar: 'avatar',
   bio: 'bio',
   verification_no: 'verification_no',
   verification_type: 'verification_type',
   next_kin: 'next_kin',
   next_email: 'next_email',
   next_no: 'next_no',
-  user_id: 'user_id',
-  city: 'city',
-  country: 'country',
-  id_number: 'id_number',
-  postal_code: 'postal_code'
+  user_id: 'user_id'
 } as const
 
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
@@ -1854,20 +1848,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'EarningStatus'
- */
-export type EnumEarningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningStatus'>
-    
-
-
-/**
- * Reference to a field of type 'EarningStatus[]'
- */
-export type ListEnumEarningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningStatus[]'>
     
 
 

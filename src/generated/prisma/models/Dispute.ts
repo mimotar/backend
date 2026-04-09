@@ -267,7 +267,7 @@ export type DisputeGroupByOutputType = {
   _max: DisputeMaxAggregateOutputType | null
 }
 
-type GetDisputeGroupByPayload<T extends DisputeGroupByArgs> = Prisma.PrismaPromise<
+export type GetDisputeGroupByPayload<T extends DisputeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DisputeGroupByOutputType, T['by']> &
       {
@@ -2123,6 +2123,11 @@ export type DisputeFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Disputes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Disputes.
+   */
   distinct?: Prisma.DisputeScalarFieldEnum | Prisma.DisputeScalarFieldEnum[]
 }
 

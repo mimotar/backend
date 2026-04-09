@@ -399,23 +399,6 @@ export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
-export type EnumEarningStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.EarningStatus | Prisma.EnumEarningStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel> | $Enums.EarningStatus
-}
-
-export type EnumEarningStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.EarningStatus | Prisma.EnumEarningStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumEarningStatusWithAggregatesFilter<$PrismaModel> | $Enums.EarningStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel>
-}
-
 export type EnumWalletTransactionTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.WalletTransactionType | Prisma.EnumWalletTransactionTypeFieldRefInput<$PrismaModel>
   in?: $Enums.WalletTransactionType[] | Prisma.ListEnumWalletTransactionTypeFieldRefInput<$PrismaModel>
@@ -961,23 +944,6 @@ export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
-}
-
-export type NestedEnumEarningStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.EarningStatus | Prisma.EnumEarningStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel> | $Enums.EarningStatus
-}
-
-export type NestedEnumEarningStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.EarningStatus | Prisma.EnumEarningStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.EarningStatus[] | Prisma.ListEnumEarningStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumEarningStatusWithAggregatesFilter<$PrismaModel> | $Enums.EarningStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumEarningStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumWalletTransactionTypeFilter<$PrismaModel = never> = {

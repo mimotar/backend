@@ -207,7 +207,7 @@ export type WalletTransactionGroupByOutputType = {
   _max: WalletTransactionMaxAggregateOutputType | null
 }
 
-type GetWalletTransactionGroupByPayload<T extends WalletTransactionGroupByArgs> = Prisma.PrismaPromise<
+export type GetWalletTransactionGroupByPayload<T extends WalletTransactionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WalletTransactionGroupByOutputType, T['by']> &
       {
@@ -1212,6 +1212,11 @@ export type WalletTransactionFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` WalletTransactions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WalletTransactions.
+   */
   distinct?: Prisma.WalletTransactionScalarFieldEnum | Prisma.WalletTransactionScalarFieldEnum[]
 }
 
