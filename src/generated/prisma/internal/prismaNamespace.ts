@@ -1568,6 +1568,10 @@ export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeo
 
 export const ProfileScalarFieldEnum = {
   id: 'id',
+  city: 'city',
+  country: 'country',
+  postal_code: 'postal_code',
+  id_number: 'id_number',
   address: 'address',
   phone_no: 'phone_no',
   avatar: 'avatar',
