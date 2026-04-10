@@ -158,3 +158,12 @@ export const Read = {
 } as const
 
 export type Read = (typeof Read)[keyof typeof Read]
+
+
+export const EarningsStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  PAID: 'PAID'
+} as const
+
+export type EarningsStatus = (typeof EarningsStatus)[keyof typeof EarningsStatus]

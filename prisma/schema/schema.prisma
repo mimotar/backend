@@ -72,8 +72,8 @@ model User {
   subject            String?
   otp                String?
   otpCreatedAt       DateTime?
-  totalEarnings      Decimal             @default(0) @db.Decimal(19, 2)
-  walletBalance      Decimal             @default(0) @db.Decimal(19, 2)
+  totalEarnings      Decimal @db.Decimal(19, 2) @default(0)
+  walletBalance      Decimal @db.Decimal(19, 2) @default(0)
   chats              ChatrParticipants[]
   disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
   disputesCreated    Dispute[]           @relation("DisputeCreator")
@@ -88,22 +88,21 @@ model User {
 }
 
 model Earnings {
-  id             Int              @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   userId         Int
-  amount         Decimal          @db.Decimal(19, 2)
-  createdAt      DateTime         @default(now())
+  amount         Decimal @db.Decimal(19, 2)
+  createdAt      DateTime    @default(now())
   description    String?
-  status         EarningsStatus   @default(PENDING)
-  transaction_id Int              @unique
-  transaction    Transaction      @relation(fields: [transaction_id], references: [id])
-  user           User             @relation(fields: [userId], references: [id])
+  transaction_id Int         @unique
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+  user           User        @relation(fields: [userId], references: [id])
 }
 
 model WalletTransaction {
   id          Int                   @id @default(autoincrement())
   userId      Int
   type        WalletTransactionType
-  amount      Decimal               @db.Decimal(19, 2)
+  amount Decimal @db.Decimal(19, 2)
   description String?
   createdAt   DateTime              @default(now())
   user        User                  @relation(fields: [userId], references: [id])
@@ -179,11 +178,11 @@ model Profile {
   next_kin          String?
   next_email        String?
   next_no           String?
+  user_id           Int     @unique
   city              String?
   country           String?
-  postal_code       String?
   id_number         String?
-  user_id           Int     @unique
+  postal_code       String?
   user              User    @relation(fields: [user_id], references: [id])
 }
 
@@ -329,10 +328,4 @@ enum AccountStatus {
 enum Read {
   read
   unread
-}
-
-enum EarningsStatus {
-  PENDING
-  COMPLETED
-  PAID
 }
