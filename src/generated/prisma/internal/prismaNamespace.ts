@@ -1496,6 +1496,7 @@ export const EarningsScalarFieldEnum = {
   amount: 'amount',
   createdAt: 'createdAt',
   description: 'description',
+  status: 'status',
   transaction_id: 'transaction_id'
 } as const
 
@@ -1577,6 +1578,10 @@ export const ProfileScalarFieldEnum = {
   next_kin: 'next_kin',
   next_email: 'next_email',
   next_no: 'next_no',
+  city: 'city',
+  country: 'country',
+  postal_code: 'postal_code',
+  id_number: 'id_number',
   user_id: 'user_id'
 } as const
 
@@ -1838,16 +1843,30 @@ export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'Decimal'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
 /**
- * Reference to a field of type 'Float[]'
+ * Reference to a field of type 'Decimal[]'
  */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EarningsStatus'
+ */
+export type EnumEarningsStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningsStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'EarningsStatus[]'
+ */
+export type ListEnumEarningsStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EarningsStatus[]'>
     
 
 
@@ -1960,6 +1979,20 @@ export type EnumReadFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Read[]'
  */
 export type ListEnumReadFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Read[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**

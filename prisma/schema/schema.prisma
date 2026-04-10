@@ -72,8 +72,8 @@ model User {
   subject            String?
   otp                String?
   otpCreatedAt       DateTime?
-  totalEarnings      Float               @default(0)
-  walletBalance      Float               @default(0)
+  totalEarnings      Decimal @db.Decimal(19, 2) @default(0)
+  walletBalance      Decimal @db.Decimal(19, 2) @default(0)
   chats              ChatrParticipants[]
   disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
   disputesCreated    Dispute[]           @relation("DisputeCreator")
@@ -90,7 +90,7 @@ model User {
 model Earnings {
   id             Int         @id @default(autoincrement())
   userId         Int
-  amount         Float
+  amount         Decimal @db.Decimal(19, 2)
   createdAt      DateTime    @default(now())
   description    String?
   transaction_id Int         @unique
@@ -102,7 +102,7 @@ model WalletTransaction {
   id          Int                   @id @default(autoincrement())
   userId      Int
   type        WalletTransactionType
-  amount      Float
+  amount Decimal @db.Decimal(19, 2)
   description String?
   createdAt   DateTime              @default(now())
   user        User                  @relation(fields: [userId], references: [id])
@@ -179,6 +179,10 @@ model Profile {
   next_email        String?
   next_no           String?
   user_id           Int     @unique
+  city              String?
+  country           String?
+  id_number         String?
+  postal_code       String?
   user              User    @relation(fields: [user_id], references: [id])
 }
 
@@ -255,6 +259,7 @@ enum StatusEnum {
   REJECTED
   CANCELED
   EXPIRED
+  PENDING_CLOSURE
 }
 
 enum PaymentMethod {

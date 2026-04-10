@@ -28,14 +28,14 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
-  totalEarnings: number | null
-  walletBalance: number | null
+  totalEarnings: runtime.Decimal | null
+  walletBalance: runtime.Decimal | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
-  totalEarnings: number | null
-  walletBalance: number | null
+  totalEarnings: runtime.Decimal | null
+  walletBalance: runtime.Decimal | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -51,8 +51,8 @@ export type UserMinAggregateOutputType = {
   subject: string | null
   otp: string | null
   otpCreatedAt: Date | null
-  totalEarnings: number | null
-  walletBalance: number | null
+  totalEarnings: runtime.Decimal | null
+  walletBalance: runtime.Decimal | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -68,8 +68,8 @@ export type UserMaxAggregateOutputType = {
   subject: string | null
   otp: string | null
   otpCreatedAt: Date | null
-  totalEarnings: number | null
-  walletBalance: number | null
+  totalEarnings: runtime.Decimal | null
+  walletBalance: runtime.Decimal | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -254,8 +254,8 @@ export type UserGroupByOutputType = {
   subject: string | null
   otp: string | null
   otpCreatedAt: Date | null
-  totalEarnings: number
-  walletBalance: number
+  totalEarnings: runtime.Decimal
+  walletBalance: runtime.Decimal
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -294,8 +294,8 @@ export type UserWhereInput = {
   subject?: Prisma.StringNullableFilter<"User"> | string | null
   otp?: Prisma.StringNullableFilter<"User"> | string | null
   otpCreatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  totalEarnings?: Prisma.FloatFilter<"User"> | number
-  walletBalance?: Prisma.FloatFilter<"User"> | number
+  totalEarnings?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsListRelationFilter
   disputesAsBuyer?: Prisma.DisputeListRelationFilter
   disputesCreated?: Prisma.DisputeListRelationFilter
@@ -353,8 +353,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   subject?: Prisma.StringNullableFilter<"User"> | string | null
   otp?: Prisma.StringNullableFilter<"User"> | string | null
   otpCreatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  totalEarnings?: Prisma.FloatFilter<"User"> | number
-  walletBalance?: Prisma.FloatFilter<"User"> | number
+  totalEarnings?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsListRelationFilter
   disputesAsBuyer?: Prisma.DisputeListRelationFilter
   disputesCreated?: Prisma.DisputeListRelationFilter
@@ -406,8 +406,8 @@ export type UserScalarWhereWithAggregatesInput = {
   subject?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   otp?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   otpCreatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  totalEarnings?: Prisma.FloatWithAggregatesFilter<"User"> | number
-  walletBalance?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  totalEarnings?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCreateInput = {
@@ -422,8 +422,8 @@ export type UserCreateInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -450,8 +450,8 @@ export type UserUncheckedCreateInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -477,8 +477,8 @@ export type UserUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -505,8 +505,8 @@ export type UserUncheckedUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -533,8 +533,8 @@ export type UserCreateManyInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -549,8 +549,8 @@ export type UserUpdateManyMutationInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -566,8 +566,8 @@ export type UserUncheckedUpdateManyInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -659,12 +659,12 @@ export type UserUpdateOneWithoutTransactionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransactionInput, Prisma.UserUpdateWithoutTransactionInput>, Prisma.UserUncheckedUpdateWithoutTransactionInput>
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCreateNestedOneWithoutEarningsInput = {
@@ -819,8 +819,8 @@ export type UserCreateWithoutTransactionInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -846,8 +846,8 @@ export type UserUncheckedCreateWithoutTransactionInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -888,8 +888,8 @@ export type UserUpdateWithoutTransactionInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -915,8 +915,8 @@ export type UserUncheckedUpdateWithoutTransactionInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -941,8 +941,8 @@ export type UserCreateWithoutEarningsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -968,8 +968,8 @@ export type UserUncheckedCreateWithoutEarningsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1010,8 +1010,8 @@ export type UserUpdateWithoutEarningsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -1037,8 +1037,8 @@ export type UserUncheckedUpdateWithoutEarningsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1063,8 +1063,8 @@ export type UserCreateWithoutWalletTransactionsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -1090,8 +1090,8 @@ export type UserUncheckedCreateWithoutWalletTransactionsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1132,8 +1132,8 @@ export type UserUpdateWithoutWalletTransactionsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -1159,8 +1159,8 @@ export type UserUncheckedUpdateWithoutWalletTransactionsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1185,8 +1185,8 @@ export type UserCreateWithoutDisputesAsBuyerInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
   disputesAsSeller?: Prisma.DisputeCreateNestedManyWithoutSellerInput
@@ -1212,8 +1212,8 @@ export type UserUncheckedCreateWithoutDisputesAsBuyerInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
   disputesAsSeller?: Prisma.DisputeUncheckedCreateNestedManyWithoutSellerInput
@@ -1243,8 +1243,8 @@ export type UserCreateWithoutDisputesCreatedInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesAsSeller?: Prisma.DisputeCreateNestedManyWithoutSellerInput
@@ -1270,8 +1270,8 @@ export type UserUncheckedCreateWithoutDisputesCreatedInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesAsSeller?: Prisma.DisputeUncheckedCreateNestedManyWithoutSellerInput
@@ -1301,8 +1301,8 @@ export type UserCreateWithoutDisputesAsSellerInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -1328,8 +1328,8 @@ export type UserUncheckedCreateWithoutDisputesAsSellerInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1370,8 +1370,8 @@ export type UserUpdateWithoutDisputesAsBuyerInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
   disputesAsSeller?: Prisma.DisputeUpdateManyWithoutSellerNestedInput
@@ -1397,8 +1397,8 @@ export type UserUncheckedUpdateWithoutDisputesAsBuyerInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
   disputesAsSeller?: Prisma.DisputeUncheckedUpdateManyWithoutSellerNestedInput
@@ -1434,8 +1434,8 @@ export type UserUpdateWithoutDisputesCreatedInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesAsSeller?: Prisma.DisputeUpdateManyWithoutSellerNestedInput
@@ -1461,8 +1461,8 @@ export type UserUncheckedUpdateWithoutDisputesCreatedInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesAsSeller?: Prisma.DisputeUncheckedUpdateManyWithoutSellerNestedInput
@@ -1498,8 +1498,8 @@ export type UserUpdateWithoutDisputesAsSellerInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -1525,8 +1525,8 @@ export type UserUncheckedUpdateWithoutDisputesAsSellerInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1551,8 +1551,8 @@ export type UserCreateWithoutChatsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
   disputesAsSeller?: Prisma.DisputeCreateNestedManyWithoutSellerInput
@@ -1578,8 +1578,8 @@ export type UserUncheckedCreateWithoutChatsInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
   disputesAsSeller?: Prisma.DisputeUncheckedCreateNestedManyWithoutSellerInput
@@ -1620,8 +1620,8 @@ export type UserUpdateWithoutChatsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
   disputesAsSeller?: Prisma.DisputeUpdateManyWithoutSellerNestedInput
@@ -1647,8 +1647,8 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
   disputesAsSeller?: Prisma.DisputeUncheckedUpdateManyWithoutSellerNestedInput
@@ -1673,8 +1673,8 @@ export type UserCreateWithoutMessagesInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -1700,8 +1700,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1742,8 +1742,8 @@ export type UserUpdateWithoutMessagesInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -1769,8 +1769,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1795,8 +1795,8 @@ export type UserCreateWithoutProfileInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -1822,8 +1822,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1864,8 +1864,8 @@ export type UserUpdateWithoutProfileInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -1891,8 +1891,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1917,8 +1917,8 @@ export type UserCreateWithoutSettingInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -1944,8 +1944,8 @@ export type UserUncheckedCreateWithoutSettingInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -1986,8 +1986,8 @@ export type UserUpdateWithoutSettingInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -2013,8 +2013,8 @@ export type UserUncheckedUpdateWithoutSettingInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2039,8 +2039,8 @@ export type UserCreateWithoutNotificationInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
@@ -2066,8 +2066,8 @@ export type UserUncheckedCreateWithoutNotificationInput = {
   subject?: string | null
   otp?: string | null
   otpCreatedAt?: Date | string | null
-  totalEarnings?: number
-  walletBalance?: number
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
   disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
   disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
@@ -2108,8 +2108,8 @@ export type UserUpdateWithoutNotificationInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
@@ -2135,8 +2135,8 @@ export type UserUncheckedUpdateWithoutNotificationInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
   disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
   disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2378,8 +2378,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     subject: string | null
     otp: string | null
     otpCreatedAt: Date | null
-    totalEarnings: number
-    walletBalance: number
+    totalEarnings: runtime.Decimal
+    walletBalance: runtime.Decimal
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2826,8 +2826,8 @@ export interface UserFieldRefs {
   readonly subject: Prisma.FieldRef<"User", 'String'>
   readonly otp: Prisma.FieldRef<"User", 'String'>
   readonly otpCreatedAt: Prisma.FieldRef<"User", 'DateTime'>
-  readonly totalEarnings: Prisma.FieldRef<"User", 'Float'>
-  readonly walletBalance: Prisma.FieldRef<"User", 'Float'>
+  readonly totalEarnings: Prisma.FieldRef<"User", 'Decimal'>
+  readonly walletBalance: Prisma.FieldRef<"User", 'Decimal'>
 }
     
 

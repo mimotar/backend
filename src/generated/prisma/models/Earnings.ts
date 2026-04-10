@@ -29,32 +29,34 @@ export type AggregateEarnings = {
 export type EarningsAvgAggregateOutputType = {
   id: number | null
   userId: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   transaction_id: number | null
 }
 
 export type EarningsSumAggregateOutputType = {
   id: number | null
   userId: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   transaction_id: number | null
 }
 
 export type EarningsMinAggregateOutputType = {
   id: number | null
   userId: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   createdAt: Date | null
   description: string | null
+  status: $Enums.EarningsStatus | null
   transaction_id: number | null
 }
 
 export type EarningsMaxAggregateOutputType = {
   id: number | null
   userId: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   createdAt: Date | null
   description: string | null
+  status: $Enums.EarningsStatus | null
   transaction_id: number | null
 }
 
@@ -64,6 +66,7 @@ export type EarningsCountAggregateOutputType = {
   amount: number
   createdAt: number
   description: number
+  status: number
   transaction_id: number
   _all: number
 }
@@ -89,6 +92,7 @@ export type EarningsMinAggregateInputType = {
   amount?: true
   createdAt?: true
   description?: true
+  status?: true
   transaction_id?: true
 }
 
@@ -98,6 +102,7 @@ export type EarningsMaxAggregateInputType = {
   amount?: true
   createdAt?: true
   description?: true
+  status?: true
   transaction_id?: true
 }
 
@@ -107,6 +112,7 @@ export type EarningsCountAggregateInputType = {
   amount?: true
   createdAt?: true
   description?: true
+  status?: true
   transaction_id?: true
   _all?: true
 }
@@ -200,9 +206,10 @@ export type EarningsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type EarningsGroupByOutputType = {
   id: number
   userId: number
-  amount: number
+  amount: runtime.Decimal
   createdAt: Date
   description: string | null
+  status: $Enums.EarningsStatus
   transaction_id: number
   _count: EarningsCountAggregateOutputType | null
   _avg: EarningsAvgAggregateOutputType | null
@@ -232,9 +239,10 @@ export type EarningsWhereInput = {
   NOT?: Prisma.EarningsWhereInput | Prisma.EarningsWhereInput[]
   id?: Prisma.IntFilter<"Earnings"> | number
   userId?: Prisma.IntFilter<"Earnings"> | number
-  amount?: Prisma.FloatFilter<"Earnings"> | number
+  amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableFilter<"Earnings"> | string | null
+  status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFilter<"Earnings"> | number
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -246,6 +254,7 @@ export type EarningsOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
   transaction?: Prisma.TransactionOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -258,9 +267,10 @@ export type EarningsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EarningsWhereInput[]
   NOT?: Prisma.EarningsWhereInput | Prisma.EarningsWhereInput[]
   userId?: Prisma.IntFilter<"Earnings"> | number
-  amount?: Prisma.FloatFilter<"Earnings"> | number
+  amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableFilter<"Earnings"> | string | null
+  status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "transaction_id">
@@ -271,6 +281,7 @@ export type EarningsOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
   _count?: Prisma.EarningsCountOrderByAggregateInput
   _avg?: Prisma.EarningsAvgOrderByAggregateInput
@@ -285,16 +296,18 @@ export type EarningsScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EarningsScalarWhereWithAggregatesInput | Prisma.EarningsScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Earnings"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Earnings"> | number
-  amount?: Prisma.FloatWithAggregatesFilter<"Earnings"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Earnings"> | string | null
+  status?: Prisma.EnumEarningsStatusWithAggregatesFilter<"Earnings"> | $Enums.EarningsStatus
   transaction_id?: Prisma.IntWithAggregatesFilter<"Earnings"> | number
 }
 
 export type EarningsCreateInput = {
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction: Prisma.TransactionCreateNestedOneWithoutEarningsInput
   user: Prisma.UserCreateNestedOneWithoutEarningsInput
 }
@@ -302,16 +315,18 @@ export type EarningsCreateInput = {
 export type EarningsUncheckedCreateInput = {
   id?: number
   userId: number
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction_id: number
 }
 
 export type EarningsUpdateInput = {
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutEarningsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEarningsNestedInput
 }
@@ -319,33 +334,37 @@ export type EarningsUpdateInput = {
 export type EarningsUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EarningsCreateManyInput = {
   id?: number
   userId: number
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction_id: number
 }
 
 export type EarningsUpdateManyMutationInput = {
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
 export type EarningsUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -370,6 +389,7 @@ export type EarningsCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
 }
 
@@ -386,6 +406,7 @@ export type EarningsMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
 }
 
@@ -395,6 +416,7 @@ export type EarningsMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
 }
 
@@ -479,19 +501,25 @@ export type EarningsUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
 }
 
+export type EnumEarningsStatusFieldUpdateOperationsInput = {
+  set?: $Enums.EarningsStatus
+}
+
 export type EarningsCreateWithoutTransactionInput = {
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   user: Prisma.UserCreateNestedOneWithoutEarningsInput
 }
 
 export type EarningsUncheckedCreateWithoutTransactionInput = {
   id?: number
   userId: number
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
 }
 
 export type EarningsCreateOrConnectWithoutTransactionInput = {
@@ -511,32 +539,36 @@ export type EarningsUpdateToOneWithWhereWithoutTransactionInput = {
 }
 
 export type EarningsUpdateWithoutTransactionInput = {
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   user?: Prisma.UserUpdateOneRequiredWithoutEarningsNestedInput
 }
 
 export type EarningsUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
 export type EarningsCreateWithoutUserInput = {
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction: Prisma.TransactionCreateNestedOneWithoutEarningsInput
 }
 
 export type EarningsUncheckedCreateWithoutUserInput = {
   id?: number
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction_id: number
 }
 
@@ -572,40 +604,45 @@ export type EarningsScalarWhereInput = {
   NOT?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
   id?: Prisma.IntFilter<"Earnings"> | number
   userId?: Prisma.IntFilter<"Earnings"> | number
-  amount?: Prisma.FloatFilter<"Earnings"> | number
+  amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableFilter<"Earnings"> | string | null
+  status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFilter<"Earnings"> | number
 }
 
 export type EarningsCreateManyUserInput = {
   id?: number
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  status?: $Enums.EarningsStatus
   transaction_id: number
 }
 
 export type EarningsUpdateWithoutUserInput = {
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutEarningsNestedInput
 }
 
 export type EarningsUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EarningsUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -617,6 +654,7 @@ export type EarningsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   amount?: boolean
   createdAt?: boolean
   description?: boolean
+  status?: boolean
   transaction_id?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -628,6 +666,7 @@ export type EarningsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   amount?: boolean
   createdAt?: boolean
   description?: boolean
+  status?: boolean
   transaction_id?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -639,6 +678,7 @@ export type EarningsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   amount?: boolean
   createdAt?: boolean
   description?: boolean
+  status?: boolean
   transaction_id?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -650,10 +690,11 @@ export type EarningsSelectScalar = {
   amount?: boolean
   createdAt?: boolean
   description?: boolean
+  status?: boolean
   transaction_id?: boolean
 }
 
-export type EarningsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "createdAt" | "description" | "transaction_id", ExtArgs["result"]["earnings"]>
+export type EarningsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "createdAt" | "description" | "status" | "transaction_id", ExtArgs["result"]["earnings"]>
 export type EarningsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -676,9 +717,10 @@ export type $EarningsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
-    amount: number
+    amount: runtime.Decimal
     createdAt: Date
     description: string | null
+    status: $Enums.EarningsStatus
     transaction_id: number
   }, ExtArgs["result"]["earnings"]>
   composites: {}
@@ -1107,9 +1149,10 @@ export interface Prisma__EarningsClient<T, Null = never, ExtArgs extends runtime
 export interface EarningsFieldRefs {
   readonly id: Prisma.FieldRef<"Earnings", 'Int'>
   readonly userId: Prisma.FieldRef<"Earnings", 'Int'>
-  readonly amount: Prisma.FieldRef<"Earnings", 'Float'>
+  readonly amount: Prisma.FieldRef<"Earnings", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"Earnings", 'DateTime'>
   readonly description: Prisma.FieldRef<"Earnings", 'String'>
+  readonly status: Prisma.FieldRef<"Earnings", 'EarningsStatus'>
   readonly transaction_id: Prisma.FieldRef<"Earnings", 'Int'>
 }
     

@@ -5,6 +5,10 @@ export interface UpdateProfileDto {
   fullName?: string;
   phone_no?: string;
   address?: string;
+  city?: string;
+  country?: string;
+  postal_code?: string;
+  id_number?: string;
 }
 
 export const getProfileService = async (userId: number) => {
