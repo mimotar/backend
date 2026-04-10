@@ -47,11 +47,11 @@ export type ProfileMinAggregateOutputType = {
   next_kin: string | null
   next_email: string | null
   next_no: string | null
+  user_id: number | null
   city: string | null
   country: string | null
-  postal_code: string | null
   id_number: string | null
-  user_id: number | null
+  postal_code: string | null
 }
 
 export type ProfileMaxAggregateOutputType = {
@@ -65,11 +65,11 @@ export type ProfileMaxAggregateOutputType = {
   next_kin: string | null
   next_email: string | null
   next_no: string | null
+  user_id: number | null
   city: string | null
   country: string | null
-  postal_code: string | null
   id_number: string | null
-  user_id: number | null
+  postal_code: string | null
 }
 
 export type ProfileCountAggregateOutputType = {
@@ -83,11 +83,11 @@ export type ProfileCountAggregateOutputType = {
   next_kin: number
   next_email: number
   next_no: number
+  user_id: number
   city: number
   country: number
-  postal_code: number
   id_number: number
-  user_id: number
+  postal_code: number
   _all: number
 }
 
@@ -113,11 +113,11 @@ export type ProfileMinAggregateInputType = {
   next_kin?: true
   next_email?: true
   next_no?: true
+  user_id?: true
   city?: true
   country?: true
-  postal_code?: true
   id_number?: true
-  user_id?: true
+  postal_code?: true
 }
 
 export type ProfileMaxAggregateInputType = {
@@ -131,11 +131,11 @@ export type ProfileMaxAggregateInputType = {
   next_kin?: true
   next_email?: true
   next_no?: true
+  user_id?: true
   city?: true
   country?: true
-  postal_code?: true
   id_number?: true
-  user_id?: true
+  postal_code?: true
 }
 
 export type ProfileCountAggregateInputType = {
@@ -149,11 +149,11 @@ export type ProfileCountAggregateInputType = {
   next_kin?: true
   next_email?: true
   next_no?: true
+  user_id?: true
   city?: true
   country?: true
-  postal_code?: true
   id_number?: true
-  user_id?: true
+  postal_code?: true
   _all?: true
 }
 
@@ -254,11 +254,11 @@ export type ProfileGroupByOutputType = {
   next_kin: string | null
   next_email: string | null
   next_no: string | null
+  user_id: number
   city: string | null
   country: string | null
-  postal_code: string | null
   id_number: string | null
-  user_id: number
+  postal_code: string | null
   _count: ProfileCountAggregateOutputType | null
   _avg: ProfileAvgAggregateOutputType | null
   _sum: ProfileSumAggregateOutputType | null
@@ -295,11 +295,11 @@ export type ProfileWhereInput = {
   next_kin?: Prisma.StringNullableFilter<"Profile"> | string | null
   next_email?: Prisma.StringNullableFilter<"Profile"> | string | null
   next_no?: Prisma.StringNullableFilter<"Profile"> | string | null
+  user_id?: Prisma.IntFilter<"Profile"> | number
   city?: Prisma.StringNullableFilter<"Profile"> | string | null
   country?: Prisma.StringNullableFilter<"Profile"> | string | null
-  postal_code?: Prisma.StringNullableFilter<"Profile"> | string | null
   id_number?: Prisma.StringNullableFilter<"Profile"> | string | null
-  user_id?: Prisma.IntFilter<"Profile"> | number
+  postal_code?: Prisma.StringNullableFilter<"Profile"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -314,11 +314,11 @@ export type ProfileOrderByWithRelationInput = {
   next_kin?: Prisma.SortOrderInput | Prisma.SortOrder
   next_email?: Prisma.SortOrderInput | Prisma.SortOrder
   next_no?: Prisma.SortOrderInput | Prisma.SortOrder
+  user_id?: Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
-  postal_code?: Prisma.SortOrderInput | Prisma.SortOrder
   id_number?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  postal_code?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -339,8 +339,8 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   next_no?: Prisma.StringNullableFilter<"Profile"> | string | null
   city?: Prisma.StringNullableFilter<"Profile"> | string | null
   country?: Prisma.StringNullableFilter<"Profile"> | string | null
-  postal_code?: Prisma.StringNullableFilter<"Profile"> | string | null
   id_number?: Prisma.StringNullableFilter<"Profile"> | string | null
+  postal_code?: Prisma.StringNullableFilter<"Profile"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "user_id">
 
@@ -355,11 +355,11 @@ export type ProfileOrderByWithAggregationInput = {
   next_kin?: Prisma.SortOrderInput | Prisma.SortOrder
   next_email?: Prisma.SortOrderInput | Prisma.SortOrder
   next_no?: Prisma.SortOrderInput | Prisma.SortOrder
+  user_id?: Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
-  postal_code?: Prisma.SortOrderInput | Prisma.SortOrder
   id_number?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  postal_code?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProfileCountOrderByAggregateInput
   _avg?: Prisma.ProfileAvgOrderByAggregateInput
   _max?: Prisma.ProfileMaxOrderByAggregateInput
@@ -381,11 +381,11 @@ export type ProfileScalarWhereWithAggregatesInput = {
   next_kin?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   next_email?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   next_no?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  user_id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
   city?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  postal_code?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   id_number?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  user_id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
+  postal_code?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
 }
 
 export type ProfileCreateInput = {
@@ -400,8 +400,8 @@ export type ProfileCreateInput = {
   next_no?: string | null
   city?: string | null
   country?: string | null
-  postal_code?: string | null
   id_number?: string | null
+  postal_code?: string | null
   user: Prisma.UserCreateNestedOneWithoutProfileInput
 }
 
@@ -416,11 +416,11 @@ export type ProfileUncheckedCreateInput = {
   next_kin?: string | null
   next_email?: string | null
   next_no?: string | null
+  user_id: number
   city?: string | null
   country?: string | null
-  postal_code?: string | null
   id_number?: string | null
-  user_id: number
+  postal_code?: string | null
 }
 
 export type ProfileUpdateInput = {
@@ -435,8 +435,8 @@ export type ProfileUpdateInput = {
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
 }
 
@@ -451,11 +451,11 @@ export type ProfileUncheckedUpdateInput = {
   next_kin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   next_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProfileCreateManyInput = {
@@ -469,11 +469,11 @@ export type ProfileCreateManyInput = {
   next_kin?: string | null
   next_email?: string | null
   next_no?: string | null
+  user_id: number
   city?: string | null
   country?: string | null
-  postal_code?: string | null
   id_number?: string | null
-  user_id: number
+  postal_code?: string | null
 }
 
 export type ProfileUpdateManyMutationInput = {
@@ -488,8 +488,8 @@ export type ProfileUpdateManyMutationInput = {
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProfileUncheckedUpdateManyInput = {
@@ -503,11 +503,11 @@ export type ProfileUncheckedUpdateManyInput = {
   next_kin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   next_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProfileNullableScalarRelationFilter = {
@@ -526,11 +526,11 @@ export type ProfileCountOrderByAggregateInput = {
   next_kin?: Prisma.SortOrder
   next_email?: Prisma.SortOrder
   next_no?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
   city?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  postal_code?: Prisma.SortOrder
   id_number?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  postal_code?: Prisma.SortOrder
 }
 
 export type ProfileAvgOrderByAggregateInput = {
@@ -549,11 +549,11 @@ export type ProfileMaxOrderByAggregateInput = {
   next_kin?: Prisma.SortOrder
   next_email?: Prisma.SortOrder
   next_no?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
   city?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  postal_code?: Prisma.SortOrder
   id_number?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  postal_code?: Prisma.SortOrder
 }
 
 export type ProfileMinOrderByAggregateInput = {
@@ -567,11 +567,11 @@ export type ProfileMinOrderByAggregateInput = {
   next_kin?: Prisma.SortOrder
   next_email?: Prisma.SortOrder
   next_no?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
   city?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  postal_code?: Prisma.SortOrder
   id_number?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  postal_code?: Prisma.SortOrder
 }
 
 export type ProfileSumOrderByAggregateInput = {
@@ -623,8 +623,8 @@ export type ProfileCreateWithoutUserInput = {
   next_no?: string | null
   city?: string | null
   country?: string | null
-  postal_code?: string | null
   id_number?: string | null
+  postal_code?: string | null
 }
 
 export type ProfileUncheckedCreateWithoutUserInput = {
@@ -640,8 +640,8 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   next_no?: string | null
   city?: string | null
   country?: string | null
-  postal_code?: string | null
   id_number?: string | null
+  postal_code?: string | null
 }
 
 export type ProfileCreateOrConnectWithoutUserInput = {
@@ -672,8 +672,8 @@ export type ProfileUpdateWithoutUserInput = {
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProfileUncheckedUpdateWithoutUserInput = {
@@ -689,8 +689,8 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
   next_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postal_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -706,11 +706,11 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   next_kin?: boolean
   next_email?: boolean
   next_no?: boolean
+  user_id?: boolean
   city?: boolean
   country?: boolean
-  postal_code?: boolean
   id_number?: boolean
-  user_id?: boolean
+  postal_code?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -725,11 +725,11 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   next_kin?: boolean
   next_email?: boolean
   next_no?: boolean
+  user_id?: boolean
   city?: boolean
   country?: boolean
-  postal_code?: boolean
   id_number?: boolean
-  user_id?: boolean
+  postal_code?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -744,11 +744,11 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   next_kin?: boolean
   next_email?: boolean
   next_no?: boolean
+  user_id?: boolean
   city?: boolean
   country?: boolean
-  postal_code?: boolean
   id_number?: boolean
-  user_id?: boolean
+  postal_code?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -763,14 +763,14 @@ export type ProfileSelectScalar = {
   next_kin?: boolean
   next_email?: boolean
   next_no?: boolean
+  user_id?: boolean
   city?: boolean
   country?: boolean
-  postal_code?: boolean
   id_number?: boolean
-  user_id?: boolean
+  postal_code?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "city" | "country" | "postal_code" | "id_number" | "user_id", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "user_id" | "city" | "country" | "id_number" | "postal_code", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -797,11 +797,11 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     next_kin: string | null
     next_email: string | null
     next_no: string | null
+    user_id: number
     city: string | null
     country: string | null
-    postal_code: string | null
     id_number: string | null
-    user_id: number
+    postal_code: string | null
   }, ExtArgs["result"]["profile"]>
   composites: {}
 }
@@ -1236,11 +1236,11 @@ export interface ProfileFieldRefs {
   readonly next_kin: Prisma.FieldRef<"Profile", 'String'>
   readonly next_email: Prisma.FieldRef<"Profile", 'String'>
   readonly next_no: Prisma.FieldRef<"Profile", 'String'>
+  readonly user_id: Prisma.FieldRef<"Profile", 'Int'>
   readonly city: Prisma.FieldRef<"Profile", 'String'>
   readonly country: Prisma.FieldRef<"Profile", 'String'>
-  readonly postal_code: Prisma.FieldRef<"Profile", 'String'>
   readonly id_number: Prisma.FieldRef<"Profile", 'String'>
-  readonly user_id: Prisma.FieldRef<"Profile", 'Int'>
+  readonly postal_code: Prisma.FieldRef<"Profile", 'String'>
 }
     
 

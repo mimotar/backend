@@ -161,8 +161,8 @@ export const EarningsScalarFieldEnum = {
   amount: 'amount',
   createdAt: 'createdAt',
   description: 'description',
-  status: 'status',
-  transaction_id: 'transaction_id'
+  transaction_id: 'transaction_id',
+  status: 'status'
 } as const
 
 export type EarningsScalarFieldEnum = (typeof EarningsScalarFieldEnum)[keyof typeof EarningsScalarFieldEnum]
@@ -243,11 +243,11 @@ export const ProfileScalarFieldEnum = {
   next_kin: 'next_kin',
   next_email: 'next_email',
   next_no: 'next_no',
+  user_id: 'user_id',
   city: 'city',
   country: 'country',
-  postal_code: 'postal_code',
   id_number: 'id_number',
-  user_id: 'user_id'
+  postal_code: 'postal_code'
 } as const
 
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
