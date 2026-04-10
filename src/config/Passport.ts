@@ -91,7 +91,7 @@ export const HandleSocialAuth = async (
           verified: true,
           profile: {
             create: {
-              avatarUrl: picture,
+              avatar: picture,
             },
           },
         },
