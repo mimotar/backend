@@ -116,9 +116,9 @@ export async function DashboardService(id: number, months?: number) {
     userEarnings.forEach(e => {
         const period = e.createdAt.toISOString().slice(0, 7);
         if (amountPerPeriod[period] !== undefined) {
-             amountPerPeriod[period] += e.amount;
+             amountPerPeriod[period] += e.amount.toNumber();
         } else if (!months) {
-             amountPerPeriod[period] = e.amount;
+             amountPerPeriod[period] = e.amount.toNumber();
         }
     });
 
