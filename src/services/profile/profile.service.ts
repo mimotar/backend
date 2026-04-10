@@ -1,14 +1,10 @@
 import prisma from "../../utils/prisma.js";
-import { uploadToCloudinary, deleteCloudinaryFiles } from "../../config/cloudinary.js";
+import { uploadToCloudinary } from "../../config/cloudinary.js";
 
 export interface UpdateProfileDto {
   fullName?: string;
   phone_no?: string;
   address?: string;
-  city?: string;
-  country?: string;
-  postal_code?: string;
-  id_number?: string;
 }
 
 export const getProfileService = async (userId: number) => {
@@ -28,11 +24,7 @@ export const getProfileService = async (userId: number) => {
     email: user.email,
     phone_no: user.profile?.phone_no || null,
     address: user.profile?.address || null,
-    city: user.profile?.city || null,
-    country: user.profile?.country || null,
-    postal_code: user.profile?.postal_code || null,
-    id_number: user.profile?.id_number || null,
-    avatarUrl: user.profile?.avatarUrl || null,
+    avatar: user.profile?.avatar || null,
   };
 };
 
@@ -65,10 +57,6 @@ export const updateProfileService = async (userId: number, data: UpdateProfileDt
   const profileData = {
     phone_no: data.phone_no !== undefined ? data.phone_no : user.profile?.phone_no,
     address: data.address !== undefined ? data.address : user.profile?.address,
-    city: data.city !== undefined ? data.city : user.profile?.city,
-    country: data.country !== undefined ? data.country : user.profile?.country,
-    postal_code: data.postal_code !== undefined ? data.postal_code : user.profile?.postal_code,
-    id_number: data.id_number !== undefined ? data.id_number : user.profile?.id_number,
   };
 
   if (user.profile) {
@@ -99,14 +87,6 @@ export const uploadProfileImageService = async (userId: number, file: Express.Mu
   }
 
   // Delete existing avatar from cloudinary if it exists
-  if (user.profile && user.profile.avatarPublicId) {
-    try {
-      await deleteCloudinaryFiles([user.profile.avatarPublicId]);
-    } catch (error) {
-      console.error("Failed to delete existing avatar from Cloudinary", error);
-    }
-  }
-
   // Upload new image
   const uploadResult = await uploadToCloudinary(file, "profiles") as { url: string; public_id: string };
 
@@ -115,22 +95,19 @@ export const uploadProfileImageService = async (userId: number, file: Express.Mu
     await prisma.profile.update({
       where: { user_id: userId },
       data: {
-        avatarUrl: uploadResult.url,
-        avatarPublicId: uploadResult.public_id,
+        avatar: uploadResult.url,
       },
     });
   } else {
     await prisma.profile.create({
       data: {
         user_id: userId,
-        avatarUrl: uploadResult.url,
-        avatarPublicId: uploadResult.public_id,
+        avatar: uploadResult.url,
       },
     });
   }
 
   return {
-    avatarUrl: uploadResult.url,
-    avatarPublicId: uploadResult.public_id,
+    avatar: uploadResult.url,
   };
 };
