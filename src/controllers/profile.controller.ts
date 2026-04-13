@@ -54,10 +54,10 @@ export const updateProfileController = async (
       fullName: req.body.fullName,
       phone_no: req.body.phone_no,
       address: req.body.address,
-      city: req.body.city ?? null,
-      country: req.body.country ?? null,
-      postal_code: req.body.postal_code ?? null,
-      id_number: req.body.id_number ?? null,
+      city: req.body.city,
+      country: req.body.country,
+      postal_code: req.body.postal_code,
+      id_number: req.body.id_number,
     };
 
     const updatedProfile = await updateProfileService(Number(userId), updateData);

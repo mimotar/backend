@@ -88,15 +88,15 @@ model User {
 }
 
 model Earnings {
-  id             Int         @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   userId         Int
   amount         Decimal        @db.Decimal(19, 2)
-  createdAt      DateTime    @default(now())
+  createdAt      DateTime       @default(now())
   description    String?
-  transaction_id Int         @unique
-  status         EarningsStatus   @default(PENDING)
-  transaction    Transaction @relation(fields: [transaction_id], references: [id])
-  user           User        @relation(fields: [userId], references: [id])
+  transaction_id Int            @unique
+  status         EarningsStatus @default(PENDING)
+  transaction    Transaction    @relation(fields: [transaction_id], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
 }
 
 model WalletTransaction {
@@ -200,14 +200,15 @@ model Setting {
 
 model Notification {
   id               Int      @id @default(autoincrement())
-  sender_user_id   Int
+  title            String
+  sender_user_id   Int?
   receiver_user_id Int
   timestamp        DateTime @default(now())
   content          String?
   link             String?
   avatar           String
-  read             Read
-  user             User     @relation(fields: [sender_user_id], references: [id])
+  read             Read     @default(unread)
+  user             User?    @relation(fields: [sender_user_id], references: [id])
 }
 
 model Contact {

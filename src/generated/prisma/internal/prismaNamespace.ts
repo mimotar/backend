@@ -1603,6 +1603,7 @@ export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeo
 
 export const NotificationScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   sender_user_id: 'sender_user_id',
   receiver_user_id: 'receiver_user_id',
   timestamp: 'timestamp',

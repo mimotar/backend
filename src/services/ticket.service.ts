@@ -11,6 +11,7 @@ import { generateSixDigitString } from "../utils/OTPGenerator.js";
 import { transactionClosureQueue } from "../config/bullmq.js";
 import { sendEmail } from "./emailService.js";
 import { EmailType } from "../emails/templates/emailTypes.brevo.js";
+import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
 
 
 export const createTransactionService = async (data: TransactionType) => {
@@ -98,6 +99,13 @@ export const approveTransactionService = async (id: number) => {
       status: "APPROVED",
     },
   });
+
+  await systemDispatchNotificationByEmail(
+    transaction.creator_email,
+    "Transaction Approved",
+    `Your transaction "${transaction.transaction_description}" has been approved by the counterparty.`
+  );
+
   return updatedTransaction;
 };
 
@@ -122,6 +130,13 @@ export const rejectTransactionService = async (id: number) => {
       status: "REJECTED",
     },
   });
+
+  await systemDispatchNotificationByEmail(
+    transaction.creator_email,
+    "Transaction Rejected",
+    `Your transaction "${transaction.transaction_description}" has been rejected by the counterparty.`
+  );
+
   return updatedTransaction;
 }
 
