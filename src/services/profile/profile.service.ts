@@ -29,6 +29,10 @@ export const getProfileService = async (userId: number) => {
     phone_no: user.profile?.phone_no || null,
     address: user.profile?.address || null,
     avatar: user.profile?.avatar || null,
+    city: user.profile?.city || null,
+    country: user.profile?.country || null,
+    postal_code: user.profile?.postal_code || null,
+    id_number: user.profile?.id_number || null,
   };
 };
 
@@ -61,6 +65,10 @@ export const updateProfileService = async (userId: number, data: UpdateProfileDt
   const profileData = {
     phone_no: data.phone_no !== undefined ? data.phone_no : user.profile?.phone_no,
     address: data.address !== undefined ? data.address : user.profile?.address,
+    city: data.city !== undefined ? data.city : user.profile?.city,
+    country: data.country !== undefined ? data.country : user.profile?.country,
+    postal_code: data.postal_code !== undefined ? data.postal_code : user.profile?.postal_code,
+    id_number: data.id_number !== undefined ? data.id_number : user.profile?.id_number,
   };
 
   if (user.profile) {
