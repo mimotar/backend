@@ -305,6 +305,18 @@ Welcome to the **Mimotar API** documentation. This API supports:
           id_number: { type: "string", nullable: true },
         },
       },
+      CreateNotificationBody: {
+        type: "object",
+        required: ["title", "avatar", "sender_user_id", "receiver_user_id"],
+        properties: {
+          title: { type: "string" },
+          content: { type: "string", nullable: true },
+          link: { type: "string", nullable: true },
+          avatar: { type: "string" },
+          sender_user_id: { type: "integer" },
+          receiver_user_id: { type: "integer" },
+        },
+      },
     },
   },
   paths: {
@@ -630,6 +642,76 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "200": { description: "Password successfully changed" },
           "400": { description: "Invalid OTP, credentials, or expired OTP" },
           "401": { description: "Unauthorized" },
+        },
+      },
+    },
+
+    // ----- Notifications -----
+    "/api/notification": {
+      get: {
+        summary: "Get my notifications",
+        description: "Returns all notifications for the authenticated user, ordered by most recent first.",
+        tags: ["Notifications"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": { description: "List of notifications" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+      post: {
+        summary: "Create notification",
+        description: "Creates a new notification. Typically an internal operation but exposed for completeness.",
+        tags: ["Notifications"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/CreateNotificationBody" } },
+          },
+        },
+        responses: {
+          "201": { description: "Notification created" },
+          "401": { description: "Unauthorized" },
+          "500": { description: "Server error" },
+        },
+      },
+    },
+    "/api/notification/read-all": {
+      put: {
+        summary: "Mark all notifications as read",
+        description: "Marks all unread notifications for the authenticated user as read.",
+        tags: ["Notifications"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": { description: "All notifications marked as read" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/api/notification/{id}/read": {
+      put: {
+        summary: "Mark a notification as read",
+        description: "Marks a specific notification as read by its ID.",
+        tags: ["Notifications"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Notification marked as read" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Notification not found" },
+        },
+      },
+    },
+    "/api/notification/{id}": {
+      delete: {
+        summary: "Delete a notification",
+        description: "Deletes a specific notification by its ID.",
+        tags: ["Notifications"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Notification deleted" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Notification not found" },
         },
       },
     },

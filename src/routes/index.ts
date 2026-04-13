@@ -16,7 +16,7 @@ import tokenVerifyRouter from "./helpers/tokenVerify.route.js";
 import contactRouter from "./contact/contact.route.js";
 import profileRouter from "./profile.route.js";
 import dashboardRouter from "./dashboard.route.js";
-
+import notificationRouter from "./notification.route.js";
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -51,5 +51,6 @@ router.use("/payment", paymentRouter)
 router.use("/contact", contactRouter);
 router.use("/profile", profileRouter);
 router.use("/dashboard", dashboardRouter);
+router.use("/notification", notificationRouter);
 
 export default router;

@@ -4,6 +4,7 @@ import { getTransactionParticipants } from "../utils/payment/getTransactionParti
 import prisma from "../utils/prisma.js";
 // import { prisma } from "../config/db.js";
 import { DisputeType } from "../zod/Dispute.zod.js";
+import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
 
 class DisputeService {
   async createDispute(data: DisputeType, userId: number) {
@@ -92,6 +93,23 @@ try {
         }),
       ]
     )
+
+    if (participants?.buyer?.email) {
+      await systemDispatchNotificationByEmail(
+        participants.buyer.email as string,
+        "Dispute Created",
+        `A dispute has been opened regarding your transaction #${transactionId}.`
+      );
+    }
+
+    if (participants?.seller?.email) {
+      await systemDispatchNotificationByEmail(
+        participants.seller.email as string,
+        "Dispute Created",
+        `A dispute has been opened regarding your transaction #${transactionId}.`
+      );
+    }
+
     return dispute;
 } catch (error) {
   console.log(error)
