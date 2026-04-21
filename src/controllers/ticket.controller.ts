@@ -77,24 +77,6 @@ export const createTransactionController = async (
 
     const transaction = await createTransactionService(transactionData);
 
-    const LinkJwtPayload: JwtPayload = {
-      creator_email: transaction.creator_email,
-      reciever_email: transaction.reciever_email,
-      transaction_id: transaction.id,
-    };
-
-    const token = await createToken("3d", LinkJwtPayload);
-
-    await prisma.transaction.update({
-      where: { id: transaction.id },
-      data: {
-        transactionToken: token,
-        txn_link: `${env.FRONTEND_URL}/ticket/${token}`,
-      },
-    });
-
-    console.log("FRONTEND", env.FRONTEND_URL)
-    console.log("LINK", transaction.txn_link)
     res.status(201).json({
       message: "Transaction created successfully",
       data: transaction,
@@ -105,7 +87,7 @@ export const createTransactionController = async (
         transaction_description,
         receiver_fullname,
         amount,
-        link: `${transaction.txn_link}/${token}`,
+        link: transaction.txn_link,
         creator_fullname,
         inspection_duration,
         expiresAt,
