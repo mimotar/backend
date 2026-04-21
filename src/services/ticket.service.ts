@@ -16,17 +16,10 @@ import { systemDispatchNotificationByEmail } from "./notification/notification.s
 
 export const createTransactionService = async (data: TransactionType) => {
   const { files, expiresAt, creator_email, reciever_email, ...rest } = data;
-  const LinkJwtPayload: JwtPayload = {
-    creator_email,
-    reciever_email,
-  };
 
-  const frontendUrl = `${env.FRONTEND_URL}/approve-transaction`;
   const parseDayToExpireToDate = convertDayToExpireDate(expiresAt);
-  const expiresIn = expiresAt * 24 * 60 * 60 * 1000;
-  const transactionToken = await createToken(expiresIn, LinkJwtPayload);
 
-  return await prisma.transaction.create({
+  const transaction = await prisma.transaction.create({
     data: {
       ...rest,
       user_id: rest.user_id ?? null,
@@ -35,6 +28,24 @@ export const createTransactionService = async (data: TransactionType) => {
       expiresAt: new Date(parseDayToExpireToDate),
       files: files?.length ? JSON.stringify(files) : undefined,
       transactionToken: "",
+      txn_link: "",
+    },
+  });
+
+  const LinkJwtPayload: JwtPayload = {
+    creator_email,
+    reciever_email,
+    transaction_id: transaction.id,
+  };
+
+  const frontendUrl = `${env.FRONTEND_URL}/ticket`;
+  const expiresIn = expiresAt * 24 * 60 * 60 * 1000;
+  const transactionToken = await createToken(expiresIn, LinkJwtPayload);
+
+  return await prisma.transaction.update({
+    where: { id: transaction.id },
+    data: {
+      transactionToken,
       txn_link: `${frontendUrl}/${transactionToken}`,
     },
   });
