@@ -137,6 +137,18 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
       },
+      TransactionHistory: {
+        type: "object",
+        description: "History of key events in the transaction lifecycle",
+        properties: {
+          transaction_created_at: { type: "string", format: "date-time" },
+          agreement_accepted_at: { type: "string", format: "date-time", nullable: true },
+          payment_sent_to_escrow_at: { type: "string", format: "date-time", nullable: true },
+          inspection_started_at: { type: "string", format: "date-time", nullable: true },
+          inspection_completed_at: { type: "string", format: "date-time", nullable: true },
+          transaction_completed_at: { type: "string", format: "date-time", nullable: true },
+        },
+      },
       // Dispute
       ResolutionOptionEnum: {
         type: "string",
@@ -915,7 +927,29 @@ Welcome to the **Mimotar API** documentation. This API supports:
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Transaction details" },
+          "200": {
+            description: "Transaction details retrieved successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Transaction retrieved successfully" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        id: { type: "integer" },
+                        amount: { type: "integer" },
+                        transaction_description: { type: "string" },
+                        status: { type: "string" },
+                        history: { $ref: "#/components/schemas/TransactionHistory" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           "401": { description: "Unauthorized" },
           "404": { description: "Not found" },
         },

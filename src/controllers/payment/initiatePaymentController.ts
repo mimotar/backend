@@ -142,7 +142,11 @@ export const PaymentWebhookController = async (
         }),
         prisma.transaction.update({
           where: { id: Number(data?.meta?.transaction_id) },
-          data: { status: "ONGOING" },
+          data: {
+            status: "ONGOING",
+            payment_sent_to_escrow_at: new Date(),
+            inspection_started_at: new Date(),
+          },
         }),
       ]);
 

@@ -30,7 +30,10 @@ const worker = new Worker(
     if (transaction.status === "PENDING_CLOSURE") {
       const updatedTransaction = await prisma.transaction.update({
         where: { id: transactionId },
-        data: { status: "COMPLETED" },
+        data: {
+          status: "COMPLETED",
+          transaction_completed_at: new Date(),
+        },
       });
 
       // Send autocomplete emails to both parties

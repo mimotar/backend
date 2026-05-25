@@ -40,6 +40,11 @@ model Transaction {
   otp_created_at          DateTime?
   payment_id              Int?
   currency                CurrencyEnum    @default(NGN)
+  agreement_accepted_at    DateTime?
+  payment_sent_to_escrow_at DateTime?
+  inspection_started_at     DateTime?
+  inspection_completed_at   DateTime?
+  transaction_completed_at  DateTime?
   dispute                 Dispute?
   earnings                Earnings?
   payment                 Payment?

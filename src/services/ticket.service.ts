@@ -64,7 +64,17 @@ export const getTransactionByIdService = async (id: number) => {
   }
   const {otp,otp_created_at, ...rest} = transaction;
 
-  return rest;
+  return {
+    ...rest,
+    history: {
+      transaction_created_at: transaction.created_at,
+      agreement_accepted_at: transaction.agreement_accepted_at,
+      payment_sent_to_escrow_at: transaction.payment_sent_to_escrow_at,
+      inspection_started_at: transaction.inspection_started_at,
+      inspection_completed_at: transaction.inspection_completed_at,
+      transaction_completed_at: transaction.transaction_completed_at,
+    },
+  };
   } catch (error) {
     console.error("Error fetching transaction by ID:", error);
     throw new GlobalError("Error fetching transaction", "Error", 404, true);
@@ -108,6 +118,7 @@ export const approveTransactionService = async (id: number) => {
     },
     data: {
       status: "APPROVED",
+      agreement_accepted_at: new Date(),
     },
   });
 
@@ -158,6 +169,8 @@ export const updateTicketToOngoing =async(id: number) => {
     },
     data: {
       status: "ONGOING",
+      payment_sent_to_escrow_at: new Date(),
+      inspection_started_at: new Date(),
     },
   });
   if (!updatedTransaction) {
@@ -342,7 +355,10 @@ export const closeATransactionService = async (userId: number, transactionId: nu
   
   const updatedTransaction = await prisma.transaction.update({
     where: { id: transactionId },
-    data: { status: "COMPLETED" },
+    data: {
+      status: "COMPLETED",
+      transaction_completed_at: new Date(),
+    },
   });
   if (!updatedTransaction) {
     throw new Error("Failed to close transaction");
@@ -369,7 +385,10 @@ export const resolveTransactionService = async (transactionId: number, initiator
 
   const updatedTransaction = await prisma.transaction.update({
     where: { id: transactionId },
-    data: { status: "PENDING_CLOSURE" },
+    data: {
+      status: "PENDING_CLOSURE",
+      inspection_completed_at: new Date(),
+    },
   });
 
   // Delay for 24h
@@ -403,7 +422,10 @@ export const acceptResolutionService = async (transactionId: number) => {
 
   const updatedTransaction = await prisma.transaction.update({
     where: { id: transactionId },
-    data: { status: "COMPLETED" },
+    data: {
+      status: "COMPLETED",
+      transaction_completed_at: new Date(),
+    },
   });
 
   await payoutSellerEarnings(transaction);

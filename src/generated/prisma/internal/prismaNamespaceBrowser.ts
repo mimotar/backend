@@ -114,7 +114,12 @@ export const TransactionScalarFieldEnum = {
   otp: 'otp',
   otp_created_at: 'otp_created_at',
   payment_id: 'payment_id',
-  currency: 'currency'
+  currency: 'currency',
+  agreement_accepted_at: 'agreement_accepted_at',
+  payment_sent_to_escrow_at: 'payment_sent_to_escrow_at',
+  inspection_started_at: 'inspection_started_at',
+  inspection_completed_at: 'inspection_completed_at',
+  transaction_completed_at: 'transaction_completed_at'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
