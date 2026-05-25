@@ -26,7 +26,7 @@ export const createTransactionService = async (data: TransactionType) => {
       creator_email,
       reciever_email,
       expiresAt: new Date(parseDayToExpireToDate),
-      files: files?.length ? JSON.stringify(files) : undefined,
+      files: files?.length ? files : undefined,
       transactionToken: "",
       txn_link: "",
     },
@@ -151,6 +151,20 @@ export const rejectTransactionService = async (id: number) => {
   return updatedTransaction;
 }
 
+export const updateTicketToOngoing =async(id: number) => {
+  const updatedTransaction = await prisma.transaction.update({
+    where: {
+      id,
+    },
+    data: {
+      status: "ONGOING",
+    },
+  });
+  if (!updatedTransaction) {
+    throw new Error("Failed to update transaction");
+  }
+  return updatedTransaction;
+}
 
 export const requestTokenToValidateTransactionService = async (id: number) => {
   const transaction = await prisma.transaction.findUnique({

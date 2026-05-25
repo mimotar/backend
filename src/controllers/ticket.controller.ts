@@ -14,6 +14,7 @@ import {
   getTransactionByIdService,
   rejectTransactionService,
   requestTokenToValidateTransactionService,
+  updateTicketToOngoing,
   validateTransactionOtpService,
 } from "../services/ticket.service.js";
 import { env } from "../config/env.js";
@@ -49,7 +50,7 @@ export const createTransactionController = async (
       const uploads = await Promise.all(
         rawFiles.map(async (file) => {
           const result = await uploadToCloudinary(file);
-          const { public_id } = result as any;
+          const { public_id, url } = result as any;
           return {
             fileName: file.originalname,
             fileType: file.mimetype.split("/")[0] as
@@ -57,7 +58,7 @@ export const createTransactionController = async (
               | "pdf"
               | "doc"
               | "other",
-            fileUrl: (result as any).secure_url,
+            fileUrl: url,
             fileId: public_id,
           };
         })
@@ -202,6 +203,17 @@ export const getTransactionByIdCotroller = async (
   });
 }
 
+export const updateTicketToOngoingController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  const { id } = req.params;
+  const updatedTransaction = await updateTicketToOngoing(Number(id))
+  res.status(200).json({
+    message: "Transaction updated successfully",
+    data: updatedTransaction,
+  });
+}
 
 
 

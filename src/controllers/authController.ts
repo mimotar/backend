@@ -428,6 +428,37 @@ export const getAllUsersController = async(req: Request,res: Response) => {
  return;
 }
 
+export const checkUserExistsController = async (req: Request, res: Response) => {
+  const email = Array.isArray(req.query.email) ? req.query.email[0] : req.query.email;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({
+      status: 400,
+      message: "Email query parameter is required",
+      data: null,
+      success: false,
+    });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    return res.status(200).json({
+      status: 200,
+      message: `User ${user ? "exists" : "does not exist"}`,
+      data: { exists: Boolean(user) },
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error checking user existence:", error);
+    return res.status(500).json({
+      status: 500,
+      message: "Server error",
+      data: null,
+      success: false,
+    });
+  }
+};
+
 export const testMiddleware = async(req: Request, res: Response) => {
   res.status(200).json({
     message: "I can now access this route",

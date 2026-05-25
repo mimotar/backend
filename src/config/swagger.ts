@@ -498,6 +498,46 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/user/exists": {
+      get: {
+        summary: "Check whether a user exists",
+        description: "Returns whether a user with the given email exists in the database.",
+        tags: ["Users"],
+        parameters: [
+          {
+            name: "email",
+            in: "query",
+            required: true,
+            schema: { type: "string", format: "email" },
+            description: "Email address to check",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "User existence status",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "number" },
+                    message: { type: "string" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        exists: { type: "boolean" },
+                      },
+                    },
+                    success: { type: "boolean" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Missing or invalid email query parameter" },
+        },
+      },
+    },
     "/api/user/test": {
       get: {
         summary: "Protected test route",

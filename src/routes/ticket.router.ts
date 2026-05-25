@@ -12,7 +12,8 @@ import {
   requestTokenToValidateTransactionController,
   resolveTransactionController,
   acceptResolutionController,
-  rejectResolutionController
+  rejectResolutionController,
+  updateTicketToOngoingController
 } from "../controllers/ticket.controller.js";
 
 import { upload } from "../config/cloudinary.js";
@@ -42,7 +43,8 @@ ticketRouter.put(
 ticketRouter.put("/:id/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
 ticketRouter.put("/:id/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
-
+ticketRouter.put("/:id/update-status-to-ongoing", authenticateTokenMiddleware, updateTicketToOngoingController as RequestHandler);
+  
 // Request Token to Validate Transaction
 ticketRouter.post("/:id/request-token", 
   authenticateTokenMiddleware,
@@ -60,7 +62,7 @@ ticketRouter.get(
 
 ticketRouter.get(
   "/:id",
-  authenticateTokenMiddleware,
+  // authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   getTransactionByIdCotroller as RequestHandler
 );
