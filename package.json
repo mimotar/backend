@@ -2,7 +2,7 @@
   "name": "mimotar-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -10,14 +10,12 @@
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prisma:generate": "prisma generate --schema=./prisma/prisma",
-    "prisma:migrate": "prisma migrate dev --schema=./prisma/prisma",
-    "prisma:studio": "prisma studio",
+    "prisma:generate": "prisma generate --schema=prisma/schema/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=prisma/schema/schema.prisma",
+    "prisma:studio": "prisma studio --schema=prisma/schema/schema.prisma",
+    "prisma:migrate:deploy": "prisma migrate deploy --schema=prisma/schema/schema.prisma",
     "test": "jest",
     "test:watch": "jest --watch"
-  },
-  "prisma": {
-    "schema": "prisma/schema"
   },
   "keywords": [],
   "author": "",
