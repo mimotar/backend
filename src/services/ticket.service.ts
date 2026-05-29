@@ -131,7 +131,7 @@ export const approveTransactionService = async (id: number) => {
   return updatedTransaction;
 };
 
-export const rejectTransactionService = async (id: number) => {
+export const rejectTransactionService = async (id: number, rejection_reason: string) => {
   await checkAndExpireAllTransactionService(id);
 
   const transaction = await getTransactionByIdService(id);
@@ -150,6 +150,7 @@ export const rejectTransactionService = async (id: number) => {
     },
     data: {
       status: "REJECTED",
+      rejection_reason,
     },
   });
 
@@ -297,13 +298,39 @@ export const getAUserTransactionService = async (userEmail: string) => {
       receiver_no: true,
       expiresAt: true,
       link_expires: true,
+      agreement_accepted_at: true,
+      payment_sent_to_escrow_at: true,
+      inspection_started_at: true,
+      inspection_completed_at: true,
+      transaction_completed_at: true,
     },
     orderBy: {
       created_at: 'desc'
     }
   });
 
-  return transactions;
+  return transactions.map((transaction) => {
+    const {
+      agreement_accepted_at,
+      payment_sent_to_escrow_at,
+      inspection_started_at,
+      inspection_completed_at,
+      transaction_completed_at,
+      ...rest
+    } = transaction;
+
+    return {
+      ...rest,
+      history: {
+        transaction_created_at: transaction.created_at,
+        agreement_accepted_at,
+        payment_sent_to_escrow_at,
+        inspection_started_at,
+        inspection_completed_at,
+        transaction_completed_at,
+      },
+    };
+  });
 };
 const payoutSellerEarnings = async (transaction: any) => {
   const sellerEmail = transaction.creator_role === "SELLER" ? transaction.creator_email : transaction.reciever_email;

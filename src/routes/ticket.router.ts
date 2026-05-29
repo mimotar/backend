@@ -2,7 +2,7 @@ import { RequestHandler, Router } from "express";
 
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
-import { TransactionSchema } from "../zod/TicketSchema.js";
+import { TransactionSchema, RejectTransactionSchema } from "../zod/TicketSchema.js";
 import {
   approveTransactionController,
   createTransactionController,
@@ -37,6 +37,7 @@ ticketRouter.put(
   "/reject/:id",
   authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
+  validateSchema(RejectTransactionSchema),
   rejectTransactionController as RequestHandler
 );
 

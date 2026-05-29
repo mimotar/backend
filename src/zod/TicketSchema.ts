@@ -49,3 +49,11 @@ export const TransactionSchema = z.object({
 
 
 export type TransactionType = z.infer<typeof TransactionSchema>;
+
+export const RejectTransactionSchema = z.object({
+  otp: z.string().min(1, "OTP is required"),
+  rejection_reason: z.string().min(1, "Rejection reason is required").max(500, "Rejection reason must be under 500 characters"),
+});
+
+export type RejectTransactionType = z.infer<typeof RejectTransactionSchema>;
+

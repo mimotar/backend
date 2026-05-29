@@ -853,8 +853,24 @@ Welcome to the **Mimotar API** documentation. This API supports:
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp", "rejection_reason"],
+                properties: {
+                  otp: { type: "string", description: "6-digit verification code" },
+                  rejection_reason: { type: "string", description: "Reason for rejecting the transaction" },
+                },
+              },
+            },
+          },
+        },
         responses: {
           "200": { description: "Transaction rejected" },
+          "400": { description: "Validation error or invalid OTP" },
           "401": { description: "Unauthorized" },
           "404": { description: "Transaction not found" },
         },

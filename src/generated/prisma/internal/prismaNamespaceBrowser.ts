@@ -110,6 +110,7 @@ export const TransactionScalarFieldEnum = {
   transactionToken: 'transactionToken',
   reciever_email: 'reciever_email',
   approveStatus: 'approveStatus',
+  rejection_reason: 'rejection_reason',
   files: 'files',
   otp: 'otp',
   otp_created_at: 'otp_created_at',

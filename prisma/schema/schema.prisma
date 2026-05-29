@@ -35,6 +35,7 @@ model Transaction {
   transactionToken        String          @unique
   reciever_email          String
   approveStatus           Boolean         @default(false)
+  rejection_reason        String?
   files                   Json?           @db.Json
   otp                     String?
   otp_created_at          DateTime?

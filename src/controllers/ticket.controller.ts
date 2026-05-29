@@ -158,14 +158,14 @@ export const rejectTransactionController = async (
   res: Response
 ): Promise<Response | void> => {
   const { id } = req.params;
-  const { otp } = req.body;
+  const { otp, rejection_reason } = req.body;
 
   try {
     
     // Validate OTP (throws if invalid or expired)
     await validateTransactionOtpService(Number(id), otp);
 
-    const approved = await rejectTransactionService(Number(id));
+    const approved = await rejectTransactionService(Number(id), rejection_reason);
 
     return res.status(200).json({
       message: "Transaction has been rejected successfully",
