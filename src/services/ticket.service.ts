@@ -38,7 +38,7 @@ export const createTransactionService = async (data: TransactionType) => {
     transaction_id: transaction.id,
   };
 
-  const frontendUrl = `${env.FRONTEND_URL}/ticket`;
+  const frontendUrl = `${env.FRONTEND_URL}/approve-transaction`;
   const expiresIn = expiresAt * 24 * 60 * 60 * 1000;
   const transactionToken = await createToken(expiresIn, LinkJwtPayload);
 
