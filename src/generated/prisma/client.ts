@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Transaction = Prisma.TransactionModel
 /**
+ * Model Milestone
+ * 
+ */
+export type Milestone = Prisma.MilestoneModel
+/**
  * Model Payment
  * 
  */

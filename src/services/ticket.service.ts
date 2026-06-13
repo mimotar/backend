@@ -12,24 +12,42 @@ import { transactionClosureQueue } from "../config/bullmq.js";
 import { sendEmail } from "./emailService.js";
 import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
+import { calculateEscrowPayment, EscrowFeePayer } from "../utils/payment/calculateAmountToPay.js";
 
 
 export const createTransactionService = async (data: TransactionType) => {
-  const { files, expiresAt, creator_email, reciever_email, ...rest } = data;
+  const { files, expiresAt, creator_email, reciever_email, milestones, ...rest } = data;
 
   const parseDayToExpireToDate = convertDayToExpireDate(expiresAt);
 
-  const transaction = await prisma.transaction.create({
-    data: {
-      ...rest,
-      user_id: rest.user_id ?? null,
-      creator_email,
-      reciever_email,
-      expiresAt: new Date(parseDayToExpireToDate),
-      files: files?.length ? files : undefined,
-      transactionToken: "",
-      txn_link: "",
-    },
+  const transaction = await prisma.$transaction(async (tx) => {
+    const createdTxn = await tx.transaction.create({
+      data: {
+        ...rest,
+        user_id: rest.user_id ?? null,
+        creator_email,
+        reciever_email,
+        expiresAt: new Date(parseDayToExpireToDate),
+        files: files?.length ? files : undefined,
+        transactionToken: "",
+        txn_link: "",
+      },
+    });
+
+    if (rest.transactionType === "MILESTONE_BASED_PROJECT" && milestones && milestones.length > 0) {
+      await tx.milestone.createMany({
+        data: milestones.map((m) => ({
+          transaction_id: createdTxn.id,
+          name: m.name,
+          amount: m.amount,
+          deadline: new Date(m.deadline),
+          files: m.files?.length ? m.files : undefined,
+          status: "CREATED",
+        })),
+      });
+    }
+
+    return createdTxn;
   });
 
   const LinkJwtPayload: JwtPayload = {
@@ -48,6 +66,9 @@ export const createTransactionService = async (data: TransactionType) => {
       transactionToken,
       txn_link: `${frontendUrl}/${transactionToken}`,
     },
+    include: {
+      milestones: true,
+    },
   });
 };
 
@@ -56,6 +77,9 @@ export const getTransactionByIdService = async (id: number) => {
     const transaction = await prisma.transaction.findUnique({
     where: {
       id,
+    },
+    include: {
+      milestones: true,
     },
   });
 
@@ -271,6 +295,7 @@ export const getAUserTransactionService = async (userEmail: string) => {
     },
     select: {
       id: true,
+      title: true,
       receiver_fullname: true,
       reciever_email: true,
       creator_email: true,
@@ -303,6 +328,7 @@ export const getAUserTransactionService = async (userEmail: string) => {
       inspection_started_at: true,
       inspection_completed_at: true,
       transaction_completed_at: true,
+      milestones: true,
     },
     orderBy: {
       created_at: 'desc'
@@ -337,36 +363,49 @@ const payoutSellerEarnings = async (transaction: any) => {
   const sellerUser = await prisma.user.findUnique({ where: { email: sellerEmail } });
   
   if (sellerUser) {
+    // Calculate fee deductions
+    const { sellerCommissionShare } = calculateEscrowPayment(transaction.amount, transaction.pay_escrow_fee as EscrowFeePayer);
+    const payoutAmount = transaction.amount - sellerCommissionShare;
+
     await prisma.earnings.upsert({
       where: { transaction_id: transaction.id },
       create: {
         userId: sellerUser.id,
-        amount: transaction.amount,
+        amount: payoutAmount,
         status: "PENDING",
         transaction_id: transaction.id,
         description: "Earnings from completed transaction",
       },
       update: {
         status: "PENDING",
-        amount: transaction.amount,
+        amount: payoutAmount,
       }
     });
+
+    const currency = transaction.currency || "NGN";
 
     await prisma.walletTransaction.create({
       data: {
         userId: sellerUser.id,
-        amount: transaction.amount,
+        amount: payoutAmount,
         type: "INFLOW",
+        currency: currency as any,
         description: `Payout for transaction #${transaction.id}`,
       }
     });
 
+    const updateData: any = {};
+    if (currency === "USD") {
+      updateData.walletBalanceUSD = { increment: payoutAmount };
+      updateData.totalEarningsUSD = { increment: payoutAmount };
+    } else {
+      updateData.walletBalanceNGN = { increment: payoutAmount };
+      updateData.totalEarningsNGN = { increment: payoutAmount };
+    }
+
     await prisma.user.update({
       where: { id: sellerUser.id },
-      data: {
-        walletBalance: { increment: transaction.amount },
-        totalEarnings: { increment: transaction.amount },
-      }
+      data: updateData
     });
   }
 };

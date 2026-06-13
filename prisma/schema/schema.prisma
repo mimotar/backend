@@ -9,6 +9,7 @@ datasource db {
 
 model Transaction {
   id                      Int             @id @default(autoincrement())
+  title                   String          @default("") @db.VarChar(200)
   amount                  Int
   user_id                 Int?
   additional_agreement    String          @db.VarChar(200)
@@ -50,6 +51,18 @@ model Transaction {
   earnings                Earnings?
   payment                 Payment?
   user                    User?           @relation(fields: [user_id], references: [id])
+  milestones              Milestone[]
+}
+
+model Milestone {
+  id             Int         @id @default(autoincrement())
+  transaction_id Int
+  name           String
+  amount         Int
+  deadline       DateTime
+  files          Json?       @db.Json
+  status         StatusEnum  @default(CREATED)
+  transaction    Transaction @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
 }
 
 model Payment {
@@ -80,6 +93,10 @@ model User {
   otpCreatedAt       DateTime?
   totalEarnings      Decimal             @default(0) @db.Decimal(19, 2)
   walletBalance      Decimal             @default(0) @db.Decimal(19, 2)
+  walletBalanceNGN   Decimal             @default(0) @db.Decimal(19, 2)
+  totalEarningsNGN   Decimal             @default(0) @db.Decimal(19, 2)
+  walletBalanceUSD   Decimal             @default(0) @db.Decimal(19, 2)
+  totalEarningsUSD   Decimal             @default(0) @db.Decimal(19, 2)
   chats              ChatrParticipants[]
   disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
   disputesCreated    Dispute[]           @relation("DisputeCreator")
@@ -111,6 +128,7 @@ model WalletTransaction {
   type        WalletTransactionType
   amount      Decimal               @db.Decimal(19, 2)
   description String?
+  currency    CurrencyEnum          @default(NGN)
   createdAt   DateTime              @default(now())
   user        User                  @relation(fields: [userId], references: [id])
 }

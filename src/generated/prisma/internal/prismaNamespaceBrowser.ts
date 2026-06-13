@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Transaction: 'Transaction',
+  Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
   Earnings: 'Earnings',
@@ -84,6 +85,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const TransactionScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   amount: 'amount',
   user_id: 'user_id',
   additional_agreement: 'additional_agreement',
@@ -126,6 +128,19 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const MilestoneScalarFieldEnum = {
+  id: 'id',
+  transaction_id: 'transaction_id',
+  name: 'name',
+  amount: 'amount',
+  deadline: 'deadline',
+  files: 'files',
+  status: 'status'
+} as const
+
+export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
 export const PaymentScalarFieldEnum = {
   id: 'id',
   transaction_id: 'transaction_id',
@@ -155,7 +170,11 @@ export const UserScalarFieldEnum = {
   otp: 'otp',
   otpCreatedAt: 'otpCreatedAt',
   totalEarnings: 'totalEarnings',
-  walletBalance: 'walletBalance'
+  walletBalance: 'walletBalance',
+  walletBalanceNGN: 'walletBalanceNGN',
+  totalEarningsNGN: 'totalEarningsNGN',
+  walletBalanceUSD: 'walletBalanceUSD',
+  totalEarningsUSD: 'totalEarningsUSD'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -180,6 +199,7 @@ export const WalletTransactionScalarFieldEnum = {
   type: 'type',
   amount: 'amount',
   description: 'description',
+  currency: 'currency',
   createdAt: 'createdAt'
 } as const
 

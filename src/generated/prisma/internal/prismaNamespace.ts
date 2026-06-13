@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Transaction: 'Transaction',
+  Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
   Earnings: 'Earnings',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "transaction" | "payment" | "user" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact"
+    modelProps: "transaction" | "milestone" | "payment" | "user" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -487,6 +488,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TransactionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TransactionCountAggregateOutputType> | number
+        }
+      }
+    }
+    Milestone: {
+      payload: Prisma.$MilestonePayload<ExtArgs>
+      fields: Prisma.MilestoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MilestoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MilestoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        findFirst: {
+          args: Prisma.MilestoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MilestoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        findMany: {
+          args: Prisma.MilestoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+        }
+        create: {
+          args: Prisma.MilestoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        createMany: {
+          args: Prisma.MilestoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MilestoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+        }
+        delete: {
+          args: Prisma.MilestoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        update: {
+          args: Prisma.MilestoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        deleteMany: {
+          args: Prisma.MilestoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MilestoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MilestoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+        }
+        upsert: {
+          args: Prisma.MilestoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestonePayload>
+        }
+        aggregate: {
+          args: Prisma.MilestoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMilestone>
+        }
+        groupBy: {
+          args: Prisma.MilestoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MilestoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MilestoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MilestoneCountAggregateOutputType> | number
         }
       }
     }
@@ -1419,6 +1494,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const TransactionScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   amount: 'amount',
   user_id: 'user_id',
   additional_agreement: 'additional_agreement',
@@ -1461,6 +1537,19 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const MilestoneScalarFieldEnum = {
+  id: 'id',
+  transaction_id: 'transaction_id',
+  name: 'name',
+  amount: 'amount',
+  deadline: 'deadline',
+  files: 'files',
+  status: 'status'
+} as const
+
+export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
 export const PaymentScalarFieldEnum = {
   id: 'id',
   transaction_id: 'transaction_id',
@@ -1490,7 +1579,11 @@ export const UserScalarFieldEnum = {
   otp: 'otp',
   otpCreatedAt: 'otpCreatedAt',
   totalEarnings: 'totalEarnings',
-  walletBalance: 'walletBalance'
+  walletBalance: 'walletBalance',
+  walletBalanceNGN: 'walletBalanceNGN',
+  totalEarningsNGN: 'totalEarningsNGN',
+  walletBalanceUSD: 'walletBalanceUSD',
+  totalEarningsUSD: 'totalEarningsUSD'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1515,6 +1608,7 @@ export const WalletTransactionScalarFieldEnum = {
   type: 'type',
   amount: 'amount',
   description: 'description',
+  currency: 'currency',
   createdAt: 'createdAt'
 } as const
 
@@ -2098,6 +2192,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   transaction?: Prisma.TransactionOmit
+  milestone?: Prisma.MilestoneOmit
   payment?: Prisma.PaymentOmit
   user?: Prisma.UserOmit
   earnings?: Prisma.EarningsOmit

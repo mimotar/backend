@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Transaction.js'
+export type * from './models/Milestone.js'
 export type * from './models/Payment.js'
 export type * from './models/User.js'
 export type * from './models/Earnings.js'

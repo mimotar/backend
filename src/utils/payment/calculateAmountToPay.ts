@@ -39,24 +39,9 @@ function calculateEscrowPayment(
     throw new Error('Amount must be greater than 0');
   }
 
-  // Determine commission rate based on amount tiers
-  let commissionRate: number;
+  // Determine commission rate (flat 3% transaction fee)
+  let commissionRate: number = 0.03;
   let flatFee: number = 0;
-
-  if (amount <= 100000) {
-    // ₦1 - ₦100,000: 3.0%
-    commissionRate = 0.03;
-  } else if (amount <= 1000000) {
-    // ₦100,001 - ₦1,000,000: 2.5%
-    commissionRate = 0.025;
-  } else if (amount <= 5000000) {
-    // ₦1,000,001 - ₦5,000,000: 2.2%
-    commissionRate = 0.022;
-  } else {
-    // ₦5,000,001+: 2.0% + ₦5,000 flat fee
-    commissionRate = 0.02;
-    flatFee = 5000;
-  }
 
   // Calculate total commission
   const percentageCommission = amount * commissionRate;

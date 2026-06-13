@@ -86,6 +86,26 @@ Welcome to the **Mimotar API** documentation. This API supports:
         required: ["email"],
         properties: { email: { type: "string", format: "email" } },
       },
+      Milestone: {
+        type: "object",
+        required: ["name", "amount", "deadline"],
+        properties: {
+          name: { type: "string" },
+          amount: { type: "integer", minimum: 1 },
+          deadline: { type: "string", format: "date-time" },
+          files: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                fileName: { type: "string" },
+                fileType: { type: "string", enum: ["image", "pdf", "doc", "other"] },
+                fileUrl: { type: "string", format: "uri" },
+              },
+            },
+          },
+        },
+      },
       // Transaction (Ticket)
       TransactionTypeEnum: {
         type: "string",
@@ -96,12 +116,14 @@ Welcome to the **Mimotar API** documentation. This API supports:
       TransactionCreateBody: {
         type: "object",
         required: [
-          "amount", "transaction_description", "pay_escrow_fee", "additional_agreement",
+          "title", "currency", "amount", "transaction_description", "pay_escrow_fee", "additional_agreement",
           "pay_shipping_cost", "creator_fullname", "creator_email", "creator_no", "creator_role",
           "receiver_fullname", "reciever_email", "receiver_no", "reciever_role", "transactionType",
           "inspection_duration", "expiresAt",
         ],
         properties: {
+          title: { type: "string", maxLength: 200 },
+          currency: { type: "string", enum: ["NGN", "USD"] },
           amount: { type: "integer", minimum: 1 },
           transaction_description: { type: "string", maxLength: 200 },
           user_id: { type: "integer", minimum: 1 },
@@ -134,6 +156,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
                 fileUrl: { type: "string", format: "uri" },
               },
             },
+          },
+          milestones: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Milestone" },
           },
         },
       },
@@ -782,6 +808,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
                 type: "object",
                 description: "All transaction fields (amount, transaction_description, pay_escrow_fee, creator_*, receiver_*, transactionType, inspection_duration, expiresAt, etc.) plus optional files (max 2).",
                 properties: {
+                  title: { type: "string" },
+                  currency: { type: "string", enum: ["NGN", "USD"] },
                   amount: { type: "string" },
                   transaction_description: { type: "string" },
                   pay_escrow_fee: { type: "string" },
@@ -802,6 +830,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                   inspection_duration: { type: "string" },
                   expiresAt: { type: "string" },
                   files: { type: "array", items: { type: "string", format: "binary" }, maxItems: 2 },
+                  milestones: { type: "string", description: "JSON stringified array of Milestone objects" },
                 },
               },
             },

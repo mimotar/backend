@@ -12,7 +12,27 @@ export const TransactionTypeEnum = z.enum([
 
 export const StatusEnum = z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
 
+export const MilestoneSchema = z.object({
+  name: z.string().min(1, "Milestone name is required"),
+  amount: z.coerce.number().int().positive("Milestone amount must be positive"),
+  deadline: z.string().or(z.date()),
+  files: z
+    .array(
+      z.object({
+        fileName: z.string(),
+        fileType: z.enum(["image", "pdf", "doc", "other"]),
+        fileUrl: z.string().url(),
+        fileId: z.string().optional(),
+      })
+    )
+    .optional(),
+});
+
+export const CurrencyEnum = z.enum(["NGN", "USD"]);
+
 export const TransactionSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200, "Title must be under 200 characters"),
+  currency: CurrencyEnum,
   amount: z.coerce.number().int(),
   transaction_description: z.string().max(200),
   user_id: z.coerce.number().positive().optional(),
@@ -44,6 +64,19 @@ export const TransactionSchema = z.object({
     )
     .max(2)
     .optional(),
+  milestones: z.preprocess(
+    (val) => {
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return val;
+        }
+      }
+      return val;
+    },
+    z.array(MilestoneSchema).optional()
+  ),
 });
 
 

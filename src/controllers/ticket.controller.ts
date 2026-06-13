@@ -67,9 +67,14 @@ export const createTransactionController = async (
       uploadedFiles = uploads;
     }
 
+    let totalAmount = Number(req.body.amount);
+    if (req.body.transactionType === "MILESTONE_BASED_PROJECT" && req.body.milestones && req.body.milestones.length > 0) {
+      totalAmount = req.body.milestones.reduce((acc: number, m: any) => acc + Number(m.amount), 0);
+    }
+
     const transactionData: TransactionType = {
       ...req.body,
-      amount: Number(req.body.amount),
+      amount: totalAmount,
       inspection_duration: Number(req.body.inspection_duration),
       expiresAt: Number(req.body.expiresAt),
       files: uploadedFiles,
@@ -87,7 +92,7 @@ export const createTransactionController = async (
       {
         transaction_description,
         receiver_fullname,
-        amount,
+        amount: transaction.amount,
         link: transaction.txn_link,
         creator_fullname,
         inspection_duration,
@@ -100,7 +105,7 @@ export const createTransactionController = async (
       {
         creator_fullname,
         transaction_description,
-        amount,
+        amount: transaction.amount,
         expiresAt,
         inspection_duration,
       },
