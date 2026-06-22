@@ -5,6 +5,22 @@ module.exports = {
   testMatch: ["**/tests/**/*.ts"],
   setupFilesAfterEnv: ["<rootDir>/src/utils/jestSetup.ts"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        tsconfig: {
+          module: "CommonJS",
+          moduleResolution: "Node",
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+        },
+      },
+    ],
+  },
   // coverageDirectory: './coverage',
   // collectCoverageFrom: [
   //   'src/**/*.ts',

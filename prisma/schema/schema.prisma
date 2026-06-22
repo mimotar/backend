@@ -8,61 +8,70 @@ datasource db {
 }
 
 model Transaction {
-  id                      Int             @id @default(autoincrement())
-  title                   String          @default("") @db.VarChar(200)
-  amount                  Int
-  user_id                 Int?
-  additional_agreement    String          @db.VarChar(200)
-  creator_fullname        String
-  creator_email           String
-  creator_no              String
-  creator_address         String?
-  receiver_fullname       String
-  receiver_no             String
-  receiver_address        String?
-  link_expires            Boolean         @default(false)
-  txn_link                String
-  created_at              DateTime        @default(now())
-  inspection_duration     Int
-  reciever_role           Role
-  terms                   String?
-  transactionType         TransactionType
-  transaction_description String          @db.VarChar(200)
-  pay_escrow_fee          EscrowFeePayer
-  pay_shipping_cost       EscrowFeePayer
-  creator_role            Role
-  status                  StatusEnum      @default(CREATED)
-  expiresAt               DateTime
-  transactionToken        String          @unique
-  reciever_email          String
-  approveStatus           Boolean         @default(false)
-  rejection_reason        String?
-  files                   Json?           @db.Json
-  otp                     String?
-  otp_created_at          DateTime?
-  payment_id              Int?
-  currency                CurrencyEnum    @default(NGN)
-  agreement_accepted_at    DateTime?
+  id                        Int             @id @default(autoincrement())
+  title                     String          @default("") @db.VarChar(200)
+  amount                    Int
+  user_id                   Int?
+  additional_agreement      String          @db.VarChar(200)
+  creator_fullname          String
+  creator_email             String
+  creator_no                String
+  creator_address           String?
+  receiver_fullname         String
+  receiver_no               String
+  receiver_address          String?
+  link_expires              Boolean         @default(false)
+  txn_link                  String
+  created_at                DateTime        @default(now())
+  inspection_duration       Int
+  reciever_role             Role
+  terms                     String?
+  transactionType           TransactionType
+  transaction_description   String          @db.VarChar(200)
+  pay_escrow_fee            EscrowFeePayer
+  pay_shipping_cost         EscrowFeePayer
+  creator_role              Role
+  status                    StatusEnum      @default(CREATED)
+  expiresAt                 DateTime
+  transactionToken          String          @unique
+  reciever_email            String
+  approveStatus             Boolean         @default(false)
+  rejection_reason          String?
+  files                     Json?           @db.Json
+  otp                       String?
+  otp_created_at            DateTime?
+  payment_id                Int?
+  currency                  CurrencyEnum    @default(NGN)
+  agreement_accepted_at     DateTime?
   payment_sent_to_escrow_at DateTime?
   inspection_started_at     DateTime?
   inspection_completed_at   DateTime?
   transaction_completed_at  DateTime?
-  dispute                 Dispute?
-  earnings                Earnings?
-  payment                 Payment?
-  user                    User?           @relation(fields: [user_id], references: [id])
-  milestones              Milestone[]
+  dispute                   Dispute[]
+  earnings                  Earnings[]
+  payment                   Payment?
+  user                      User?           @relation(fields: [user_id], references: [id])
+  milestones                Milestone[]
 }
 
 model Milestone {
   id             Int         @id @default(autoincrement())
   transaction_id Int
+  sequence       Int
   name           String
   amount         Int
   deadline       DateTime
   files          Json?       @db.Json
   status         StatusEnum  @default(CREATED)
+  activatedAt    DateTime?
+  completedAt    DateTime?
+  releasedAt     DateTime?
+  disputes       Dispute[]
+  earnings       Earnings?
   transaction    Transaction @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
+
+  @@unique([transaction_id, sequence])
+  @@index([transaction_id, status])
 }
 
 model Payment {
@@ -79,35 +88,38 @@ model Payment {
 }
 
 model User {
-  id                 Int                 @id @default(autoincrement())
-  email              String              @unique
-  password           String
-  createdAt          DateTime            @default(now())
-  verified           Boolean             @default(false)
-  verificationToken  String?
-  firstName          String
-  lastName           String
-  provider           String?
-  subject            String?
-  otp                String?
-  otpCreatedAt       DateTime?
-  totalEarnings      Decimal             @default(0) @db.Decimal(19, 2)
-  walletBalance      Decimal             @default(0) @db.Decimal(19, 2)
-  walletBalanceNGN   Decimal             @default(0) @db.Decimal(19, 2)
-  totalEarningsNGN   Decimal             @default(0) @db.Decimal(19, 2)
-  walletBalanceUSD   Decimal             @default(0) @db.Decimal(19, 2)
-  totalEarningsUSD   Decimal             @default(0) @db.Decimal(19, 2)
-  chats              ChatrParticipants[]
-  disputesAsBuyer    Dispute[]           @relation("DisputeBuyer")
-  disputesCreated    Dispute[]           @relation("DisputeCreator")
-  disputesAsSeller   Dispute[]           @relation("DisputeSeller")
-  earnings           Earnings[]
-  messages           Message[]
-  notification       Notification[]
-  profile            Profile?
-  setting            Setting?
-  transaction        Transaction[]
-  walletTransactions WalletTransaction[]
+  id                  Int                 @id @default(autoincrement())
+  email               String              @unique
+  password            String
+  createdAt           DateTime            @default(now())
+  verified            Boolean             @default(false)
+  verificationToken   String?
+  firstName           String
+  lastName            String
+  provider            String?
+  subject             String?
+  otp                 String?
+  otpCreatedAt        DateTime?
+  otpPurpose          OtpPurpose?
+  pendingPasswordHash String?
+  totalEarnings       Decimal             @default(0) @db.Decimal(19, 2)
+  walletBalance       Decimal             @default(0) @db.Decimal(19, 2)
+  walletBalanceNGN    Decimal             @default(0) @db.Decimal(19, 2)
+  totalEarningsNGN    Decimal             @default(0) @db.Decimal(19, 2)
+  walletBalanceUSD    Decimal             @default(0) @db.Decimal(19, 2)
+  totalEarningsUSD    Decimal             @default(0) @db.Decimal(19, 2)
+  chats               ChatrParticipants[]
+  disputesAsBuyer     Dispute[]           @relation("DisputeBuyer")
+  disputesCreated     Dispute[]           @relation("DisputeCreator")
+  disputesAsSeller    Dispute[]           @relation("DisputeSeller")
+  disputesResolved    Dispute[]           @relation("DisputeResolver")
+  earnings            Earnings[]
+  messages            Message[]
+  notification        Notification[]
+  profile             Profile?
+  setting             Setting?
+  transaction         Transaction[]
+  walletTransactions  WalletTransaction[]
 }
 
 model Earnings {
@@ -116,10 +128,15 @@ model Earnings {
   amount         Decimal        @db.Decimal(19, 2)
   createdAt      DateTime       @default(now())
   description    String?
-  transaction_id Int            @unique
+  transaction_id Int
+  milestone_id   Int?           @unique
+  releaseKey     String         @unique
   status         EarningsStatus @default(PENDING)
   transaction    Transaction    @relation(fields: [transaction_id], references: [id])
+  milestone      Milestone?     @relation(fields: [milestone_id], references: [id])
   user           User           @relation(fields: [userId], references: [id])
+
+  @@index([transaction_id])
 }
 
 model WalletTransaction {
@@ -134,27 +151,34 @@ model WalletTransaction {
 }
 
 model Dispute {
-  id               Int              @id @default(autoincrement())
-  transactionId    Int              @unique
-  chatId           Int?             @unique
+  id               Int                @id @default(autoincrement())
+  transactionId    Int
+  milestoneId      Int?
+  chatId           Int?               @unique
   description      String
   resolutionOption ResolutionOption
-  createdAt        DateTime?        @default(now())
+  createdAt        DateTime?          @default(now())
   elapsesAt        DateTime?
-  status           disputeStatus    @default(ongoing)
+  status           disputeStatus      @default(ongoing)
+  resolution       DisputeResolution?
+  resolvedAt       DateTime?
+  resolvedById     Int?
   reason           String
   evidenceUrl      String[]
   evidenceId       String[]
   buyerId          Int
   creatorId        Int
   sellerId         Int
-  buyer            User             @relation("DisputeBuyer", fields: [buyerId], references: [id])
-  chat             Chat?            @relation(fields: [chatId], references: [id])
-  creator          User             @relation("DisputeCreator", fields: [creatorId], references: [id])
-  seller           User             @relation("DisputeSeller", fields: [sellerId], references: [id])
-  transaction      Transaction      @relation(fields: [transactionId], references: [id])
+  buyer            User               @relation("DisputeBuyer", fields: [buyerId], references: [id])
+  chat             Chat?              @relation(fields: [chatId], references: [id])
+  creator          User               @relation("DisputeCreator", fields: [creatorId], references: [id])
+  resolver         User?              @relation("DisputeResolver", fields: [resolvedById], references: [id])
+  seller           User               @relation("DisputeSeller", fields: [sellerId], references: [id])
+  milestone        Milestone?         @relation(fields: [milestoneId], references: [id], onDelete: Restrict)
+  transaction      Transaction        @relation(fields: [transactionId], references: [id])
 
-  @@unique([transactionId, chatId])
+  @@index([transactionId, status])
+  @@index([milestoneId, status])
 }
 
 model Chat {
@@ -261,6 +285,12 @@ enum Role {
   SELLER
 }
 
+enum OtpPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  CHANGE_PASSWORD
+}
+
 enum TransactionType {
   PHYSICAL_PRODUCT
   ONLINE_PRODUCT
@@ -326,6 +356,10 @@ enum disputeStatus {
   ongoing
   cancel
   closed
+}
+
+enum DisputeResolution {
+  RELEASE_TO_SELLER
 }
 
 enum ChatRole {

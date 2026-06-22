@@ -29,7 +29,9 @@ export type AggregateDispute = {
 export type DisputeAvgAggregateOutputType = {
   id: number | null
   transactionId: number | null
+  milestoneId: number | null
   chatId: number | null
+  resolvedById: number | null
   buyerId: number | null
   creatorId: number | null
   sellerId: number | null
@@ -38,7 +40,9 @@ export type DisputeAvgAggregateOutputType = {
 export type DisputeSumAggregateOutputType = {
   id: number | null
   transactionId: number | null
+  milestoneId: number | null
   chatId: number | null
+  resolvedById: number | null
   buyerId: number | null
   creatorId: number | null
   sellerId: number | null
@@ -47,12 +51,16 @@ export type DisputeSumAggregateOutputType = {
 export type DisputeMinAggregateOutputType = {
   id: number | null
   transactionId: number | null
+  milestoneId: number | null
   chatId: number | null
   description: string | null
   resolutionOption: $Enums.ResolutionOption | null
   createdAt: Date | null
   elapsesAt: Date | null
   status: $Enums.disputeStatus | null
+  resolution: $Enums.DisputeResolution | null
+  resolvedAt: Date | null
+  resolvedById: number | null
   reason: string | null
   buyerId: number | null
   creatorId: number | null
@@ -62,12 +70,16 @@ export type DisputeMinAggregateOutputType = {
 export type DisputeMaxAggregateOutputType = {
   id: number | null
   transactionId: number | null
+  milestoneId: number | null
   chatId: number | null
   description: string | null
   resolutionOption: $Enums.ResolutionOption | null
   createdAt: Date | null
   elapsesAt: Date | null
   status: $Enums.disputeStatus | null
+  resolution: $Enums.DisputeResolution | null
+  resolvedAt: Date | null
+  resolvedById: number | null
   reason: string | null
   buyerId: number | null
   creatorId: number | null
@@ -77,12 +89,16 @@ export type DisputeMaxAggregateOutputType = {
 export type DisputeCountAggregateOutputType = {
   id: number
   transactionId: number
+  milestoneId: number
   chatId: number
   description: number
   resolutionOption: number
   createdAt: number
   elapsesAt: number
   status: number
+  resolution: number
+  resolvedAt: number
+  resolvedById: number
   reason: number
   evidenceUrl: number
   evidenceId: number
@@ -96,7 +112,9 @@ export type DisputeCountAggregateOutputType = {
 export type DisputeAvgAggregateInputType = {
   id?: true
   transactionId?: true
+  milestoneId?: true
   chatId?: true
+  resolvedById?: true
   buyerId?: true
   creatorId?: true
   sellerId?: true
@@ -105,7 +123,9 @@ export type DisputeAvgAggregateInputType = {
 export type DisputeSumAggregateInputType = {
   id?: true
   transactionId?: true
+  milestoneId?: true
   chatId?: true
+  resolvedById?: true
   buyerId?: true
   creatorId?: true
   sellerId?: true
@@ -114,12 +134,16 @@ export type DisputeSumAggregateInputType = {
 export type DisputeMinAggregateInputType = {
   id?: true
   transactionId?: true
+  milestoneId?: true
   chatId?: true
   description?: true
   resolutionOption?: true
   createdAt?: true
   elapsesAt?: true
   status?: true
+  resolution?: true
+  resolvedAt?: true
+  resolvedById?: true
   reason?: true
   buyerId?: true
   creatorId?: true
@@ -129,12 +153,16 @@ export type DisputeMinAggregateInputType = {
 export type DisputeMaxAggregateInputType = {
   id?: true
   transactionId?: true
+  milestoneId?: true
   chatId?: true
   description?: true
   resolutionOption?: true
   createdAt?: true
   elapsesAt?: true
   status?: true
+  resolution?: true
+  resolvedAt?: true
+  resolvedById?: true
   reason?: true
   buyerId?: true
   creatorId?: true
@@ -144,12 +172,16 @@ export type DisputeMaxAggregateInputType = {
 export type DisputeCountAggregateInputType = {
   id?: true
   transactionId?: true
+  milestoneId?: true
   chatId?: true
   description?: true
   resolutionOption?: true
   createdAt?: true
   elapsesAt?: true
   status?: true
+  resolution?: true
+  resolvedAt?: true
+  resolvedById?: true
   reason?: true
   evidenceUrl?: true
   evidenceId?: true
@@ -248,12 +280,16 @@ export type DisputeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type DisputeGroupByOutputType = {
   id: number
   transactionId: number
+  milestoneId: number | null
   chatId: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt: Date | null
   elapsesAt: Date | null
   status: $Enums.disputeStatus
+  resolution: $Enums.DisputeResolution | null
+  resolvedAt: Date | null
+  resolvedById: number | null
   reason: string
   evidenceUrl: string[]
   evidenceId: string[]
@@ -288,12 +324,16 @@ export type DisputeWhereInput = {
   NOT?: Prisma.DisputeWhereInput | Prisma.DisputeWhereInput[]
   id?: Prisma.IntFilter<"Dispute"> | number
   transactionId?: Prisma.IntFilter<"Dispute"> | number
+  milestoneId?: Prisma.IntNullableFilter<"Dispute"> | number | null
   chatId?: Prisma.IntNullableFilter<"Dispute"> | number | null
   description?: Prisma.StringFilter<"Dispute"> | string
   resolutionOption?: Prisma.EnumResolutionOptionFilter<"Dispute"> | $Enums.ResolutionOption
   createdAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
   elapsesAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
   status?: Prisma.EnumdisputeStatusFilter<"Dispute"> | $Enums.disputeStatus
+  resolution?: Prisma.EnumDisputeResolutionNullableFilter<"Dispute"> | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
+  resolvedById?: Prisma.IntNullableFilter<"Dispute"> | number | null
   reason?: Prisma.StringFilter<"Dispute"> | string
   evidenceUrl?: Prisma.StringNullableListFilter<"Dispute">
   evidenceId?: Prisma.StringNullableListFilter<"Dispute">
@@ -303,19 +343,25 @@ export type DisputeWhereInput = {
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chat?: Prisma.XOR<Prisma.ChatNullableScalarRelationFilter, Prisma.ChatWhereInput> | null
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
 }
 
 export type DisputeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrderInput | Prisma.SortOrder
   chatId?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   resolutionOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   elapsesAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  resolution?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrder
   evidenceUrl?: Prisma.SortOrder
   evidenceId?: Prisma.SortOrder
@@ -325,23 +371,28 @@ export type DisputeOrderByWithRelationInput = {
   buyer?: Prisma.UserOrderByWithRelationInput
   chat?: Prisma.ChatOrderByWithRelationInput
   creator?: Prisma.UserOrderByWithRelationInput
+  resolver?: Prisma.UserOrderByWithRelationInput
   seller?: Prisma.UserOrderByWithRelationInput
+  milestone?: Prisma.MilestoneOrderByWithRelationInput
   transaction?: Prisma.TransactionOrderByWithRelationInput
 }
 
 export type DisputeWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  transactionId?: number
   chatId?: number
-  transactionId_chatId?: Prisma.DisputeTransactionIdChatIdCompoundUniqueInput
   AND?: Prisma.DisputeWhereInput | Prisma.DisputeWhereInput[]
   OR?: Prisma.DisputeWhereInput[]
   NOT?: Prisma.DisputeWhereInput | Prisma.DisputeWhereInput[]
+  transactionId?: Prisma.IntFilter<"Dispute"> | number
+  milestoneId?: Prisma.IntNullableFilter<"Dispute"> | number | null
   description?: Prisma.StringFilter<"Dispute"> | string
   resolutionOption?: Prisma.EnumResolutionOptionFilter<"Dispute"> | $Enums.ResolutionOption
   createdAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
   elapsesAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
   status?: Prisma.EnumdisputeStatusFilter<"Dispute"> | $Enums.disputeStatus
+  resolution?: Prisma.EnumDisputeResolutionNullableFilter<"Dispute"> | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
+  resolvedById?: Prisma.IntNullableFilter<"Dispute"> | number | null
   reason?: Prisma.StringFilter<"Dispute"> | string
   evidenceUrl?: Prisma.StringNullableListFilter<"Dispute">
   evidenceId?: Prisma.StringNullableListFilter<"Dispute">
@@ -351,19 +402,25 @@ export type DisputeWhereUniqueInput = Prisma.AtLeast<{
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chat?: Prisma.XOR<Prisma.ChatNullableScalarRelationFilter, Prisma.ChatWhereInput> | null
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
-}, "id" | "transactionId" | "chatId" | "transactionId_chatId">
+}, "id" | "chatId">
 
 export type DisputeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrderInput | Prisma.SortOrder
   chatId?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   resolutionOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   elapsesAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  resolution?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrder
   evidenceUrl?: Prisma.SortOrder
   evidenceId?: Prisma.SortOrder
@@ -383,12 +440,16 @@ export type DisputeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DisputeScalarWhereWithAggregatesInput | Prisma.DisputeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Dispute"> | number
   transactionId?: Prisma.IntWithAggregatesFilter<"Dispute"> | number
+  milestoneId?: Prisma.IntNullableWithAggregatesFilter<"Dispute"> | number | null
   chatId?: Prisma.IntNullableWithAggregatesFilter<"Dispute"> | number | null
   description?: Prisma.StringWithAggregatesFilter<"Dispute"> | string
   resolutionOption?: Prisma.EnumResolutionOptionWithAggregatesFilter<"Dispute"> | $Enums.ResolutionOption
   createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Dispute"> | Date | string | null
   elapsesAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Dispute"> | Date | string | null
   status?: Prisma.EnumdisputeStatusWithAggregatesFilter<"Dispute"> | $Enums.disputeStatus
+  resolution?: Prisma.EnumDisputeResolutionNullableWithAggregatesFilter<"Dispute"> | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Dispute"> | Date | string | null
+  resolvedById?: Prisma.IntNullableWithAggregatesFilter<"Dispute"> | number | null
   reason?: Prisma.StringWithAggregatesFilter<"Dispute"> | string
   evidenceUrl?: Prisma.StringNullableListFilter<"Dispute">
   evidenceId?: Prisma.StringNullableListFilter<"Dispute">
@@ -403,25 +464,33 @@ export type DisputeCreateInput = {
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
   creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
   seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
   transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
 }
 
 export type DisputeUncheckedCreateInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -436,25 +505,33 @@ export type DisputeUpdateInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
   chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
 }
 
 export type DisputeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -466,12 +543,16 @@ export type DisputeUncheckedUpdateInput = {
 export type DisputeCreateManyInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -486,6 +567,8 @@ export type DisputeUpdateManyMutationInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -494,23 +577,22 @@ export type DisputeUpdateManyMutationInput = {
 export type DisputeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   buyerId?: Prisma.IntFieldUpdateOperationsInput | number
   creatorId?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type DisputeNullableScalarRelationFilter = {
-  is?: Prisma.DisputeWhereInput | null
-  isNot?: Prisma.DisputeWhereInput | null
 }
 
 export type DisputeListRelationFilter = {
@@ -531,20 +613,19 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
-export type DisputeTransactionIdChatIdCompoundUniqueInput = {
-  transactionId: number
-  chatId: number
-}
-
 export type DisputeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   resolutionOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   elapsesAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
+  resolvedAt?: Prisma.SortOrder
+  resolvedById?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   evidenceUrl?: Prisma.SortOrder
   evidenceId?: Prisma.SortOrder
@@ -556,7 +637,9 @@ export type DisputeCountOrderByAggregateInput = {
 export type DisputeAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
+  resolvedById?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
@@ -565,12 +648,16 @@ export type DisputeAvgOrderByAggregateInput = {
 export type DisputeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   resolutionOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   elapsesAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
+  resolvedAt?: Prisma.SortOrder
+  resolvedById?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
@@ -580,12 +667,16 @@ export type DisputeMaxOrderByAggregateInput = {
 export type DisputeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   resolutionOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   elapsesAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
+  resolvedAt?: Prisma.SortOrder
+  resolvedById?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
@@ -595,42 +686,101 @@ export type DisputeMinOrderByAggregateInput = {
 export type DisputeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
+  milestoneId?: Prisma.SortOrder
   chatId?: Prisma.SortOrder
+  resolvedById?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
 }
 
-export type DisputeCreateNestedOneWithoutTransactionInput = {
-  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput
-  connect?: Prisma.DisputeWhereUniqueInput
+export type DisputeNullableScalarRelationFilter = {
+  is?: Prisma.DisputeWhereInput | null
+  isNot?: Prisma.DisputeWhereInput | null
 }
 
-export type DisputeUncheckedCreateNestedOneWithoutTransactionInput = {
-  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput
-  connect?: Prisma.DisputeWhereUniqueInput
+export type DisputeCreateNestedManyWithoutTransactionInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput> | Prisma.DisputeCreateWithoutTransactionInput[] | Prisma.DisputeUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput | Prisma.DisputeCreateOrConnectWithoutTransactionInput[]
+  createMany?: Prisma.DisputeCreateManyTransactionInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
 }
 
-export type DisputeUpdateOneWithoutTransactionNestedInput = {
-  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput
-  upsert?: Prisma.DisputeUpsertWithoutTransactionInput
-  disconnect?: Prisma.DisputeWhereInput | boolean
-  delete?: Prisma.DisputeWhereInput | boolean
-  connect?: Prisma.DisputeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DisputeUpdateToOneWithWhereWithoutTransactionInput, Prisma.DisputeUpdateWithoutTransactionInput>, Prisma.DisputeUncheckedUpdateWithoutTransactionInput>
+export type DisputeUncheckedCreateNestedManyWithoutTransactionInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput> | Prisma.DisputeCreateWithoutTransactionInput[] | Prisma.DisputeUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput | Prisma.DisputeCreateOrConnectWithoutTransactionInput[]
+  createMany?: Prisma.DisputeCreateManyTransactionInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
 }
 
-export type DisputeUncheckedUpdateOneWithoutTransactionNestedInput = {
-  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput
-  upsert?: Prisma.DisputeUpsertWithoutTransactionInput
-  disconnect?: Prisma.DisputeWhereInput | boolean
-  delete?: Prisma.DisputeWhereInput | boolean
-  connect?: Prisma.DisputeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DisputeUpdateToOneWithWhereWithoutTransactionInput, Prisma.DisputeUpdateWithoutTransactionInput>, Prisma.DisputeUncheckedUpdateWithoutTransactionInput>
+export type DisputeUpdateManyWithoutTransactionNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput> | Prisma.DisputeCreateWithoutTransactionInput[] | Prisma.DisputeUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput | Prisma.DisputeCreateOrConnectWithoutTransactionInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutTransactionInput | Prisma.DisputeUpsertWithWhereUniqueWithoutTransactionInput[]
+  createMany?: Prisma.DisputeCreateManyTransactionInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutTransactionInput | Prisma.DisputeUpdateWithWhereUniqueWithoutTransactionInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutTransactionInput | Prisma.DisputeUpdateManyWithWhereWithoutTransactionInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+}
+
+export type DisputeUncheckedUpdateManyWithoutTransactionNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput> | Prisma.DisputeCreateWithoutTransactionInput[] | Prisma.DisputeUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutTransactionInput | Prisma.DisputeCreateOrConnectWithoutTransactionInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutTransactionInput | Prisma.DisputeUpsertWithWhereUniqueWithoutTransactionInput[]
+  createMany?: Prisma.DisputeCreateManyTransactionInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutTransactionInput | Prisma.DisputeUpdateWithWhereUniqueWithoutTransactionInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutTransactionInput | Prisma.DisputeUpdateManyWithWhereWithoutTransactionInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+}
+
+export type DisputeCreateNestedManyWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput> | Prisma.DisputeCreateWithoutMilestoneInput[] | Prisma.DisputeUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutMilestoneInput | Prisma.DisputeCreateOrConnectWithoutMilestoneInput[]
+  createMany?: Prisma.DisputeCreateManyMilestoneInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+}
+
+export type DisputeUncheckedCreateNestedManyWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput> | Prisma.DisputeCreateWithoutMilestoneInput[] | Prisma.DisputeUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutMilestoneInput | Prisma.DisputeCreateOrConnectWithoutMilestoneInput[]
+  createMany?: Prisma.DisputeCreateManyMilestoneInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+}
+
+export type DisputeUpdateManyWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput> | Prisma.DisputeCreateWithoutMilestoneInput[] | Prisma.DisputeUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutMilestoneInput | Prisma.DisputeCreateOrConnectWithoutMilestoneInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutMilestoneInput | Prisma.DisputeUpsertWithWhereUniqueWithoutMilestoneInput[]
+  createMany?: Prisma.DisputeCreateManyMilestoneInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutMilestoneInput | Prisma.DisputeUpdateWithWhereUniqueWithoutMilestoneInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutMilestoneInput | Prisma.DisputeUpdateManyWithWhereWithoutMilestoneInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+}
+
+export type DisputeUncheckedUpdateManyWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput> | Prisma.DisputeCreateWithoutMilestoneInput[] | Prisma.DisputeUncheckedCreateWithoutMilestoneInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutMilestoneInput | Prisma.DisputeCreateOrConnectWithoutMilestoneInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutMilestoneInput | Prisma.DisputeUpsertWithWhereUniqueWithoutMilestoneInput[]
+  createMany?: Prisma.DisputeCreateManyMilestoneInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutMilestoneInput | Prisma.DisputeUpdateWithWhereUniqueWithoutMilestoneInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutMilestoneInput | Prisma.DisputeUpdateManyWithWhereWithoutMilestoneInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
 }
 
 export type DisputeCreateNestedManyWithoutBuyerInput = {
@@ -654,6 +804,13 @@ export type DisputeCreateNestedManyWithoutSellerInput = {
   connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
 }
 
+export type DisputeCreateNestedManyWithoutResolverInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput> | Prisma.DisputeCreateWithoutResolverInput[] | Prisma.DisputeUncheckedCreateWithoutResolverInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutResolverInput | Prisma.DisputeCreateOrConnectWithoutResolverInput[]
+  createMany?: Prisma.DisputeCreateManyResolverInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+}
+
 export type DisputeUncheckedCreateNestedManyWithoutBuyerInput = {
   create?: Prisma.XOR<Prisma.DisputeCreateWithoutBuyerInput, Prisma.DisputeUncheckedCreateWithoutBuyerInput> | Prisma.DisputeCreateWithoutBuyerInput[] | Prisma.DisputeUncheckedCreateWithoutBuyerInput[]
   connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutBuyerInput | Prisma.DisputeCreateOrConnectWithoutBuyerInput[]
@@ -672,6 +829,13 @@ export type DisputeUncheckedCreateNestedManyWithoutSellerInput = {
   create?: Prisma.XOR<Prisma.DisputeCreateWithoutSellerInput, Prisma.DisputeUncheckedCreateWithoutSellerInput> | Prisma.DisputeCreateWithoutSellerInput[] | Prisma.DisputeUncheckedCreateWithoutSellerInput[]
   connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutSellerInput | Prisma.DisputeCreateOrConnectWithoutSellerInput[]
   createMany?: Prisma.DisputeCreateManySellerInputEnvelope
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+}
+
+export type DisputeUncheckedCreateNestedManyWithoutResolverInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput> | Prisma.DisputeCreateWithoutResolverInput[] | Prisma.DisputeUncheckedCreateWithoutResolverInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutResolverInput | Prisma.DisputeCreateOrConnectWithoutResolverInput[]
+  createMany?: Prisma.DisputeCreateManyResolverInputEnvelope
   connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
 }
 
@@ -717,6 +881,20 @@ export type DisputeUpdateManyWithoutSellerNestedInput = {
   deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
 }
 
+export type DisputeUpdateManyWithoutResolverNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput> | Prisma.DisputeCreateWithoutResolverInput[] | Prisma.DisputeUncheckedCreateWithoutResolverInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutResolverInput | Prisma.DisputeCreateOrConnectWithoutResolverInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutResolverInput | Prisma.DisputeUpsertWithWhereUniqueWithoutResolverInput[]
+  createMany?: Prisma.DisputeCreateManyResolverInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutResolverInput | Prisma.DisputeUpdateWithWhereUniqueWithoutResolverInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutResolverInput | Prisma.DisputeUpdateManyWithWhereWithoutResolverInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+}
+
 export type DisputeUncheckedUpdateManyWithoutBuyerNestedInput = {
   create?: Prisma.XOR<Prisma.DisputeCreateWithoutBuyerInput, Prisma.DisputeUncheckedCreateWithoutBuyerInput> | Prisma.DisputeCreateWithoutBuyerInput[] | Prisma.DisputeUncheckedCreateWithoutBuyerInput[]
   connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutBuyerInput | Prisma.DisputeCreateOrConnectWithoutBuyerInput[]
@@ -759,6 +937,20 @@ export type DisputeUncheckedUpdateManyWithoutSellerNestedInput = {
   deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
 }
 
+export type DisputeUncheckedUpdateManyWithoutResolverNestedInput = {
+  create?: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput> | Prisma.DisputeCreateWithoutResolverInput[] | Prisma.DisputeUncheckedCreateWithoutResolverInput[]
+  connectOrCreate?: Prisma.DisputeCreateOrConnectWithoutResolverInput | Prisma.DisputeCreateOrConnectWithoutResolverInput[]
+  upsert?: Prisma.DisputeUpsertWithWhereUniqueWithoutResolverInput | Prisma.DisputeUpsertWithWhereUniqueWithoutResolverInput[]
+  createMany?: Prisma.DisputeCreateManyResolverInputEnvelope
+  set?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  disconnect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  delete?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  connect?: Prisma.DisputeWhereUniqueInput | Prisma.DisputeWhereUniqueInput[]
+  update?: Prisma.DisputeUpdateWithWhereUniqueWithoutResolverInput | Prisma.DisputeUpdateWithWhereUniqueWithoutResolverInput[]
+  updateMany?: Prisma.DisputeUpdateManyWithWhereWithoutResolverInput | Prisma.DisputeUpdateManyWithWhereWithoutResolverInput[]
+  deleteMany?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+}
+
 export type DisputeCreateevidenceUrlInput = {
   set: string[]
 }
@@ -773,6 +965,10 @@ export type EnumResolutionOptionFieldUpdateOperationsInput = {
 
 export type EnumdisputeStatusFieldUpdateOperationsInput = {
   set?: $Enums.disputeStatus
+}
+
+export type NullableEnumDisputeResolutionFieldUpdateOperationsInput = {
+  set?: $Enums.DisputeResolution | null
 }
 
 export type DisputeUpdateevidenceUrlInput = {
@@ -823,23 +1019,31 @@ export type DisputeCreateWithoutTransactionInput = {
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
   creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
   seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
 }
 
 export type DisputeUncheckedCreateWithoutTransactionInput = {
   id?: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -853,64 +1057,71 @@ export type DisputeCreateOrConnectWithoutTransactionInput = {
   create: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
 }
 
-export type DisputeUpsertWithoutTransactionInput = {
-  update: Prisma.XOR<Prisma.DisputeUpdateWithoutTransactionInput, Prisma.DisputeUncheckedUpdateWithoutTransactionInput>
-  create: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
-  where?: Prisma.DisputeWhereInput
+export type DisputeCreateManyTransactionInputEnvelope = {
+  data: Prisma.DisputeCreateManyTransactionInput | Prisma.DisputeCreateManyTransactionInput[]
+  skipDuplicates?: boolean
 }
 
-export type DisputeUpdateToOneWithWhereWithoutTransactionInput = {
-  where?: Prisma.DisputeWhereInput
+export type DisputeUpsertWithWhereUniqueWithoutTransactionInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  update: Prisma.XOR<Prisma.DisputeUpdateWithoutTransactionInput, Prisma.DisputeUncheckedUpdateWithoutTransactionInput>
+  create: Prisma.XOR<Prisma.DisputeCreateWithoutTransactionInput, Prisma.DisputeUncheckedCreateWithoutTransactionInput>
+}
+
+export type DisputeUpdateWithWhereUniqueWithoutTransactionInput = {
+  where: Prisma.DisputeWhereUniqueInput
   data: Prisma.XOR<Prisma.DisputeUpdateWithoutTransactionInput, Prisma.DisputeUncheckedUpdateWithoutTransactionInput>
 }
 
-export type DisputeUpdateWithoutTransactionInput = {
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
-  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
-  reason?: Prisma.StringFieldUpdateOperationsInput | string
-  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
-  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
-  buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
-  chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
-  seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+export type DisputeUpdateManyWithWhereWithoutTransactionInput = {
+  where: Prisma.DisputeScalarWhereInput
+  data: Prisma.XOR<Prisma.DisputeUpdateManyMutationInput, Prisma.DisputeUncheckedUpdateManyWithoutTransactionInput>
 }
 
-export type DisputeUncheckedUpdateWithoutTransactionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
-  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
-  reason?: Prisma.StringFieldUpdateOperationsInput | string
-  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
-  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
-  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
-  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+export type DisputeScalarWhereInput = {
+  AND?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+  OR?: Prisma.DisputeScalarWhereInput[]
+  NOT?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
+  id?: Prisma.IntFilter<"Dispute"> | number
+  transactionId?: Prisma.IntFilter<"Dispute"> | number
+  milestoneId?: Prisma.IntNullableFilter<"Dispute"> | number | null
+  chatId?: Prisma.IntNullableFilter<"Dispute"> | number | null
+  description?: Prisma.StringFilter<"Dispute"> | string
+  resolutionOption?: Prisma.EnumResolutionOptionFilter<"Dispute"> | $Enums.ResolutionOption
+  createdAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
+  elapsesAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
+  status?: Prisma.EnumdisputeStatusFilter<"Dispute"> | $Enums.disputeStatus
+  resolution?: Prisma.EnumDisputeResolutionNullableFilter<"Dispute"> | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
+  resolvedById?: Prisma.IntNullableFilter<"Dispute"> | number | null
+  reason?: Prisma.StringFilter<"Dispute"> | string
+  evidenceUrl?: Prisma.StringNullableListFilter<"Dispute">
+  evidenceId?: Prisma.StringNullableListFilter<"Dispute">
+  buyerId?: Prisma.IntFilter<"Dispute"> | number
+  creatorId?: Prisma.IntFilter<"Dispute"> | number
+  sellerId?: Prisma.IntFilter<"Dispute"> | number
 }
 
-export type DisputeCreateWithoutBuyerInput = {
+export type DisputeCreateWithoutMilestoneInput = {
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
   creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
   seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
   transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
 }
 
-export type DisputeUncheckedCreateWithoutBuyerInput = {
+export type DisputeUncheckedCreateWithoutMilestoneInput = {
   id?: number
   transactionId: number
   chatId?: number | null
@@ -919,6 +1130,75 @@ export type DisputeUncheckedCreateWithoutBuyerInput = {
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyerId: number
+  creatorId: number
+  sellerId: number
+}
+
+export type DisputeCreateOrConnectWithoutMilestoneInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  create: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput>
+}
+
+export type DisputeCreateManyMilestoneInputEnvelope = {
+  data: Prisma.DisputeCreateManyMilestoneInput | Prisma.DisputeCreateManyMilestoneInput[]
+  skipDuplicates?: boolean
+}
+
+export type DisputeUpsertWithWhereUniqueWithoutMilestoneInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  update: Prisma.XOR<Prisma.DisputeUpdateWithoutMilestoneInput, Prisma.DisputeUncheckedUpdateWithoutMilestoneInput>
+  create: Prisma.XOR<Prisma.DisputeCreateWithoutMilestoneInput, Prisma.DisputeUncheckedCreateWithoutMilestoneInput>
+}
+
+export type DisputeUpdateWithWhereUniqueWithoutMilestoneInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  data: Prisma.XOR<Prisma.DisputeUpdateWithoutMilestoneInput, Prisma.DisputeUncheckedUpdateWithoutMilestoneInput>
+}
+
+export type DisputeUpdateManyWithWhereWithoutMilestoneInput = {
+  where: Prisma.DisputeScalarWhereInput
+  data: Prisma.XOR<Prisma.DisputeUpdateManyMutationInput, Prisma.DisputeUncheckedUpdateManyWithoutMilestoneInput>
+}
+
+export type DisputeCreateWithoutBuyerInput = {
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
+  creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
+  seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
+  transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
+}
+
+export type DisputeUncheckedCreateWithoutBuyerInput = {
+  id?: number
+  transactionId: number
+  milestoneId?: number | null
+  chatId?: number | null
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -942,24 +1222,32 @@ export type DisputeCreateWithoutCreatorInput = {
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
   seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
   transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
 }
 
 export type DisputeUncheckedCreateWithoutCreatorInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -983,24 +1271,32 @@ export type DisputeCreateWithoutSellerInput = {
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
   creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
   transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
 }
 
 export type DisputeUncheckedCreateWithoutSellerInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -1018,6 +1314,55 @@ export type DisputeCreateManySellerInputEnvelope = {
   skipDuplicates?: boolean
 }
 
+export type DisputeCreateWithoutResolverInput = {
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
+  chat?: Prisma.ChatCreateNestedOneWithoutDisputeInput
+  creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
+  transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
+}
+
+export type DisputeUncheckedCreateWithoutResolverInput = {
+  id?: number
+  transactionId: number
+  milestoneId?: number | null
+  chatId?: number | null
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyerId: number
+  creatorId: number
+  sellerId: number
+}
+
+export type DisputeCreateOrConnectWithoutResolverInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  create: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput>
+}
+
+export type DisputeCreateManyResolverInputEnvelope = {
+  data: Prisma.DisputeCreateManyResolverInput | Prisma.DisputeCreateManyResolverInput[]
+  skipDuplicates?: boolean
+}
+
 export type DisputeUpsertWithWhereUniqueWithoutBuyerInput = {
   where: Prisma.DisputeWhereUniqueInput
   update: Prisma.XOR<Prisma.DisputeUpdateWithoutBuyerInput, Prisma.DisputeUncheckedUpdateWithoutBuyerInput>
@@ -1032,26 +1377,6 @@ export type DisputeUpdateWithWhereUniqueWithoutBuyerInput = {
 export type DisputeUpdateManyWithWhereWithoutBuyerInput = {
   where: Prisma.DisputeScalarWhereInput
   data: Prisma.XOR<Prisma.DisputeUpdateManyMutationInput, Prisma.DisputeUncheckedUpdateManyWithoutBuyerInput>
-}
-
-export type DisputeScalarWhereInput = {
-  AND?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
-  OR?: Prisma.DisputeScalarWhereInput[]
-  NOT?: Prisma.DisputeScalarWhereInput | Prisma.DisputeScalarWhereInput[]
-  id?: Prisma.IntFilter<"Dispute"> | number
-  transactionId?: Prisma.IntFilter<"Dispute"> | number
-  chatId?: Prisma.IntNullableFilter<"Dispute"> | number | null
-  description?: Prisma.StringFilter<"Dispute"> | string
-  resolutionOption?: Prisma.EnumResolutionOptionFilter<"Dispute"> | $Enums.ResolutionOption
-  createdAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
-  elapsesAt?: Prisma.DateTimeNullableFilter<"Dispute"> | Date | string | null
-  status?: Prisma.EnumdisputeStatusFilter<"Dispute"> | $Enums.disputeStatus
-  reason?: Prisma.StringFilter<"Dispute"> | string
-  evidenceUrl?: Prisma.StringNullableListFilter<"Dispute">
-  evidenceId?: Prisma.StringNullableListFilter<"Dispute">
-  buyerId?: Prisma.IntFilter<"Dispute"> | number
-  creatorId?: Prisma.IntFilter<"Dispute"> | number
-  sellerId?: Prisma.IntFilter<"Dispute"> | number
 }
 
 export type DisputeUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -1086,29 +1411,53 @@ export type DisputeUpdateManyWithWhereWithoutSellerInput = {
   data: Prisma.XOR<Prisma.DisputeUpdateManyMutationInput, Prisma.DisputeUncheckedUpdateManyWithoutSellerInput>
 }
 
+export type DisputeUpsertWithWhereUniqueWithoutResolverInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  update: Prisma.XOR<Prisma.DisputeUpdateWithoutResolverInput, Prisma.DisputeUncheckedUpdateWithoutResolverInput>
+  create: Prisma.XOR<Prisma.DisputeCreateWithoutResolverInput, Prisma.DisputeUncheckedCreateWithoutResolverInput>
+}
+
+export type DisputeUpdateWithWhereUniqueWithoutResolverInput = {
+  where: Prisma.DisputeWhereUniqueInput
+  data: Prisma.XOR<Prisma.DisputeUpdateWithoutResolverInput, Prisma.DisputeUncheckedUpdateWithoutResolverInput>
+}
+
+export type DisputeUpdateManyWithWhereWithoutResolverInput = {
+  where: Prisma.DisputeScalarWhereInput
+  data: Prisma.XOR<Prisma.DisputeUpdateManyMutationInput, Prisma.DisputeUncheckedUpdateManyWithoutResolverInput>
+}
+
 export type DisputeCreateWithoutChatInput = {
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyer: Prisma.UserCreateNestedOneWithoutDisputesAsBuyerInput
   creator: Prisma.UserCreateNestedOneWithoutDisputesCreatedInput
+  resolver?: Prisma.UserCreateNestedOneWithoutDisputesResolvedInput
   seller: Prisma.UserCreateNestedOneWithoutDisputesAsSellerInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutDisputesInput
   transaction: Prisma.TransactionCreateNestedOneWithoutDisputeInput
 }
 
 export type DisputeUncheckedCreateWithoutChatInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -1139,23 +1488,189 @@ export type DisputeUpdateWithoutChatInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
 }
 
 export type DisputeUncheckedUpdateWithoutChatInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type DisputeCreateManyTransactionInput = {
+  id?: number
+  milestoneId?: number | null
+  chatId?: number | null
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyerId: number
+  creatorId: number
+  sellerId: number
+}
+
+export type DisputeUpdateWithoutTransactionInput = {
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
+  chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
+  seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
+}
+
+export type DisputeUncheckedUpdateWithoutTransactionInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type DisputeUncheckedUpdateManyWithoutTransactionInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type DisputeCreateManyMilestoneInput = {
+  id?: number
+  transactionId: number
+  chatId?: number | null
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyerId: number
+  creatorId: number
+  sellerId: number
+}
+
+export type DisputeUpdateWithoutMilestoneInput = {
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
+  chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
+  seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
+}
+
+export type DisputeUncheckedUpdateWithoutMilestoneInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type DisputeUncheckedUpdateManyWithoutMilestoneInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1167,12 +1682,16 @@ export type DisputeUncheckedUpdateWithoutChatInput = {
 export type DisputeCreateManyBuyerInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -1183,12 +1702,16 @@ export type DisputeCreateManyBuyerInput = {
 export type DisputeCreateManyCreatorInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
@@ -1199,17 +1722,41 @@ export type DisputeCreateManyCreatorInput = {
 export type DisputeCreateManySellerInput = {
   id?: number
   transactionId: number
+  milestoneId?: number | null
   chatId?: number | null
   description: string
   resolutionOption: $Enums.ResolutionOption
   createdAt?: Date | string | null
   elapsesAt?: Date | string | null
   status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  resolvedById?: number | null
   reason: string
   evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
   buyerId: number
   creatorId: number
+}
+
+export type DisputeCreateManyResolverInput = {
+  id?: number
+  transactionId: number
+  milestoneId?: number | null
+  chatId?: number | null
+  description: string
+  resolutionOption: $Enums.ResolutionOption
+  createdAt?: Date | string | null
+  elapsesAt?: Date | string | null
+  status?: $Enums.disputeStatus
+  resolution?: $Enums.DisputeResolution | null
+  resolvedAt?: Date | string | null
+  reason: string
+  evidenceUrl?: Prisma.DisputeCreateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeCreateevidenceIdInput | string[]
+  buyerId: number
+  creatorId: number
+  sellerId: number
 }
 
 export type DisputeUpdateWithoutBuyerInput = {
@@ -1218,24 +1765,32 @@ export type DisputeUpdateWithoutBuyerInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
 }
 
 export type DisputeUncheckedUpdateWithoutBuyerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1246,12 +1801,16 @@ export type DisputeUncheckedUpdateWithoutBuyerInput = {
 export type DisputeUncheckedUpdateManyWithoutBuyerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1265,24 +1824,32 @@ export type DisputeUpdateWithoutCreatorInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
   chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
 }
 
 export type DisputeUncheckedUpdateWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1293,12 +1860,16 @@ export type DisputeUncheckedUpdateWithoutCreatorInput = {
 export type DisputeUncheckedUpdateManyWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1312,24 +1883,32 @@ export type DisputeUpdateWithoutSellerInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
   buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
   chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutDisputesResolvedNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
 }
 
 export type DisputeUncheckedUpdateWithoutSellerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1340,12 +1919,16 @@ export type DisputeUncheckedUpdateWithoutSellerInput = {
 export type DisputeUncheckedUpdateManyWithoutSellerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
   evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
@@ -1353,17 +1936,80 @@ export type DisputeUncheckedUpdateManyWithoutSellerInput = {
   creatorId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
+export type DisputeUpdateWithoutResolverInput = {
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyer?: Prisma.UserUpdateOneRequiredWithoutDisputesAsBuyerNestedInput
+  chat?: Prisma.ChatUpdateOneWithoutDisputeNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutDisputesCreatedNestedInput
+  seller?: Prisma.UserUpdateOneRequiredWithoutDisputesAsSellerNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutDisputesNestedInput
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutDisputeNestedInput
+}
+
+export type DisputeUncheckedUpdateWithoutResolverInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type DisputeUncheckedUpdateManyWithoutResolverInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transactionId?: Prisma.IntFieldUpdateOperationsInput | number
+  milestoneId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  chatId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  resolutionOption?: Prisma.EnumResolutionOptionFieldUpdateOperationsInput | $Enums.ResolutionOption
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  elapsesAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumdisputeStatusFieldUpdateOperationsInput | $Enums.disputeStatus
+  resolution?: Prisma.NullableEnumDisputeResolutionFieldUpdateOperationsInput | $Enums.DisputeResolution | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  evidenceUrl?: Prisma.DisputeUpdateevidenceUrlInput | string[]
+  evidenceId?: Prisma.DisputeUpdateevidenceIdInput | string[]
+  buyerId?: Prisma.IntFieldUpdateOperationsInput | number
+  creatorId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 
 
 export type DisputeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transactionId?: boolean
+  milestoneId?: boolean
   chatId?: boolean
   description?: boolean
   resolutionOption?: boolean
   createdAt?: boolean
   elapsesAt?: boolean
   status?: boolean
+  resolution?: boolean
+  resolvedAt?: boolean
+  resolvedById?: boolean
   reason?: boolean
   evidenceUrl?: boolean
   evidenceId?: boolean
@@ -1373,19 +2019,25 @@ export type DisputeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dispute"]>
 
 export type DisputeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transactionId?: boolean
+  milestoneId?: boolean
   chatId?: boolean
   description?: boolean
   resolutionOption?: boolean
   createdAt?: boolean
   elapsesAt?: boolean
   status?: boolean
+  resolution?: boolean
+  resolvedAt?: boolean
+  resolvedById?: boolean
   reason?: boolean
   evidenceUrl?: boolean
   evidenceId?: boolean
@@ -1395,19 +2047,25 @@ export type DisputeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dispute"]>
 
 export type DisputeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transactionId?: boolean
+  milestoneId?: boolean
   chatId?: boolean
   description?: boolean
   resolutionOption?: boolean
   createdAt?: boolean
   elapsesAt?: boolean
   status?: boolean
+  resolution?: boolean
+  resolvedAt?: boolean
+  resolvedById?: boolean
   reason?: boolean
   evidenceUrl?: boolean
   evidenceId?: boolean
@@ -1417,19 +2075,25 @@ export type DisputeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dispute"]>
 
 export type DisputeSelectScalar = {
   id?: boolean
   transactionId?: boolean
+  milestoneId?: boolean
   chatId?: boolean
   description?: boolean
   resolutionOption?: boolean
   createdAt?: boolean
   elapsesAt?: boolean
   status?: boolean
+  resolution?: boolean
+  resolvedAt?: boolean
+  resolvedById?: boolean
   reason?: boolean
   evidenceUrl?: boolean
   evidenceId?: boolean
@@ -1438,26 +2102,32 @@ export type DisputeSelectScalar = {
   sellerId?: boolean
 }
 
-export type DisputeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transactionId" | "chatId" | "description" | "resolutionOption" | "createdAt" | "elapsesAt" | "status" | "reason" | "evidenceUrl" | "evidenceId" | "buyerId" | "creatorId" | "sellerId", ExtArgs["result"]["dispute"]>
+export type DisputeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transactionId" | "milestoneId" | "chatId" | "description" | "resolutionOption" | "createdAt" | "elapsesAt" | "status" | "resolution" | "resolvedAt" | "resolvedById" | "reason" | "evidenceUrl" | "evidenceId" | "buyerId" | "creatorId" | "sellerId", ExtArgs["result"]["dispute"]>
 export type DisputeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }
 export type DisputeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }
 export type DisputeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chat?: boolean | Prisma.Dispute$chatArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolver?: boolean | Prisma.Dispute$resolverArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Dispute$milestoneArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }
 
@@ -1467,18 +2137,24 @@ export type $DisputePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     buyer: Prisma.$UserPayload<ExtArgs>
     chat: Prisma.$ChatPayload<ExtArgs> | null
     creator: Prisma.$UserPayload<ExtArgs>
+    resolver: Prisma.$UserPayload<ExtArgs> | null
     seller: Prisma.$UserPayload<ExtArgs>
+    milestone: Prisma.$MilestonePayload<ExtArgs> | null
     transaction: Prisma.$TransactionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     transactionId: number
+    milestoneId: number | null
     chatId: number | null
     description: string
     resolutionOption: $Enums.ResolutionOption
     createdAt: Date | null
     elapsesAt: Date | null
     status: $Enums.disputeStatus
+    resolution: $Enums.DisputeResolution | null
+    resolvedAt: Date | null
+    resolvedById: number | null
     reason: string
     evidenceUrl: string[]
     evidenceId: string[]
@@ -1882,7 +2558,9 @@ export interface Prisma__DisputeClient<T, Null = never, ExtArgs extends runtime.
   buyer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   chat<T extends Prisma.Dispute$chatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Dispute$chatArgs<ExtArgs>>): Prisma.Prisma__ChatClient<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  resolver<T extends Prisma.Dispute$resolverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Dispute$resolverArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   seller<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  milestone<T extends Prisma.Dispute$milestoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Dispute$milestoneArgs<ExtArgs>>): Prisma.Prisma__MilestoneClient<runtime.Types.Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transaction<T extends Prisma.TransactionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransactionDefaultArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1915,12 +2593,16 @@ export interface Prisma__DisputeClient<T, Null = never, ExtArgs extends runtime.
 export interface DisputeFieldRefs {
   readonly id: Prisma.FieldRef<"Dispute", 'Int'>
   readonly transactionId: Prisma.FieldRef<"Dispute", 'Int'>
+  readonly milestoneId: Prisma.FieldRef<"Dispute", 'Int'>
   readonly chatId: Prisma.FieldRef<"Dispute", 'Int'>
   readonly description: Prisma.FieldRef<"Dispute", 'String'>
   readonly resolutionOption: Prisma.FieldRef<"Dispute", 'ResolutionOption'>
   readonly createdAt: Prisma.FieldRef<"Dispute", 'DateTime'>
   readonly elapsesAt: Prisma.FieldRef<"Dispute", 'DateTime'>
   readonly status: Prisma.FieldRef<"Dispute", 'disputeStatus'>
+  readonly resolution: Prisma.FieldRef<"Dispute", 'DisputeResolution'>
+  readonly resolvedAt: Prisma.FieldRef<"Dispute", 'DateTime'>
+  readonly resolvedById: Prisma.FieldRef<"Dispute", 'Int'>
   readonly reason: Prisma.FieldRef<"Dispute", 'String'>
   readonly evidenceUrl: Prisma.FieldRef<"Dispute", 'String[]'>
   readonly evidenceId: Prisma.FieldRef<"Dispute", 'String[]'>
@@ -2344,6 +3026,44 @@ export type Dispute$chatArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.ChatInclude<ExtArgs> | null
   where?: Prisma.ChatWhereInput
+}
+
+/**
+ * Dispute.resolver
+ */
+export type Dispute$resolverArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Dispute.milestone
+ */
+export type Dispute$milestoneArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Milestone
+   */
+  select?: Prisma.MilestoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Milestone
+   */
+  omit?: Prisma.MilestoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MilestoneInclude<ExtArgs> | null
+  where?: Prisma.MilestoneWhereInput
 }
 
 /**

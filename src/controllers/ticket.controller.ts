@@ -290,7 +290,14 @@ export const resolveTransactionController = async (req: Request, res: Response):
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
 
-    const updatedTransaction = await resolveTransactionService(id, user.email);
+    const milestoneId = req.params.milestoneId
+      ? Number(req.params.milestoneId)
+      : undefined;
+    const updatedTransaction = await resolveTransactionService(
+      id,
+      user.email,
+      milestoneId
+    );
 
     res.status(200).json({
       message: "Transaction resolution requested successfully",
@@ -308,7 +315,16 @@ export const resolveTransactionController = async (req: Request, res: Response):
 export const acceptResolutionController = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const id = Number(req.params.id);
-    const updatedTransaction = await acceptResolutionService(id);
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const milestoneId = req.params.milestoneId
+      ? Number(req.params.milestoneId)
+      : undefined;
+    const updatedTransaction = await acceptResolutionService(
+      id,
+      userId,
+      milestoneId
+    );
 
     res.status(200).json({
       message: "Transaction closure accepted successfully",
@@ -326,7 +342,16 @@ export const acceptResolutionController = async (req: Request, res: Response): P
 export const rejectResolutionController = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const id = Number(req.params.id);
-    const updatedTransaction = await rejectResolutionService(id);
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const milestoneId = req.params.milestoneId
+      ? Number(req.params.milestoneId)
+      : undefined;
+    const updatedTransaction = await rejectResolutionService(
+      id,
+      userId,
+      milestoneId
+    );
 
     res.status(200).json({
       message: "Transaction closure rejected successfully (Moved to DISPUTE)",

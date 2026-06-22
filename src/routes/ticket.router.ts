@@ -44,6 +44,9 @@ ticketRouter.put(
 ticketRouter.put("/:id/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
 ticketRouter.put("/:id/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
+ticketRouter.put("/:id/milestones/:milestoneId/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
+ticketRouter.put("/:id/milestones/:milestoneId/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
+ticketRouter.put("/:id/milestones/:milestoneId/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
 ticketRouter.put("/:id/update-status-to-ongoing", authenticateTokenMiddleware, updateTicketToOngoingController as RequestHandler);
   
 // Request Token to Validate Transaction

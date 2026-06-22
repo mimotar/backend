@@ -5,7 +5,7 @@ import { createUser, demo } from "../controllers/test/user.js";
 import disputeRouter from "./dispute/dispute.router.js";
 import userRouter from "./userRoutes.js";
 import ticketRouter from "./ticket.router.js";
-import { passwordResetReqRouter } from "./password-reset-req.router.js";
+import { passwordRouter } from "./password.router.js";
 import { settingRouter } from "./setting.route.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
 import { TransactionSchema } from "../zod/TicketSchema.js";
@@ -20,7 +20,7 @@ import notificationRouter from "./notification.route.js";
 
 const router = Router();
 router.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello Mimotar");
 });
 
 router.use("/auth", signupRouter);
@@ -35,7 +35,7 @@ router.get("/demo", validateSchema(TransactionSchema), demo);
 
 // router.use("/email", emailRouter);
 
-router.use("/password-reset", passwordResetReqRouter);
+router.use("/password", passwordRouter);
 router.use("/ticket", ticketRouter);
 router.use("/setting", settingRouter);
 

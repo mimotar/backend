@@ -11,6 +11,12 @@ export const verifyOTPService = async (email: string, otp: string) => {
             message: "User not found",
         };
     }
+    if (user.otpPurpose !== "EMAIL_VERIFICATION") {
+        return {
+            status: 400,
+            message: "No active email verification OTP was found",
+        };
+    }
     if (user.otp !== otp) {
         return {
             status: 400,
@@ -39,6 +45,7 @@ export const verifyOTPService = async (email: string, otp: string) => {
             verified: true,
             otp: null,
             otpCreatedAt: null,
+            otpPurpose: null,
         },
     });
     return {

@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const DisputeSchema = z.object({
   id: z.number().optional(),
   transactionId: z.coerce.number(),
+  milestoneId: z.coerce.number().int().positive().optional(),
   reason: z.string().min(2).max(100),
   description: z.string().min(2).max(500),
   resolutionOption: z.enum([

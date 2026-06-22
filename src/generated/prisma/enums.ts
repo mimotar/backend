@@ -26,6 +26,15 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const OtpPurpose = {
+  EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
+  PASSWORD_RESET: 'PASSWORD_RESET',
+  CHANGE_PASSWORD: 'CHANGE_PASSWORD'
+} as const
+
+export type OtpPurpose = (typeof OtpPurpose)[keyof typeof OtpPurpose]
+
+
 export const TransactionType = {
   PHYSICAL_PRODUCT: 'PHYSICAL_PRODUCT',
   ONLINE_PRODUCT: 'ONLINE_PRODUCT',
@@ -115,6 +124,13 @@ export const disputeStatus = {
 } as const
 
 export type disputeStatus = (typeof disputeStatus)[keyof typeof disputeStatus]
+
+
+export const DisputeResolution = {
+  RELEASE_TO_SELLER: 'RELEASE_TO_SELLER'
+} as const
+
+export type DisputeResolution = (typeof DisputeResolution)[keyof typeof DisputeResolution]
 
 
 export const ChatRole = {

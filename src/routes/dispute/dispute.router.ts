@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticateTokenMiddleware } from "../../middlewares/authenticateTokenMiddleware.js";
-import { DeleteDisputeController, CreateDisputeController, GetDisputeByIdController, GetUserDisputesController } from "../../controllers/dispute.controller.js";
+import { DeleteDisputeController, CreateDisputeController, GetDisputeByIdController, GetUserDisputesController, ResolveDisputeController } from "../../controllers/dispute.controller.js";
 import { validateSchema } from "../../middlewares/validations/allroute.validation.js";
 import { DisputeSchema } from "../../zod/Dispute.zod.js";
 import { upload } from "../../config/cloudinary.js";
@@ -20,6 +20,12 @@ disputeRouter.delete('/:id',
     authenticateTokenMiddleware, 
      createRateLimiterMiddleware(10 * 60 * 1000, 10),
     DeleteDisputeController
+);
+
+disputeRouter.patch('/:id/resolve',
+    authenticateTokenMiddleware,
+    createRateLimiterMiddleware(10 * 60 * 1000, 10),
+    ResolveDisputeController
 );
 
 disputeRouter.get('/:id',

@@ -3,6 +3,20 @@ import { NextFunction, Request, Response } from "express";
 import { uploadToCloudinary } from "../config/cloudinary.js";
 import { DisputeSchema } from "../zod/Dispute.zod.js";
 import disputeService from "../services/dispute.service.js";
+import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
+
+const sendDisputeError = (res: Response, error: unknown, fallback: string) => {
+  if (error instanceof GlobalError) {
+    return res.status(error.statusCode).json({
+      error: error.name,
+      message: error.message,
+    });
+  }
+  return res.status(500).json({
+    error: fallback,
+    message: error instanceof Error ? error.message : "Unknown error",
+  });
+};
 
 const CreateDisputeController = async (
   req: Request,
@@ -34,6 +48,9 @@ const CreateDisputeController = async (
 
     const parsed = DisputeSchema.parse({
       transactionId: parseInt(req.body.transactionId),
+      milestoneId: req.body.milestoneId
+        ? parseInt(req.body.milestoneId)
+        : undefined,
       reason: req.body.reason,
       description: req.body.description,
       resolutionOption: req.body.resolutionOption,
@@ -52,12 +69,7 @@ const CreateDisputeController = async (
     });
   } catch (error) {
     console.error("Error in DisputeController:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error creating dispute",
-        message: error instanceof Error ? error.message : "Unknown error",
-      });
+    sendDisputeError(res, error, "Error creating dispute");
   }
 };
 
@@ -69,18 +81,19 @@ const DeleteDisputeController  = async (
   const { id } = req.params;
   const disputeId = Array.isArray(id) ? id[0] : id;
   try {
-    const deletedDispute = await disputeService.deleteDispute(parseInt(disputeId));
+    const userId = (req.user as { id: number })?.id;
+    const deletedDispute = await disputeService.cancelDispute(
+      parseInt(disputeId),
+      userId
+    );
     res.status(200).json({
-      message: "Dispute deleted successfully",
+      message: "Dispute cancelled successfully",
       status: "success",
       payload: deletedDispute,
     });
   } catch (error) {
     console.error("Error in DeleteDisputeController:", error);
-    res.status(500).json({
-      error: "Error deleting dispute",
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
+    sendDisputeError(res, error, "Error cancelling dispute");
   }
 };
 
@@ -100,10 +113,7 @@ const GetUserDisputesController = async (
     });
   } catch (error) {
     console.error("Error in GetUserDisputesController:", error);
-    res.status(500).json({
-      error: "Error retrieving user disputes",
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
+    sendDisputeError(res, error, "Error retrieving user disputes");
   }
 };
 
@@ -115,7 +125,11 @@ const GetDisputeByIdController = async (
   const { id } = req.params;
   const idStr = Array.isArray(id) ? id[0] : id;
   try {
-    const dispute = await disputeService.getDisputeById(parseInt(idStr));
+    const userId = (req.user as { id: number })?.id;
+    const dispute = await disputeService.getDisputeById(
+      parseInt(idStr),
+      userId
+    );
     res.status(200).json({
       message: "Dispute retrieved successfully",
       status: "success",
@@ -123,13 +137,35 @@ const GetDisputeByIdController = async (
     });
   } catch (error) {
     console.error("Error in GetDisputeById:", error);   
-    res.status(500).json({
-      error: "Error retrieving dispute",
-      message: error instanceof Error ? error.message : "Unknown error",
+    sendDisputeError(res, error, "Error retrieving dispute");
+  }
+};
+
+const ResolveDisputeController = async (req: Request, res: Response) => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const userId = (req.user as { id: number })?.id;
+
+  try {
+    const result = await disputeService.resolveAndReleaseDispute(
+      parseInt(id),
+      userId
+    );
+    return res.status(200).json({
+      message: "Dispute closed and escrow released successfully",
+      status: "success",
+      data: result,
     });
+  } catch (error) {
+    console.error("Error in ResolveDisputeController:", error);
+    return sendDisputeError(res, error, "Error resolving dispute");
   }
 };
 
 
-
-export { CreateDisputeController, DeleteDisputeController, GetUserDisputesController, GetDisputeByIdController };
+export {
+  CreateDisputeController,
+  DeleteDisputeController,
+  GetUserDisputesController,
+  GetDisputeByIdController,
+  ResolveDisputeController,
+};

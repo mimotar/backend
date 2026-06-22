@@ -31,6 +31,7 @@ export type EarningsAvgAggregateOutputType = {
   userId: number | null
   amount: runtime.Decimal | null
   transaction_id: number | null
+  milestone_id: number | null
 }
 
 export type EarningsSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type EarningsSumAggregateOutputType = {
   userId: number | null
   amount: runtime.Decimal | null
   transaction_id: number | null
+  milestone_id: number | null
 }
 
 export type EarningsMinAggregateOutputType = {
@@ -47,6 +49,8 @@ export type EarningsMinAggregateOutputType = {
   createdAt: Date | null
   description: string | null
   transaction_id: number | null
+  milestone_id: number | null
+  releaseKey: string | null
   status: $Enums.EarningsStatus | null
 }
 
@@ -57,6 +61,8 @@ export type EarningsMaxAggregateOutputType = {
   createdAt: Date | null
   description: string | null
   transaction_id: number | null
+  milestone_id: number | null
+  releaseKey: string | null
   status: $Enums.EarningsStatus | null
 }
 
@@ -67,6 +73,8 @@ export type EarningsCountAggregateOutputType = {
   createdAt: number
   description: number
   transaction_id: number
+  milestone_id: number
+  releaseKey: number
   status: number
   _all: number
 }
@@ -77,6 +85,7 @@ export type EarningsAvgAggregateInputType = {
   userId?: true
   amount?: true
   transaction_id?: true
+  milestone_id?: true
 }
 
 export type EarningsSumAggregateInputType = {
@@ -84,6 +93,7 @@ export type EarningsSumAggregateInputType = {
   userId?: true
   amount?: true
   transaction_id?: true
+  milestone_id?: true
 }
 
 export type EarningsMinAggregateInputType = {
@@ -93,6 +103,8 @@ export type EarningsMinAggregateInputType = {
   createdAt?: true
   description?: true
   transaction_id?: true
+  milestone_id?: true
+  releaseKey?: true
   status?: true
 }
 
@@ -103,6 +115,8 @@ export type EarningsMaxAggregateInputType = {
   createdAt?: true
   description?: true
   transaction_id?: true
+  milestone_id?: true
+  releaseKey?: true
   status?: true
 }
 
@@ -113,6 +127,8 @@ export type EarningsCountAggregateInputType = {
   createdAt?: true
   description?: true
   transaction_id?: true
+  milestone_id?: true
+  releaseKey?: true
   status?: true
   _all?: true
 }
@@ -210,6 +226,8 @@ export type EarningsGroupByOutputType = {
   createdAt: Date
   description: string | null
   transaction_id: number
+  milestone_id: number | null
+  releaseKey: string
   status: $Enums.EarningsStatus
   _count: EarningsCountAggregateOutputType | null
   _avg: EarningsAvgAggregateOutputType | null
@@ -243,8 +261,11 @@ export type EarningsWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableFilter<"Earnings"> | string | null
   transaction_id?: Prisma.IntFilter<"Earnings"> | number
+  milestone_id?: Prisma.IntNullableFilter<"Earnings"> | number | null
+  releaseKey?: Prisma.StringFilter<"Earnings"> | string
   status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -255,14 +276,18 @@ export type EarningsOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  releaseKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   transaction?: Prisma.TransactionOrderByWithRelationInput
+  milestone?: Prisma.MilestoneOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type EarningsWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  transaction_id?: number
+  milestone_id?: number
+  releaseKey?: string
   AND?: Prisma.EarningsWhereInput | Prisma.EarningsWhereInput[]
   OR?: Prisma.EarningsWhereInput[]
   NOT?: Prisma.EarningsWhereInput | Prisma.EarningsWhereInput[]
@@ -270,10 +295,12 @@ export type EarningsWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableFilter<"Earnings"> | string | null
+  transaction_id?: Prisma.IntFilter<"Earnings"> | number
   status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
+  milestone?: Prisma.XOR<Prisma.MilestoneNullableScalarRelationFilter, Prisma.MilestoneWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "transaction_id">
+}, "id" | "milestone_id" | "releaseKey">
 
 export type EarningsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -282,6 +309,8 @@ export type EarningsOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  releaseKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   _count?: Prisma.EarningsCountOrderByAggregateInput
   _avg?: Prisma.EarningsAvgOrderByAggregateInput
@@ -300,6 +329,8 @@ export type EarningsScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Earnings"> | Date | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Earnings"> | string | null
   transaction_id?: Prisma.IntWithAggregatesFilter<"Earnings"> | number
+  milestone_id?: Prisma.IntNullableWithAggregatesFilter<"Earnings"> | number | null
+  releaseKey?: Prisma.StringWithAggregatesFilter<"Earnings"> | string
   status?: Prisma.EnumEarningsStatusWithAggregatesFilter<"Earnings"> | $Enums.EarningsStatus
 }
 
@@ -307,8 +338,10 @@ export type EarningsCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
   transaction: Prisma.TransactionCreateNestedOneWithoutEarningsInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutEarningsInput
   user: Prisma.UserCreateNestedOneWithoutEarningsInput
 }
 
@@ -319,6 +352,8 @@ export type EarningsUncheckedCreateInput = {
   createdAt?: Date | string
   description?: string | null
   transaction_id: number
+  milestone_id?: number | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
 }
 
@@ -326,8 +361,10 @@ export type EarningsUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutEarningsNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutEarningsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEarningsNestedInput
 }
 
@@ -338,6 +375,8 @@ export type EarningsUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
@@ -348,6 +387,8 @@ export type EarningsCreateManyInput = {
   createdAt?: Date | string
   description?: string | null
   transaction_id: number
+  milestone_id?: number | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
 }
 
@@ -355,6 +396,7 @@ export type EarningsUpdateManyMutationInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
@@ -365,12 +407,9 @@ export type EarningsUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
-}
-
-export type EarningsNullableScalarRelationFilter = {
-  is?: Prisma.EarningsWhereInput | null
-  isNot?: Prisma.EarningsWhereInput | null
 }
 
 export type EarningsListRelationFilter = {
@@ -383,6 +422,11 @@ export type EarningsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type EarningsNullableScalarRelationFilter = {
+  is?: Prisma.EarningsWhereInput | null
+  isNot?: Prisma.EarningsWhereInput | null
+}
+
 export type EarningsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -390,6 +434,8 @@ export type EarningsCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrder
+  releaseKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -398,6 +444,7 @@ export type EarningsAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrder
 }
 
 export type EarningsMaxOrderByAggregateInput = {
@@ -407,6 +454,8 @@ export type EarningsMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrder
+  releaseKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -417,6 +466,8 @@ export type EarningsMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrder
+  releaseKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -425,38 +476,81 @@ export type EarningsSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  milestone_id?: Prisma.SortOrder
 }
 
-export type EarningsCreateNestedOneWithoutTransactionInput = {
-  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput
+export type EarningsCreateNestedManyWithoutTransactionInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput> | Prisma.EarningsCreateWithoutTransactionInput[] | Prisma.EarningsUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput | Prisma.EarningsCreateOrConnectWithoutTransactionInput[]
+  createMany?: Prisma.EarningsCreateManyTransactionInputEnvelope
+  connect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+}
+
+export type EarningsUncheckedCreateNestedManyWithoutTransactionInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput> | Prisma.EarningsCreateWithoutTransactionInput[] | Prisma.EarningsUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput | Prisma.EarningsCreateOrConnectWithoutTransactionInput[]
+  createMany?: Prisma.EarningsCreateManyTransactionInputEnvelope
+  connect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+}
+
+export type EarningsUpdateManyWithoutTransactionNestedInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput> | Prisma.EarningsCreateWithoutTransactionInput[] | Prisma.EarningsUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput | Prisma.EarningsCreateOrConnectWithoutTransactionInput[]
+  upsert?: Prisma.EarningsUpsertWithWhereUniqueWithoutTransactionInput | Prisma.EarningsUpsertWithWhereUniqueWithoutTransactionInput[]
+  createMany?: Prisma.EarningsCreateManyTransactionInputEnvelope
+  set?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  disconnect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  delete?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  connect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  update?: Prisma.EarningsUpdateWithWhereUniqueWithoutTransactionInput | Prisma.EarningsUpdateWithWhereUniqueWithoutTransactionInput[]
+  updateMany?: Prisma.EarningsUpdateManyWithWhereWithoutTransactionInput | Prisma.EarningsUpdateManyWithWhereWithoutTransactionInput[]
+  deleteMany?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
+}
+
+export type EarningsUncheckedUpdateManyWithoutTransactionNestedInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput> | Prisma.EarningsCreateWithoutTransactionInput[] | Prisma.EarningsUncheckedCreateWithoutTransactionInput[]
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput | Prisma.EarningsCreateOrConnectWithoutTransactionInput[]
+  upsert?: Prisma.EarningsUpsertWithWhereUniqueWithoutTransactionInput | Prisma.EarningsUpsertWithWhereUniqueWithoutTransactionInput[]
+  createMany?: Prisma.EarningsCreateManyTransactionInputEnvelope
+  set?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  disconnect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  delete?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  connect?: Prisma.EarningsWhereUniqueInput | Prisma.EarningsWhereUniqueInput[]
+  update?: Prisma.EarningsUpdateWithWhereUniqueWithoutTransactionInput | Prisma.EarningsUpdateWithWhereUniqueWithoutTransactionInput[]
+  updateMany?: Prisma.EarningsUpdateManyWithWhereWithoutTransactionInput | Prisma.EarningsUpdateManyWithWhereWithoutTransactionInput[]
+  deleteMany?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
+}
+
+export type EarningsCreateNestedOneWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutMilestoneInput
   connect?: Prisma.EarningsWhereUniqueInput
 }
 
-export type EarningsUncheckedCreateNestedOneWithoutTransactionInput = {
-  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput
+export type EarningsUncheckedCreateNestedOneWithoutMilestoneInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutMilestoneInput
   connect?: Prisma.EarningsWhereUniqueInput
 }
 
-export type EarningsUpdateOneWithoutTransactionNestedInput = {
-  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput
-  upsert?: Prisma.EarningsUpsertWithoutTransactionInput
+export type EarningsUpdateOneWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutMilestoneInput
+  upsert?: Prisma.EarningsUpsertWithoutMilestoneInput
   disconnect?: Prisma.EarningsWhereInput | boolean
   delete?: Prisma.EarningsWhereInput | boolean
   connect?: Prisma.EarningsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EarningsUpdateToOneWithWhereWithoutTransactionInput, Prisma.EarningsUpdateWithoutTransactionInput>, Prisma.EarningsUncheckedUpdateWithoutTransactionInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EarningsUpdateToOneWithWhereWithoutMilestoneInput, Prisma.EarningsUpdateWithoutMilestoneInput>, Prisma.EarningsUncheckedUpdateWithoutMilestoneInput>
 }
 
-export type EarningsUncheckedUpdateOneWithoutTransactionNestedInput = {
-  create?: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutTransactionInput
-  upsert?: Prisma.EarningsUpsertWithoutTransactionInput
+export type EarningsUncheckedUpdateOneWithoutMilestoneNestedInput = {
+  create?: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+  connectOrCreate?: Prisma.EarningsCreateOrConnectWithoutMilestoneInput
+  upsert?: Prisma.EarningsUpsertWithoutMilestoneInput
   disconnect?: Prisma.EarningsWhereInput | boolean
   delete?: Prisma.EarningsWhereInput | boolean
   connect?: Prisma.EarningsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EarningsUpdateToOneWithWhereWithoutTransactionInput, Prisma.EarningsUpdateWithoutTransactionInput>, Prisma.EarningsUncheckedUpdateWithoutTransactionInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EarningsUpdateToOneWithWhereWithoutMilestoneInput, Prisma.EarningsUpdateWithoutMilestoneInput>, Prisma.EarningsUncheckedUpdateWithoutMilestoneInput>
 }
 
 export type EarningsCreateNestedManyWithoutUserInput = {
@@ -509,7 +603,9 @@ export type EarningsCreateWithoutTransactionInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutEarningsInput
   user: Prisma.UserCreateNestedOneWithoutEarningsInput
 }
 
@@ -519,6 +615,8 @@ export type EarningsUncheckedCreateWithoutTransactionInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  milestone_id?: number | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
 }
 
@@ -527,31 +625,97 @@ export type EarningsCreateOrConnectWithoutTransactionInput = {
   create: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
 }
 
-export type EarningsUpsertWithoutTransactionInput = {
-  update: Prisma.XOR<Prisma.EarningsUpdateWithoutTransactionInput, Prisma.EarningsUncheckedUpdateWithoutTransactionInput>
-  create: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
-  where?: Prisma.EarningsWhereInput
+export type EarningsCreateManyTransactionInputEnvelope = {
+  data: Prisma.EarningsCreateManyTransactionInput | Prisma.EarningsCreateManyTransactionInput[]
+  skipDuplicates?: boolean
 }
 
-export type EarningsUpdateToOneWithWhereWithoutTransactionInput = {
-  where?: Prisma.EarningsWhereInput
+export type EarningsUpsertWithWhereUniqueWithoutTransactionInput = {
+  where: Prisma.EarningsWhereUniqueInput
+  update: Prisma.XOR<Prisma.EarningsUpdateWithoutTransactionInput, Prisma.EarningsUncheckedUpdateWithoutTransactionInput>
+  create: Prisma.XOR<Prisma.EarningsCreateWithoutTransactionInput, Prisma.EarningsUncheckedCreateWithoutTransactionInput>
+}
+
+export type EarningsUpdateWithWhereUniqueWithoutTransactionInput = {
+  where: Prisma.EarningsWhereUniqueInput
   data: Prisma.XOR<Prisma.EarningsUpdateWithoutTransactionInput, Prisma.EarningsUncheckedUpdateWithoutTransactionInput>
 }
 
-export type EarningsUpdateWithoutTransactionInput = {
+export type EarningsUpdateManyWithWhereWithoutTransactionInput = {
+  where: Prisma.EarningsScalarWhereInput
+  data: Prisma.XOR<Prisma.EarningsUpdateManyMutationInput, Prisma.EarningsUncheckedUpdateManyWithoutTransactionInput>
+}
+
+export type EarningsScalarWhereInput = {
+  AND?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
+  OR?: Prisma.EarningsScalarWhereInput[]
+  NOT?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
+  id?: Prisma.IntFilter<"Earnings"> | number
+  userId?: Prisma.IntFilter<"Earnings"> | number
+  amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
+  description?: Prisma.StringNullableFilter<"Earnings"> | string | null
+  transaction_id?: Prisma.IntFilter<"Earnings"> | number
+  milestone_id?: Prisma.IntNullableFilter<"Earnings"> | number | null
+  releaseKey?: Prisma.StringFilter<"Earnings"> | string
+  status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
+}
+
+export type EarningsCreateWithoutMilestoneInput = {
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  description?: string | null
+  releaseKey: string
+  status?: $Enums.EarningsStatus
+  transaction: Prisma.TransactionCreateNestedOneWithoutEarningsInput
+  user: Prisma.UserCreateNestedOneWithoutEarningsInput
+}
+
+export type EarningsUncheckedCreateWithoutMilestoneInput = {
+  id?: number
+  userId: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  description?: string | null
+  transaction_id: number
+  releaseKey: string
+  status?: $Enums.EarningsStatus
+}
+
+export type EarningsCreateOrConnectWithoutMilestoneInput = {
+  where: Prisma.EarningsWhereUniqueInput
+  create: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+}
+
+export type EarningsUpsertWithoutMilestoneInput = {
+  update: Prisma.XOR<Prisma.EarningsUpdateWithoutMilestoneInput, Prisma.EarningsUncheckedUpdateWithoutMilestoneInput>
+  create: Prisma.XOR<Prisma.EarningsCreateWithoutMilestoneInput, Prisma.EarningsUncheckedCreateWithoutMilestoneInput>
+  where?: Prisma.EarningsWhereInput
+}
+
+export type EarningsUpdateToOneWithWhereWithoutMilestoneInput = {
+  where?: Prisma.EarningsWhereInput
+  data: Prisma.XOR<Prisma.EarningsUpdateWithoutMilestoneInput, Prisma.EarningsUncheckedUpdateWithoutMilestoneInput>
+}
+
+export type EarningsUpdateWithoutMilestoneInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutEarningsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEarningsNestedInput
 }
 
-export type EarningsUncheckedUpdateWithoutTransactionInput = {
+export type EarningsUncheckedUpdateWithoutMilestoneInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
@@ -559,8 +723,10 @@ export type EarningsCreateWithoutUserInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   description?: string | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
   transaction: Prisma.TransactionCreateNestedOneWithoutEarningsInput
+  milestone?: Prisma.MilestoneCreateNestedOneWithoutEarningsInput
 }
 
 export type EarningsUncheckedCreateWithoutUserInput = {
@@ -569,6 +735,8 @@ export type EarningsUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   description?: string | null
   transaction_id: number
+  milestone_id?: number | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
 }
 
@@ -598,17 +766,47 @@ export type EarningsUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.EarningsUpdateManyMutationInput, Prisma.EarningsUncheckedUpdateManyWithoutUserInput>
 }
 
-export type EarningsScalarWhereInput = {
-  AND?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
-  OR?: Prisma.EarningsScalarWhereInput[]
-  NOT?: Prisma.EarningsScalarWhereInput | Prisma.EarningsScalarWhereInput[]
-  id?: Prisma.IntFilter<"Earnings"> | number
-  userId?: Prisma.IntFilter<"Earnings"> | number
-  amount?: Prisma.DecimalFilter<"Earnings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  createdAt?: Prisma.DateTimeFilter<"Earnings"> | Date | string
-  description?: Prisma.StringNullableFilter<"Earnings"> | string | null
-  transaction_id?: Prisma.IntFilter<"Earnings"> | number
-  status?: Prisma.EnumEarningsStatusFilter<"Earnings"> | $Enums.EarningsStatus
+export type EarningsCreateManyTransactionInput = {
+  id?: number
+  userId: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  description?: string | null
+  milestone_id?: number | null
+  releaseKey: string
+  status?: $Enums.EarningsStatus
+}
+
+export type EarningsUpdateWithoutTransactionInput = {
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
+  milestone?: Prisma.MilestoneUpdateOneWithoutEarningsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEarningsNestedInput
+}
+
+export type EarningsUncheckedUpdateWithoutTransactionInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
+}
+
+export type EarningsUncheckedUpdateManyWithoutTransactionInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
 export type EarningsCreateManyUserInput = {
@@ -617,6 +815,8 @@ export type EarningsCreateManyUserInput = {
   createdAt?: Date | string
   description?: string | null
   transaction_id: number
+  milestone_id?: number | null
+  releaseKey: string
   status?: $Enums.EarningsStatus
 }
 
@@ -624,8 +824,10 @@ export type EarningsUpdateWithoutUserInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutEarningsNestedInput
+  milestone?: Prisma.MilestoneUpdateOneWithoutEarningsNestedInput
 }
 
 export type EarningsUncheckedUpdateWithoutUserInput = {
@@ -634,6 +836,8 @@ export type EarningsUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
@@ -643,6 +847,8 @@ export type EarningsUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  milestone_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseKey?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumEarningsStatusFieldUpdateOperationsInput | $Enums.EarningsStatus
 }
 
@@ -655,8 +861,11 @@ export type EarningsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   description?: boolean
   transaction_id?: boolean
+  milestone_id?: boolean
+  releaseKey?: boolean
   status?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["earnings"]>
 
@@ -667,8 +876,11 @@ export type EarningsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   description?: boolean
   transaction_id?: boolean
+  milestone_id?: boolean
+  releaseKey?: boolean
   status?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["earnings"]>
 
@@ -679,8 +891,11 @@ export type EarningsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   description?: boolean
   transaction_id?: boolean
+  milestone_id?: boolean
+  releaseKey?: boolean
   status?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["earnings"]>
 
@@ -691,20 +906,25 @@ export type EarningsSelectScalar = {
   createdAt?: boolean
   description?: boolean
   transaction_id?: boolean
+  milestone_id?: boolean
+  releaseKey?: boolean
   status?: boolean
 }
 
-export type EarningsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "createdAt" | "description" | "transaction_id" | "status", ExtArgs["result"]["earnings"]>
+export type EarningsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "createdAt" | "description" | "transaction_id" | "milestone_id" | "releaseKey" | "status", ExtArgs["result"]["earnings"]>
 export type EarningsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EarningsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EarningsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  milestone?: boolean | Prisma.Earnings$milestoneArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -712,6 +932,7 @@ export type $EarningsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Earnings"
   objects: {
     transaction: Prisma.$TransactionPayload<ExtArgs>
+    milestone: Prisma.$MilestonePayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -721,6 +942,8 @@ export type $EarningsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     description: string | null
     transaction_id: number
+    milestone_id: number | null
+    releaseKey: string
     status: $Enums.EarningsStatus
   }, ExtArgs["result"]["earnings"]>
   composites: {}
@@ -1117,6 +1340,7 @@ readonly fields: EarningsFieldRefs;
 export interface Prisma__EarningsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transaction<T extends Prisma.TransactionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransactionDefaultArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  milestone<T extends Prisma.Earnings$milestoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Earnings$milestoneArgs<ExtArgs>>): Prisma.Prisma__MilestoneClient<runtime.Types.Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1153,6 +1377,8 @@ export interface EarningsFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Earnings", 'DateTime'>
   readonly description: Prisma.FieldRef<"Earnings", 'String'>
   readonly transaction_id: Prisma.FieldRef<"Earnings", 'Int'>
+  readonly milestone_id: Prisma.FieldRef<"Earnings", 'Int'>
+  readonly releaseKey: Prisma.FieldRef<"Earnings", 'String'>
   readonly status: Prisma.FieldRef<"Earnings", 'EarningsStatus'>
 }
     
@@ -1552,6 +1778,25 @@ export type EarningsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Earnings to delete.
    */
   limit?: number
+}
+
+/**
+ * Earnings.milestone
+ */
+export type Earnings$milestoneArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Milestone
+   */
+  select?: Prisma.MilestoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Milestone
+   */
+  omit?: Prisma.MilestoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MilestoneInclude<ExtArgs> | null
+  where?: Prisma.MilestoneWhereInput
 }
 
 /**

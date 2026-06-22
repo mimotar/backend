@@ -29,41 +29,55 @@ export type AggregateMilestone = {
 export type MilestoneAvgAggregateOutputType = {
   id: number | null
   transaction_id: number | null
+  sequence: number | null
   amount: number | null
 }
 
 export type MilestoneSumAggregateOutputType = {
   id: number | null
   transaction_id: number | null
+  sequence: number | null
   amount: number | null
 }
 
 export type MilestoneMinAggregateOutputType = {
   id: number | null
   transaction_id: number | null
+  sequence: number | null
   name: string | null
   amount: number | null
   deadline: Date | null
   status: $Enums.StatusEnum | null
+  activatedAt: Date | null
+  completedAt: Date | null
+  releasedAt: Date | null
 }
 
 export type MilestoneMaxAggregateOutputType = {
   id: number | null
   transaction_id: number | null
+  sequence: number | null
   name: string | null
   amount: number | null
   deadline: Date | null
   status: $Enums.StatusEnum | null
+  activatedAt: Date | null
+  completedAt: Date | null
+  releasedAt: Date | null
 }
 
 export type MilestoneCountAggregateOutputType = {
   id: number
   transaction_id: number
+  sequence: number
   name: number
   amount: number
   deadline: number
   files: number
   status: number
+  activatedAt: number
+  completedAt: number
+  releasedAt: number
   _all: number
 }
 
@@ -71,41 +85,55 @@ export type MilestoneCountAggregateOutputType = {
 export type MilestoneAvgAggregateInputType = {
   id?: true
   transaction_id?: true
+  sequence?: true
   amount?: true
 }
 
 export type MilestoneSumAggregateInputType = {
   id?: true
   transaction_id?: true
+  sequence?: true
   amount?: true
 }
 
 export type MilestoneMinAggregateInputType = {
   id?: true
   transaction_id?: true
+  sequence?: true
   name?: true
   amount?: true
   deadline?: true
   status?: true
+  activatedAt?: true
+  completedAt?: true
+  releasedAt?: true
 }
 
 export type MilestoneMaxAggregateInputType = {
   id?: true
   transaction_id?: true
+  sequence?: true
   name?: true
   amount?: true
   deadline?: true
   status?: true
+  activatedAt?: true
+  completedAt?: true
+  releasedAt?: true
 }
 
 export type MilestoneCountAggregateInputType = {
   id?: true
   transaction_id?: true
+  sequence?: true
   name?: true
   amount?: true
   deadline?: true
   files?: true
   status?: true
+  activatedAt?: true
+  completedAt?: true
+  releasedAt?: true
   _all?: true
 }
 
@@ -198,11 +226,15 @@ export type MilestoneGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type MilestoneGroupByOutputType = {
   id: number
   transaction_id: number
+  sequence: number
   name: string
   amount: number
   deadline: Date
   files: runtime.JsonValue | null
   status: $Enums.StatusEnum
+  activatedAt: Date | null
+  completedAt: Date | null
+  releasedAt: Date | null
   _count: MilestoneCountAggregateOutputType | null
   _avg: MilestoneAvgAggregateOutputType | null
   _sum: MilestoneSumAggregateOutputType | null
@@ -231,47 +263,70 @@ export type MilestoneWhereInput = {
   NOT?: Prisma.MilestoneWhereInput | Prisma.MilestoneWhereInput[]
   id?: Prisma.IntFilter<"Milestone"> | number
   transaction_id?: Prisma.IntFilter<"Milestone"> | number
+  sequence?: Prisma.IntFilter<"Milestone"> | number
   name?: Prisma.StringFilter<"Milestone"> | string
   amount?: Prisma.IntFilter<"Milestone"> | number
   deadline?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   files?: Prisma.JsonNullableFilter<"Milestone">
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
+  activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  disputes?: Prisma.DisputeListRelationFilter
+  earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
 }
 
 export type MilestoneOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   name?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   files?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  releasedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disputes?: Prisma.DisputeOrderByRelationAggregateInput
+  earnings?: Prisma.EarningsOrderByWithRelationInput
   transaction?: Prisma.TransactionOrderByWithRelationInput
 }
 
 export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  transaction_id_sequence?: Prisma.MilestoneTransaction_idSequenceCompoundUniqueInput
   AND?: Prisma.MilestoneWhereInput | Prisma.MilestoneWhereInput[]
   OR?: Prisma.MilestoneWhereInput[]
   NOT?: Prisma.MilestoneWhereInput | Prisma.MilestoneWhereInput[]
   transaction_id?: Prisma.IntFilter<"Milestone"> | number
+  sequence?: Prisma.IntFilter<"Milestone"> | number
   name?: Prisma.StringFilter<"Milestone"> | string
   amount?: Prisma.IntFilter<"Milestone"> | number
   deadline?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   files?: Prisma.JsonNullableFilter<"Milestone">
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
+  activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  disputes?: Prisma.DisputeListRelationFilter
+  earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
-}, "id">
+}, "id" | "transaction_id_sequence">
 
 export type MilestoneOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   name?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   files?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  releasedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MilestoneCountOrderByAggregateInput
   _avg?: Prisma.MilestoneAvgOrderByAggregateInput
   _max?: Prisma.MilestoneMaxOrderByAggregateInput
@@ -285,77 +340,117 @@ export type MilestoneScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MilestoneScalarWhereWithAggregatesInput | Prisma.MilestoneScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Milestone"> | number
   transaction_id?: Prisma.IntWithAggregatesFilter<"Milestone"> | number
+  sequence?: Prisma.IntWithAggregatesFilter<"Milestone"> | number
   name?: Prisma.StringWithAggregatesFilter<"Milestone"> | string
   amount?: Prisma.IntWithAggregatesFilter<"Milestone"> | number
   deadline?: Prisma.DateTimeWithAggregatesFilter<"Milestone"> | Date | string
   files?: Prisma.JsonNullableWithAggregatesFilter<"Milestone">
   status?: Prisma.EnumStatusEnumWithAggregatesFilter<"Milestone"> | $Enums.StatusEnum
+  activatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
+  releasedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
 }
 
 export type MilestoneCreateInput = {
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
   transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
 }
 
 export type MilestoneUncheckedCreateInput = {
   id?: number
   transaction_id: number
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
 
 export type MilestoneUpdateInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
 }
 
 export type MilestoneUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
 
 export type MilestoneCreateManyInput = {
   id?: number
   transaction_id: number
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
 }
 
 export type MilestoneUpdateManyMutationInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MilestoneUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MilestoneListRelationFilter = {
@@ -368,44 +463,68 @@ export type MilestoneOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type MilestoneTransaction_idSequenceCompoundUniqueInput = {
+  transaction_id: number
+  sequence: number
+}
+
 export type MilestoneCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   name?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   files?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  activatedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  releasedAt?: Prisma.SortOrder
 }
 
 export type MilestoneAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   amount?: Prisma.SortOrder
 }
 
 export type MilestoneMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   name?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  activatedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  releasedAt?: Prisma.SortOrder
 }
 
 export type MilestoneMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   name?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  activatedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  releasedAt?: Prisma.SortOrder
 }
 
 export type MilestoneSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   transaction_id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+}
+
+export type MilestoneNullableScalarRelationFilter = {
+  is?: Prisma.MilestoneWhereInput | null
+  isNot?: Prisma.MilestoneWhereInput | null
 }
 
 export type MilestoneCreateNestedManyWithoutTransactionInput = {
@@ -450,21 +569,65 @@ export type MilestoneUncheckedUpdateManyWithoutTransactionNestedInput = {
   deleteMany?: Prisma.MilestoneScalarWhereInput | Prisma.MilestoneScalarWhereInput[]
 }
 
+export type MilestoneCreateNestedOneWithoutEarningsInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutEarningsInput, Prisma.MilestoneUncheckedCreateWithoutEarningsInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutEarningsInput
+  connect?: Prisma.MilestoneWhereUniqueInput
+}
+
+export type MilestoneUpdateOneWithoutEarningsNestedInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutEarningsInput, Prisma.MilestoneUncheckedCreateWithoutEarningsInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutEarningsInput
+  upsert?: Prisma.MilestoneUpsertWithoutEarningsInput
+  disconnect?: Prisma.MilestoneWhereInput | boolean
+  delete?: Prisma.MilestoneWhereInput | boolean
+  connect?: Prisma.MilestoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MilestoneUpdateToOneWithWhereWithoutEarningsInput, Prisma.MilestoneUpdateWithoutEarningsInput>, Prisma.MilestoneUncheckedUpdateWithoutEarningsInput>
+}
+
+export type MilestoneCreateNestedOneWithoutDisputesInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutDisputesInput, Prisma.MilestoneUncheckedCreateWithoutDisputesInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutDisputesInput
+  connect?: Prisma.MilestoneWhereUniqueInput
+}
+
+export type MilestoneUpdateOneWithoutDisputesNestedInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutDisputesInput, Prisma.MilestoneUncheckedCreateWithoutDisputesInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutDisputesInput
+  upsert?: Prisma.MilestoneUpsertWithoutDisputesInput
+  disconnect?: Prisma.MilestoneWhereInput | boolean
+  delete?: Prisma.MilestoneWhereInput | boolean
+  connect?: Prisma.MilestoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MilestoneUpdateToOneWithWhereWithoutDisputesInput, Prisma.MilestoneUpdateWithoutDisputesInput>, Prisma.MilestoneUncheckedUpdateWithoutDisputesInput>
+}
+
 export type MilestoneCreateWithoutTransactionInput = {
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
 }
 
 export type MilestoneUncheckedCreateWithoutTransactionInput = {
   id?: number
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
 
 export type MilestoneCreateOrConnectWithoutTransactionInput = {
@@ -499,96 +662,319 @@ export type MilestoneScalarWhereInput = {
   NOT?: Prisma.MilestoneScalarWhereInput | Prisma.MilestoneScalarWhereInput[]
   id?: Prisma.IntFilter<"Milestone"> | number
   transaction_id?: Prisma.IntFilter<"Milestone"> | number
+  sequence?: Prisma.IntFilter<"Milestone"> | number
   name?: Prisma.StringFilter<"Milestone"> | string
   amount?: Prisma.IntFilter<"Milestone"> | number
   deadline?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   files?: Prisma.JsonNullableFilter<"Milestone">
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
+  activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
 }
 
-export type MilestoneCreateManyTransactionInput = {
-  id?: number
+export type MilestoneCreateWithoutEarningsInput = {
+  sequence: number
   name: string
   amount: number
   deadline: Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
+  transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
 }
 
-export type MilestoneUpdateWithoutTransactionInput = {
+export type MilestoneUncheckedCreateWithoutEarningsInput = {
+  id?: number
+  transaction_id: number
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
+}
+
+export type MilestoneCreateOrConnectWithoutEarningsInput = {
+  where: Prisma.MilestoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutEarningsInput, Prisma.MilestoneUncheckedCreateWithoutEarningsInput>
+}
+
+export type MilestoneUpsertWithoutEarningsInput = {
+  update: Prisma.XOR<Prisma.MilestoneUpdateWithoutEarningsInput, Prisma.MilestoneUncheckedUpdateWithoutEarningsInput>
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutEarningsInput, Prisma.MilestoneUncheckedCreateWithoutEarningsInput>
+  where?: Prisma.MilestoneWhereInput
+}
+
+export type MilestoneUpdateToOneWithWhereWithoutEarningsInput = {
+  where?: Prisma.MilestoneWhereInput
+  data: Prisma.XOR<Prisma.MilestoneUpdateWithoutEarningsInput, Prisma.MilestoneUncheckedUpdateWithoutEarningsInput>
+}
+
+export type MilestoneUpdateWithoutEarningsInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
+}
+
+export type MilestoneUncheckedUpdateWithoutEarningsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
+}
+
+export type MilestoneCreateWithoutDisputesInput = {
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
+  transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
+}
+
+export type MilestoneUncheckedCreateWithoutDisputesInput = {
+  id?: number
+  transaction_id: number
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
+}
+
+export type MilestoneCreateOrConnectWithoutDisputesInput = {
+  where: Prisma.MilestoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutDisputesInput, Prisma.MilestoneUncheckedCreateWithoutDisputesInput>
+}
+
+export type MilestoneUpsertWithoutDisputesInput = {
+  update: Prisma.XOR<Prisma.MilestoneUpdateWithoutDisputesInput, Prisma.MilestoneUncheckedUpdateWithoutDisputesInput>
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutDisputesInput, Prisma.MilestoneUncheckedCreateWithoutDisputesInput>
+  where?: Prisma.MilestoneWhereInput
+}
+
+export type MilestoneUpdateToOneWithWhereWithoutDisputesInput = {
+  where?: Prisma.MilestoneWhereInput
+  data: Prisma.XOR<Prisma.MilestoneUpdateWithoutDisputesInput, Prisma.MilestoneUncheckedUpdateWithoutDisputesInput>
+}
+
+export type MilestoneUpdateWithoutDisputesInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
+}
+
+export type MilestoneUncheckedUpdateWithoutDisputesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
+}
+
+export type MilestoneCreateManyTransactionInput = {
+  id?: number
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+}
+
+export type MilestoneUpdateWithoutTransactionInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
 }
 
 export type MilestoneUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
 
 export type MilestoneUncheckedUpdateManyWithoutTransactionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+
+/**
+ * Count Type MilestoneCountOutputType
+ */
+
+export type MilestoneCountOutputType = {
+  disputes: number
+}
+
+export type MilestoneCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  disputes?: boolean | MilestoneCountOutputTypeCountDisputesArgs
+}
+
+/**
+ * MilestoneCountOutputType without action
+ */
+export type MilestoneCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MilestoneCountOutputType
+   */
+  select?: Prisma.MilestoneCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MilestoneCountOutputType without action
+ */
+export type MilestoneCountOutputTypeCountDisputesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DisputeWhereInput
+}
 
 
 export type MilestoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transaction_id?: boolean
+  sequence?: boolean
   name?: boolean
   amount?: boolean
   deadline?: boolean
   files?: boolean
   status?: boolean
+  activatedAt?: boolean
+  completedAt?: boolean
+  releasedAt?: boolean
+  disputes?: boolean | Prisma.Milestone$disputesArgs<ExtArgs>
+  earnings?: boolean | Prisma.Milestone$earningsArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.MilestoneCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["milestone"]>
 
 export type MilestoneSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transaction_id?: boolean
+  sequence?: boolean
   name?: boolean
   amount?: boolean
   deadline?: boolean
   files?: boolean
   status?: boolean
+  activatedAt?: boolean
+  completedAt?: boolean
+  releasedAt?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["milestone"]>
 
 export type MilestoneSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   transaction_id?: boolean
+  sequence?: boolean
   name?: boolean
   amount?: boolean
   deadline?: boolean
   files?: boolean
   status?: boolean
+  activatedAt?: boolean
+  completedAt?: boolean
+  releasedAt?: boolean
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["milestone"]>
 
 export type MilestoneSelectScalar = {
   id?: boolean
   transaction_id?: boolean
+  sequence?: boolean
   name?: boolean
   amount?: boolean
   deadline?: boolean
   files?: boolean
   status?: boolean
+  activatedAt?: boolean
+  completedAt?: boolean
+  releasedAt?: boolean
 }
 
-export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaction_id" | "name" | "amount" | "deadline" | "files" | "status", ExtArgs["result"]["milestone"]>
+export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaction_id" | "sequence" | "name" | "amount" | "deadline" | "files" | "status" | "activatedAt" | "completedAt" | "releasedAt", ExtArgs["result"]["milestone"]>
 export type MilestoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  disputes?: boolean | Prisma.Milestone$disputesArgs<ExtArgs>
+  earnings?: boolean | Prisma.Milestone$earningsArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.MilestoneCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MilestoneIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
@@ -600,16 +986,22 @@ export type MilestoneIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $MilestonePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Milestone"
   objects: {
+    disputes: Prisma.$DisputePayload<ExtArgs>[]
+    earnings: Prisma.$EarningsPayload<ExtArgs> | null
     transaction: Prisma.$TransactionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     transaction_id: number
+    sequence: number
     name: string
     amount: number
     deadline: Date
     files: runtime.JsonValue | null
     status: $Enums.StatusEnum
+    activatedAt: Date | null
+    completedAt: Date | null
+    releasedAt: Date | null
   }, ExtArgs["result"]["milestone"]>
   composites: {}
 }
@@ -1004,6 +1396,8 @@ readonly fields: MilestoneFieldRefs;
  */
 export interface Prisma__MilestoneClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  disputes<T extends Prisma.Milestone$disputesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$disputesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  earnings<T extends Prisma.Milestone$earningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$earningsArgs<ExtArgs>>): Prisma.Prisma__EarningsClient<runtime.Types.Result.GetResult<Prisma.$EarningsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transaction<T extends Prisma.TransactionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransactionDefaultArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1036,11 +1430,15 @@ export interface Prisma__MilestoneClient<T, Null = never, ExtArgs extends runtim
 export interface MilestoneFieldRefs {
   readonly id: Prisma.FieldRef<"Milestone", 'Int'>
   readonly transaction_id: Prisma.FieldRef<"Milestone", 'Int'>
+  readonly sequence: Prisma.FieldRef<"Milestone", 'Int'>
   readonly name: Prisma.FieldRef<"Milestone", 'String'>
   readonly amount: Prisma.FieldRef<"Milestone", 'Int'>
   readonly deadline: Prisma.FieldRef<"Milestone", 'DateTime'>
   readonly files: Prisma.FieldRef<"Milestone", 'Json'>
   readonly status: Prisma.FieldRef<"Milestone", 'StatusEnum'>
+  readonly activatedAt: Prisma.FieldRef<"Milestone", 'DateTime'>
+  readonly completedAt: Prisma.FieldRef<"Milestone", 'DateTime'>
+  readonly releasedAt: Prisma.FieldRef<"Milestone", 'DateTime'>
 }
     
 
@@ -1439,6 +1837,49 @@ export type MilestoneDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Milestones to delete.
    */
   limit?: number
+}
+
+/**
+ * Milestone.disputes
+ */
+export type Milestone$disputesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Dispute
+   */
+  select?: Prisma.DisputeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Dispute
+   */
+  omit?: Prisma.DisputeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DisputeInclude<ExtArgs> | null
+  where?: Prisma.DisputeWhereInput
+  orderBy?: Prisma.DisputeOrderByWithRelationInput | Prisma.DisputeOrderByWithRelationInput[]
+  cursor?: Prisma.DisputeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DisputeScalarFieldEnum | Prisma.DisputeScalarFieldEnum[]
+}
+
+/**
+ * Milestone.earnings
+ */
+export type Milestone$earningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Earnings
+   */
+  select?: Prisma.EarningsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Earnings
+   */
+  omit?: Prisma.EarningsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EarningsInclude<ExtArgs> | null
+  where?: Prisma.EarningsWhereInput
 }
 
 /**

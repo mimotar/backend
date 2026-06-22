@@ -18,8 +18,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
 
 - **Authentication** – Register and login with email (OTP) or OAuth (Google, Facebook)
 - **Users** – User registration, OTP verification, and profile
-- **Transactions (Tickets)** – Create, approve, reject, and manage escrow transactions
-- **Disputes** – Create and manage disputes on transactions
+- **Transactions (Tickets)** – Create, approve, reject, and manage ordinary or milestone-based escrow transactions
+- **Disputes** – Create, cancel, inspect, and resolve transaction-level or milestone-level disputes
 - **Payments** – Initialize payments and handle webhooks
 - **Settings** – User preferences (currency, notifications, 2FA)
 - **Password reset** – Request and confirm password reset via email
@@ -86,13 +86,39 @@ Welcome to the **Mimotar API** documentation. This API supports:
         required: ["email"],
         properties: { email: { type: "string", format: "email" } },
       },
+      CurrentUser: {
+        type: "object",
+        required: ["id", "email", "name", "isLoggedIn"],
+        properties: {
+          id: { type: "string", example: "1" },
+          email: { type: "string", format: "email", example: "user@example.com" },
+          name: { type: "string", example: "Ada Lovelace" },
+          isLoggedIn: { type: "boolean", example: true },
+        },
+      },
       Milestone: {
         type: "object",
         required: ["name", "amount", "deadline"],
         properties: {
+          id: { type: "integer", readOnly: true },
+          transaction_id: { type: "integer", readOnly: true },
+          sequence: {
+            type: "integer",
+            minimum: 1,
+            readOnly: true,
+            description: "One-based execution order assigned when the transaction is created",
+          },
           name: { type: "string" },
           amount: { type: "integer", minimum: 1 },
           deadline: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            readOnly: true,
+            enum: ["CREATED", "ONGOING", "PENDING_CLOSURE", "DISPUTE", "COMPLETED"],
+          },
+          activatedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+          completedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+          releasedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
           files: {
             type: "array",
             items: {
@@ -111,6 +137,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
         type: "string",
         enum: ["PHYSICAL_PRODUCT", "ONLINE_PRODUCT", "SERVICE", "RENTAL", "MILESTONE_BASED_PROJECT"],
       },
+      CurrencyEnum: {
+        type: "string",
+        enum: ["NGN", "USD"],
+      },
       RoleEnum: { type: "string", enum: ["BUYER", "SELLER"] },
       EscrowFeePayerEnum: { type: "string", enum: ["BUYER", "SELLER", "BOTH"] },
       TransactionCreateBody: {
@@ -123,7 +153,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
         ],
         properties: {
           title: { type: "string", maxLength: 200 },
-          currency: { type: "string", enum: ["NGN", "USD"] },
+          currency: { $ref: "#/components/schemas/CurrencyEnum" },
           amount: { type: "integer", minimum: 1 },
           transaction_description: { type: "string", maxLength: 200 },
           user_id: { type: "integer", minimum: 1 },
@@ -184,26 +214,64 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "CANCEL_TRANSACTION", "OTHERS",
         ],
       },
+      DisputeStatusEnum: {
+        type: "string",
+        enum: ["ongoing", "cancel", "closed"],
+      },
+      DisputeResolutionEnum: {
+        type: "string",
+        enum: ["RELEASE_TO_SELLER"],
+        description: "Final action taken when the dispute is closed. Refund execution is not currently implemented.",
+      },
       DisputeCreateBody: {
         type: "object",
         required: ["transactionId", "reason", "description", "resolutionOption"],
         properties: {
           transactionId: { type: "integer" },
+          milestoneId: {
+            type: "integer",
+            description: "Required for MILESTONE_BASED_PROJECT transactions; omit for all other transaction types",
+          },
           reason: { type: "string", minLength: 2, maxLength: 100 },
           description: { type: "string", minLength: 2, maxLength: 500 },
           resolutionOption: { $ref: "#/components/schemas/ResolutionOptionEnum" },
           evidenceUrl: { type: "array", items: { type: "string", format: "uri" } },
           evidenceId: { type: "array", items: { type: "string" } },
-          status: { type: "string", enum: ["ongoing", "closed", "cancel"] },
+          status: { $ref: "#/components/schemas/DisputeStatusEnum" },
         },
       },
+      Dispute: {
+        allOf: [
+          { $ref: "#/components/schemas/DisputeCreateBody" },
+          {
+            type: "object",
+            properties: {
+              id: { type: "integer", readOnly: true },
+              status: { $ref: "#/components/schemas/DisputeStatusEnum" },
+              resolution: {
+                allOf: [{ $ref: "#/components/schemas/DisputeResolutionEnum" }],
+                nullable: true,
+              },
+              createdAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+              elapsesAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+              resolvedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+              resolvedById: { type: "integer", nullable: true, readOnly: true },
+              milestone: {
+                allOf: [{ $ref: "#/components/schemas/Milestone" }],
+                nullable: true,
+                readOnly: true,
+              },
+            },
+          },
+        ],
+      },
       // Password reset
-      ConfirmEmailPasswordResetBody: {
+      ForgotPasswordBody: {
         type: "object",
         required: ["email"],
         properties: { email: { type: "string", format: "email" } },
       },
-      PasswordResetBody: {
+      ResetPasswordBody: {
         type: "object",
         required: ["otp", "newPassword", "email"],
         properties: {
@@ -214,19 +282,29 @@ Welcome to the **Mimotar API** documentation. This API supports:
       },
       ChangePasswordRequestBody: {
         type: "object",
-        required: ["oldPassword", "newPassword"],
+        required: ["currentPassword", "newPassword", "confirmPassword"],
         properties: {
-          oldPassword: { type: "string" },
-          newPassword: { type: "string", minLength: 8 }
+          currentPassword: { type: "string", format: "password" },
+          newPassword: {
+            type: "string",
+            format: "password",
+            minLength: 8,
+            maxLength: 32,
+            description: "Must contain uppercase, lowercase, number, and one of @$!%*?&",
+          },
+          confirmPassword: { type: "string", format: "password" },
         }
       },
       ChangePasswordVerifyBody: {
         type: "object",
-        required: ["oldPassword", "newPassword", "otp"],
+        required: ["otp"],
         properties: {
-          oldPassword: { type: "string" },
-          newPassword: { type: "string", minLength: 8 },
-          otp: { type: "string" }
+          otp: {
+            type: "string",
+            pattern: "^[0-9]{6}$",
+            example: "123456",
+            description: "Six-digit OTP sent to the authenticated user's email",
+          },
         }
       },
       // Setting
@@ -576,6 +654,35 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/user/current-user": {
+      get: {
+        summary: "Get the current user",
+        description: "Returns the currently authenticated user. Send the JWT obtained during login as `Authorization: Bearer <token>`.",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Current user retrieved successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "number", example: 200 },
+                    message: { type: "string", example: "Current user retrieved successfully" },
+                    data: { $ref: "#/components/schemas/CurrentUser" },
+                    success: { type: "boolean", example: true },
+                  },
+                },
+              },
+            },
+          },
+          "401": {
+            description: "Missing, invalid, or expired authentication token",
+          },
+        },
+      },
+    },
     "/api/user/test": {
       get: {
         summary: "Protected test route",
@@ -652,30 +759,31 @@ Welcome to the **Mimotar API** documentation. This API supports:
     },
 
     // ----- Password reset -----
-    "/api/password-reset/confirm-email-password-reset": {
+    "/api/password/forgot": {
       post: {
-        summary: "Confirm email for password reset",
-        description: "Sends a 6-digit OTP to the given email. Rate limited (10 requests per 10 minutes).",
+        summary: "Request a password reset",
+        description: "Starts the forgot-password flow by sending a 6-digit reset OTP to the given email. Rate limited (10 requests per 10 minutes).",
         tags: ["Password reset"],
         requestBody: {
           content: {
-            "application/json": { schema: { $ref: "#/components/schemas/ConfirmEmailPasswordResetBody" } },
+            "application/json": { schema: { $ref: "#/components/schemas/ForgotPasswordBody" } },
           },
         },
         responses: {
           "200": { description: "Reset OTP sent; check inbox" },
           "404": { description: "Email not found" },
+          "502": { description: "Reset email could not be delivered" },
         },
       },
     },
-    "/api/password-reset": {
+    "/api/password/reset": {
       post: {
         summary: "Set new password (OTP)",
         description: "Completes the password reset using the OTP and email. New password must meet complexity rules (length, uppercase, lowercase, number, special character).",
         tags: ["Password reset"],
         requestBody: {
           content: {
-            "application/json": { schema: { $ref: "#/components/schemas/PasswordResetBody" } },
+            "application/json": { schema: { $ref: "#/components/schemas/ResetPasswordBody" } },
           },
         },
         responses: {
@@ -690,7 +798,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/user/change-password/request": {
       post: {
         summary: "Request a password change",
-        description: "Initiates a password change. Requires the correct current password and valid new password. Sends an OTP to confirm.",
+        description: "Validates the current password and matching new-password fields, then sends a 15-minute OTP to the authenticated user's registered email. The proposed password is securely held until OTP verification.",
         tags: ["Users (Auth)"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -700,15 +808,16 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
         responses: {
           "200": { description: "Change password request accepted, OTP sent" },
-          "400": { description: "Invalid credentials or new password matches old" },
+          "400": { description: "Validation failed, current password is incorrect, or new password matches current password" },
           "401": { description: "Unauthorized" },
+          "502": { description: "OTP email could not be delivered" },
         },
       },
     },
     "/api/user/change-password/verify": {
       post: {
         summary: "Verify and apply a password change",
-        description: "Verifies the change password request with the generated OTP, and sets the new password.",
+        description: "Verifies the six-digit OTP and applies the password saved during the request step. OTPs expire after 15 minutes and can only be used once.",
         tags: ["Users (Auth)"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -718,7 +827,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
         responses: {
           "200": { description: "Password successfully changed" },
-          "400": { description: "Invalid OTP, credentials, or expired OTP" },
+          "400": { description: "No active request, or OTP is invalid, expired, or already used" },
           "401": { description: "Unauthorized" },
         },
       },
@@ -809,28 +918,28 @@ Welcome to the **Mimotar API** documentation. This API supports:
                 description: "All transaction fields (amount, transaction_description, pay_escrow_fee, creator_*, receiver_*, transactionType, inspection_duration, expiresAt, etc.) plus optional files (max 2).",
                 properties: {
                   title: { type: "string" },
-                  currency: { type: "string", enum: ["NGN", "USD"] },
-                  amount: { type: "string" },
+                  currency: { $ref: "#/components/schemas/CurrencyEnum" },
+                  amount: { type: "integer" },
                   transaction_description: { type: "string" },
-                  pay_escrow_fee: { type: "string" },
+                  pay_escrow_fee: { $ref: "#/components/schemas/EscrowFeePayerEnum" },
                   additional_agreement: { type: "string" },
-                  pay_shipping_cost: { type: "string" },
+                  pay_shipping_cost: { $ref: "#/components/schemas/EscrowFeePayerEnum" },
                   creator_fullname: { type: "string" },
-                  creator_email: { type: "string" },
+                  creator_email: { type: "string", format: "email" },
                   creator_no: { type: "string" },
                   creator_address: { type: "string" },
-                  creator_role: { type: "string" },
+                  creator_role: { $ref: "#/components/schemas/RoleEnum" },
                   receiver_fullname: { type: "string" },
-                  reciever_email: { type: "string" },
+                  reciever_email: { type: "string", format: "email" },
                   receiver_no: { type: "string" },
                   receiver_address: { type: "string" },
-                  reciever_role: { type: "string" },
+                  reciever_role: { $ref: "#/components/schemas/RoleEnum" },
                   terms: { type: "string" },
-                  transactionType: { type: "string" },
-                  inspection_duration: { type: "string" },
-                  expiresAt: { type: "string" },
+                  transactionType: { $ref: "#/components/schemas/TransactionTypeEnum" },
+                  inspection_duration: { type: "integer" },
+                  expiresAt: { type: "integer" },
                   files: { type: "array", items: { type: "string", format: "binary" }, maxItems: 2 },
-                  milestones: { type: "string", description: "JSON stringified array of Milestone objects" },
+                  milestones: { type: "array", items: { $ref: "#/components/schemas/Milestone" } },
                 },
               },
             },
@@ -907,8 +1016,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
     },
     "/api/ticket/{id}/resolve": {
       put: {
-        summary: "Resolve/End transaction",
-        description: "Initiates the closure of a transaction. Moves the status to PENDING_CLOSURE and gives the counter-party 24 hours to respond. Requires authentication.",
+        summary: "Request closure of a non-milestone transaction",
+        description: "Moves an ordinary transaction to PENDING_CLOSURE and schedules auto-closure after 24 hours. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -916,14 +1025,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "200": { description: "Transaction resolution requested" },
           "400": { description: "Transaction is not ongoing" },
           "401": { description: "Unauthorized" },
+          "403": { description: "User is not a transaction participant" },
           "404": { description: "Transaction not found" },
         },
       },
     },
     "/api/ticket/{id}/accept-resolution": {
       put: {
-        summary: "Accept transaction resolution",
-        description: "Accepts the closure request made by the initiator. Changes the status to COMPLETED and cancels the 24-hour auto-completion timer.",
+        summary: "Accept closure of a non-milestone transaction",
+        description: "The buyer accepts the closure request. Escrow is released exactly once, the transaction becomes COMPLETED, and the 24-hour timer is removed.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -931,6 +1041,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "200": { description: "Transaction closure accepted" },
           "400": { description: "Transaction is not pending closure" },
           "401": { description: "Unauthorized" },
+          "403": { description: "Only the buyer can approve escrow release" },
           "404": { description: "Transaction not found" },
         },
       },
@@ -946,6 +1057,79 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "200": { description: "Transaction closure rejected (Moved to dispute)" },
           "400": { description: "Transaction is not pending closure" },
           "401": { description: "Unauthorized" },
+          "403": { description: "User is not a transaction participant" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
+    "/api/ticket/{id}/update-status-to-ongoing": {
+      put: {
+        summary: "Mark escrow as funded and start work",
+        description: "Moves the transaction to ONGOING after payment confirmation. For a milestone project, this also activates milestone sequence 1 while later milestones remain CREATED.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" }],
+        responses: {
+          "200": { description: "Transaction started; first milestone activated when applicable" },
+          "401": { description: "Unauthorized" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
+    "/api/ticket/{id}/milestones/{milestoneId}/resolve": {
+      put: {
+        summary: "Request closure of a milestone",
+        description: "Moves the active milestone and parent transaction to PENDING_CLOSURE and schedules auto-closure after 24 hours. Only an ONGOING or DISPUTE-marked milestone belonging to the transaction can enter closure.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Active milestone ID" },
+        ],
+        responses: {
+          "200": { description: "Milestone closure requested" },
+          "400": { description: "Milestone is missing, does not belong to the transaction, or is not active" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "User is not a transaction participant" },
+          "404": { description: "Transaction not found" },
+        },
+      },
+    },
+    "/api/ticket/{id}/milestones/{milestoneId}/accept-resolution": {
+      put: {
+        summary: "Accept milestone closure and release escrow",
+        description: "The buyer accepts milestone completion. Only that milestone's net amount is released, the milestone becomes COMPLETED, and the next milestone becomes ONGOING. Completing the final milestone completes the parent transaction.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Pending milestone ID" },
+        ],
+        responses: {
+          "200": { description: "Milestone escrow released and next milestone activated, or project completed" },
+          "400": { description: "Transaction or milestone is not pending closure" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only the buyer can approve escrow release" },
+          "404": { description: "Transaction not found" },
+          "409": { description: "Milestone is not ready for settlement" },
+        },
+      },
+    },
+    "/api/ticket/{id}/milestones/{milestoneId}/reject-resolution": {
+      put: {
+        summary: "Reject milestone closure",
+        description: "Moves the milestone and parent transaction to DISPUTE and removes the scheduled closure job. A participant must then open the detailed dispute using POST /api/dispute with the same transactionId and milestoneId.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Pending milestone ID" },
+        ],
+        responses: {
+          "200": { description: "Milestone closure rejected and scope moved to DISPUTE" },
+          "400": { description: "Transaction is not pending closure or milestone is invalid" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "User is not a transaction participant" },
           "404": { description: "Transaction not found" },
         },
       },
@@ -1020,13 +1204,27 @@ Welcome to the **Mimotar API** documentation. This API supports:
         tags: ["Disputes"],
         security: [{ bearerAuth: [] }],
         responses: {
-          "200": { description: "List of disputes" },
+          "200": {
+            description: "List of transaction-level and milestone-level disputes visible to the user",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Dispute" } },
+                  },
+                },
+              },
+            },
+          },
           "401": { description: "Unauthorized" },
         },
       },
       post: {
         summary: "Create dispute",
-        description: "Create a dispute for a transaction. Upload up to 5 evidence files (multipart/form-data). Rate limited.",
+        description: "Create a dispute for a transaction or its active milestone. milestoneId is required for milestone projects. Upload up to 5 evidence files (multipart/form-data). Rate limited.",
         tags: ["Disputes"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -1037,6 +1235,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                 required: ["transactionId", "reason", "description", "resolutionOption"],
                 properties: {
                   transactionId: { type: "integer" },
+                  milestoneId: { type: "integer", description: "Required for milestone projects" },
                   reason: { type: "string" },
                   description: { type: "string" },
                   resolutionOption: { type: "string", enum: ["REFUND_ONLY", "REPLACEMENT_ONLY", "REFUND_OR_REPLACEMENT", "PARTIAL_REPAYMENT", "RESEND_PRODUCT", "REPEAT_SERVICE", "CANCEL_TRANSACTION", "OTHERS"] },
@@ -1047,9 +1246,26 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "201": { description: "Dispute created" },
-          "400": { description: "Validation error" },
+          "201": {
+            description: "Dispute created; the transaction and active milestone, when applicable, move to DISPUTE",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    status: { type: "string", example: "success" },
+                    dispute: { $ref: "#/components/schemas/Dispute" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Validation error, missing milestoneId, or milestone/transaction mismatch" },
           "401": { description: "Unauthorized" },
+          "403": { description: "User is not a transaction participant" },
+          "404": { description: "Transaction, milestone, or user not found" },
+          "409": { description: "Scope is not disputable or an ongoing dispute already exists" },
         },
       },
     },
@@ -1061,21 +1277,54 @@ Welcome to the **Mimotar API** documentation. This API supports:
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Dispute details" },
+          "200": {
+            description: "Dispute details including its transaction and optional milestone",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    status: { type: "string", example: "success" },
+                    payload: { $ref: "#/components/schemas/Dispute" },
+                  },
+                },
+              },
+            },
+          },
           "401": { description: "Unauthorized" },
+          "403": { description: "User cannot view this dispute" },
           "404": { description: "Not found" },
         },
       },
       delete: {
-        summary: "Delete dispute",
-        description: "Deletes a dispute by ID. Rate limited.",
+        summary: "Cancel dispute",
+        description: "Cancels an ongoing dispute without deleting its audit record. Only the dispute creator can cancel it.",
         tags: ["Disputes"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Dispute deleted" },
+          "200": { description: "Dispute cancelled" },
           "401": { description: "Unauthorized" },
+          "403": { description: "Only the dispute creator can cancel it" },
           "404": { description: "Not found" },
+          "409": { description: "Only an ongoing dispute can be cancelled" },
+        },
+      },
+    },
+    "/api/dispute/{id}/resolve": {
+      patch: {
+        summary: "Resolve dispute and release escrow",
+        description: "Closes an ongoing dispute in the seller's favour. The buyer must authorize the request. For a milestone dispute, only that milestone is released and the next milestone is activated.",
+        tags: ["Disputes"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Dispute closed and escrow released exactly once" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only the transaction buyer can approve release" },
+          "404": { description: "Dispute not found" },
+          "409": { description: "Dispute already resolved or cancelled" },
         },
       },
     },

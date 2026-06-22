@@ -1,24 +1,5 @@
 import "dotenv/config";
-import { PrismaClient } from "../generated/prisma/client.js";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "../config/db.js";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
-
-const prisma: PrismaClient =
-  global.prisma ??
-  new PrismaClient({
-    adapter
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
-}
-
+// Re-export the singleton Prisma instance from config/db
 export default prisma;

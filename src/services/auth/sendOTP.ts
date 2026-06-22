@@ -28,6 +28,8 @@ export const resendOTPToEmail = async (email: string): Promise<{
       data: {
         otp,
         otpCreatedAt: new Date(),
+        otpPurpose: "EMAIL_VERIFICATION",
+        pendingPasswordHash: null,
       },
     });
 

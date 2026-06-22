@@ -15,16 +15,25 @@ export const registerUserWithEmail = async (data: any) => {
 
   const hashedPassword = await hashPassword(password);
   const otp = generateSixDigitString();
+  const otpCreatedAt = new Date();
 
-  sendEmailWithTemplate(email, {firstName, lastName}, 3)
+  sendEmailWithTemplate(email, {firstName, lastName, otp}, 3)
 
   return prisma.user.create({
-    data: { email, password: hashedPassword, verified: false, firstName, lastName, otp },
+    data: {
+      email,
+      password: hashedPassword,
+      verified: false,
+      firstName,
+      lastName,
+      otp,
+      otpCreatedAt,
+      otpPurpose: "EMAIL_VERIFICATION",
+    },
   });
 };
 
 export const generateVerificationToken = (email: string) => {
   return jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: "1h" });
 };
-
 

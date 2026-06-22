@@ -1540,11 +1540,15 @@ export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[key
 export const MilestoneScalarFieldEnum = {
   id: 'id',
   transaction_id: 'transaction_id',
+  sequence: 'sequence',
   name: 'name',
   amount: 'amount',
   deadline: 'deadline',
   files: 'files',
-  status: 'status'
+  status: 'status',
+  activatedAt: 'activatedAt',
+  completedAt: 'completedAt',
+  releasedAt: 'releasedAt'
 } as const
 
 export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
@@ -1578,6 +1582,8 @@ export const UserScalarFieldEnum = {
   subject: 'subject',
   otp: 'otp',
   otpCreatedAt: 'otpCreatedAt',
+  otpPurpose: 'otpPurpose',
+  pendingPasswordHash: 'pendingPasswordHash',
   totalEarnings: 'totalEarnings',
   walletBalance: 'walletBalance',
   walletBalanceNGN: 'walletBalanceNGN',
@@ -1596,6 +1602,8 @@ export const EarningsScalarFieldEnum = {
   createdAt: 'createdAt',
   description: 'description',
   transaction_id: 'transaction_id',
+  milestone_id: 'milestone_id',
+  releaseKey: 'releaseKey',
   status: 'status'
 } as const
 
@@ -1618,12 +1626,16 @@ export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFi
 export const DisputeScalarFieldEnum = {
   id: 'id',
   transactionId: 'transactionId',
+  milestoneId: 'milestoneId',
   chatId: 'chatId',
   description: 'description',
   resolutionOption: 'resolutionOption',
   createdAt: 'createdAt',
   elapsesAt: 'elapsesAt',
   status: 'status',
+  resolution: 'resolution',
+  resolvedAt: 'resolvedAt',
+  resolvedById: 'resolvedById',
   reason: 'reason',
   evidenceUrl: 'evidenceUrl',
   evidenceId: 'evidenceId',
@@ -1944,6 +1956,20 @@ export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'OtpPurpose'
+ */
+export type EnumOtpPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OtpPurpose'>
+    
+
+
+/**
+ * Reference to a field of type 'OtpPurpose[]'
+ */
+export type ListEnumOtpPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OtpPurpose[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -2010,6 +2036,20 @@ export type EnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'disputeStatus[]'
  */
 export type ListEnumdisputeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'disputeStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DisputeResolution'
+ */
+export type EnumDisputeResolutionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisputeResolution'>
+    
+
+
+/**
+ * Reference to a field of type 'DisputeResolution[]'
+ */
+export type ListEnumDisputeResolutionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisputeResolution[]'>
     
 
 

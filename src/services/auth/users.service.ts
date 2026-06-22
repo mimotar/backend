@@ -42,6 +42,7 @@ export const registerUserWithEmailService = async (data: {
           lastName, 
           otp,
           otpCreatedAt,
+          otpPurpose: "EMAIL_VERIFICATION",
         },
         select: { 
           id: true,

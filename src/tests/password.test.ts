@@ -1,4 +1,4 @@
-import { PasswordResetController } from "../controllers/emailResetController.js";
+import { PasswordController } from "../controllers/password.controller.js";
 import { PrismaClient } from "../generated/prisma/client.js";
 import { Request, Response, NextFunction } from "express";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
@@ -10,7 +10,10 @@ import { comparePassword } from "../utils/comparePassword.js";
 import { env } from "../config/env.js";
 
 jest.mock("../utils/verifyToken");
-jest.mock("../services/emailService");
+jest.mock("../services/emailService", () => ({
+  sendEmail: jest.fn(),
+  sendEmailWithTemplate: jest.fn(),
+}));
 jest.mock("../utils/createToken");
 jest.mock("../utils/HashPassword");
 jest.mock("../utils/comparePassword");
@@ -33,22 +36,23 @@ const mockResponse = () => {
   return res;
 };
 
-describe("PasswordResetController", () => {
-  let controller: PasswordResetController;
+describe("PasswordController", () => {
+  let controller: PasswordController;
   let next: NextFunction;
 
   beforeEach(() => {
-    controller = new PasswordResetController(mockPrisma);
+    jest.clearAllMocks();
+    controller = new PasswordController(mockPrisma);
     next = jest.fn();
   });
 
-  describe("ConfirmEmail", () => {
-    it("should return 401 if no token is provided", async () => {
+  describe("forgotPassword", () => {
+    it("should return 400 if no email is provided", async () => {
       const req = mockRequest({}, {});
       const res = mockResponse();
-      await controller.ConfirmEmail(req, res, next);
+      await controller.forgotPassword(req, res, next);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 })
+        expect.objectContaining({ statusCode: 400 })
       );
     });
 
@@ -57,13 +61,13 @@ describe("PasswordResetController", () => {
     //   (VerifyToken as jest.Mock).mockResolvedValue({
     //     email: "user@example.com",
     //   });
-    //   await controller.ConfirmEmail(req, mockResponse(), next);
+    //   await controller.forgotPassword(req, mockResponse(), next);
     //   expect(next).toHaveBeenCalledWith(
     //     expect.objectContaining({ statusCode: 400 })
     //   );
     // });
 
-    it("should return 403 if the token email does not match request email", async () => {
+    it("should return 404 if the requested email is not registered", async () => {
       const req = mockRequest(
         { email: "wrong@example.com" },
         { authorization: "Bearer validtoken" }
@@ -71,9 +75,9 @@ describe("PasswordResetController", () => {
       (VerifyToken as jest.Mock).mockResolvedValue({
         email: "user@example.com",
       });
-      await controller.ConfirmEmail(req, mockResponse(), next);
+      await controller.forgotPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 })
+        expect.objectContaining({ statusCode: 404 })
       );
     });
 
@@ -86,17 +90,17 @@ describe("PasswordResetController", () => {
         email: "user@example.com",
       });
       (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
-      await controller.ConfirmEmail(req, mockResponse(), next);
+      await controller.forgotPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({ statusCode: 404 })
       );
     });
   });
 
-  describe("passwordReset", () => {
+  describe("resetPassword", () => {
     it("should return 400 if new password validation fails", async () => {
       const req = mockRequest({ token: "validtoken", newPassword: "short" });
-      await controller.passwordReset(req, mockResponse(), next);
+      await controller.resetPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({ statusCode: 400 })
       );
@@ -111,7 +115,7 @@ describe("PasswordResetController", () => {
       (VerifyToken as jest.Mock).mockResolvedValue({
         email: "user@example.com",
       });
-      await controller.passwordReset(req, mockResponse(), next);
+      await controller.resetPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({ statusCode: 401 })
       );
@@ -127,7 +131,7 @@ describe("PasswordResetController", () => {
         email: "user@example.com",
       });
       (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
-      await controller.passwordReset(req, mockResponse(), next);
+      await controller.resetPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({ statusCode: 401 })
       );
@@ -146,7 +150,7 @@ describe("PasswordResetController", () => {
         password: "hashedpassword",
       });
       (comparePassword as jest.Mock).mockResolvedValue(true);
-      await controller.passwordReset(req, mockResponse(), next);
+      await controller.resetPassword(req, mockResponse(), next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({ statusCode: 400 })
       );

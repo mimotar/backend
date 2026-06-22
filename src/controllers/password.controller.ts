@@ -5,24 +5,22 @@ import { sendEmail } from "../services/emailService.js";
 import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import { hashPassword } from "../utils/HashPassword.js";
 import { comparePassword } from "../utils/comparePassword.js";
-import prisma from "../utils/prisma.js";
-import { PrismaClient } from "../generated/prisma/client.js";
+import type { PrismaClient } from "../generated/prisma/client.js";
 import { generateSixDigitString } from "../utils/OTPGenerator.js";
 
-//interface for the verify token payload object
-interface EmailPayload {
+interface ForgotPasswordPayload {
   email: string;
 }
 
-export class PasswordResetController {
+export class PasswordController {
   private prisma: PrismaClient;
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
   }
   
-  async ConfirmEmail(req: Request, res: Response, next: NextFunction) {
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      // validation the email u want to reset
+      // Validate the email requesting a password reset.
       const emailSchema = z.object({
         email: z.string().email(),
       });
@@ -34,11 +32,11 @@ export class PasswordResetController {
         next(new GlobalError("ZodError", String(errors?.[0]), 400, true));
         return;
       }
-      const ValidatedEmail = validationResult.data as EmailPayload;
+      const validatedEmail = validationResult.data as ForgotPasswordPayload;
 
       // Check if email exists in database
-      const verifyEmailInDb = await prisma.user.findUnique({
-        where: { email: ValidatedEmail.email },
+      const verifyEmailInDb = await this.prisma.user.findUnique({
+        where: { email: validatedEmail.email },
         select: { email: true, password: true },
       });
 
@@ -59,13 +57,34 @@ export class PasswordResetController {
       const otp = generateSixDigitString();
       const otpCreatedAt = new Date();
 
-      await prisma.user.update({
-        where: { email: ValidatedEmail.email },
-        data: { otp, otpCreatedAt }
+      await this.prisma.user.update({
+        where: { email: validatedEmail.email },
+        data: {
+          otp,
+          otpCreatedAt,
+          otpPurpose: "PASSWORD_RESET",
+          pendingPasswordHash: null,
+        }
       });
 
-      // Send OTP implicitly
-      await sendEmail(validationResult.data.email, EmailType.PASSWORD_RESET_OTP, { otp });
+      // Send the OTP and do not report success when delivery fails.
+      const emailResult = await sendEmail(
+        validationResult.data.email,
+        EmailType.PASSWORD_RESET_OTP,
+        { otp }
+      );
+
+      if (!emailResult.success) {
+        next(
+          new GlobalError(
+            "EmailDeliveryError",
+            "We could not send the password reset email. Please try again.",
+            502,
+            true
+          )
+        );
+        return;
+      }
       
       res.status(200).json({
         success: true,
@@ -98,7 +117,7 @@ export class PasswordResetController {
     }
   }
 
-  async passwordReset(req: Request, res: Response, next: NextFunction) {
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { otp, newPassword, email } = req.body;
 
@@ -126,7 +145,7 @@ export class PasswordResetController {
         return;
       }
 
-      const dbCredential = await prisma.user.findUnique({
+      const dbCredential = await this.prisma.user.findUnique({
         where: { email: email },
       });
 
@@ -136,6 +155,18 @@ export class PasswordResetController {
             "forbidden",
             "Not registered User, try with a valid email",
             401,
+            true
+          )
+        );
+        return;
+      }
+
+      if (dbCredential.otpPurpose !== "PASSWORD_RESET") {
+        next(
+          new GlobalError(
+            "PasswordResetNotRequested",
+            "No active password reset request was found",
+            400,
             true
           )
         );
@@ -203,14 +234,16 @@ export class PasswordResetController {
 
       //hash password
       const hash_Password = await hashPassword(newPassword);
-      await prisma.user.update({
+      await this.prisma.user.update({
         where: {
           email: email,
         },
         data: {
           password: hash_Password,
           otp: null,
-          otpCreatedAt: null
+          otpCreatedAt: null,
+          otpPurpose: null,
+          pendingPasswordHash: null,
         },
       });
 
