@@ -55,6 +55,7 @@ export const ModelName = {
   Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
+  DeadlineExtension: 'DeadlineExtension',
   Earnings: 'Earnings',
   WalletTransaction: 'WalletTransaction',
   Dispute: 'Dispute',
@@ -122,7 +123,8 @@ export const TransactionScalarFieldEnum = {
   payment_sent_to_escrow_at: 'payment_sent_to_escrow_at',
   inspection_started_at: 'inspection_started_at',
   inspection_completed_at: 'inspection_completed_at',
-  transaction_completed_at: 'transaction_completed_at'
+  transaction_completed_at: 'transaction_completed_at',
+  deadline: 'deadline'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -184,6 +186,20 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DeadlineExtensionScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  milestoneId: 'milestoneId',
+  previousDeadline: 'previousDeadline',
+  newDeadline: 'newDeadline',
+  reason: 'reason',
+  extendedById: 'extendedById',
+  createdAt: 'createdAt'
+} as const
+
+export type DeadlineExtensionScalarFieldEnum = (typeof DeadlineExtensionScalarFieldEnum)[keyof typeof DeadlineExtensionScalarFieldEnum]
 
 
 export const EarningsScalarFieldEnum = {

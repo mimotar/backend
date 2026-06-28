@@ -19,6 +19,10 @@ import {
 } from "../services/ticket.service.js";
 import { env } from "../config/env.js";
 import { sendEmailWithTemplate } from "../services/emailService.js";
+import {
+  extendMilestoneDeadlineService,
+  extendTransactionDeadlineService,
+} from "../services/deadline.service.js";
 
 export const createTransactionController = async (
   req: Request,
@@ -219,6 +223,65 @@ export const updateTicketToOngoingController = async (
     data: updatedTransaction,
   });
 }
+
+export const extendTransactionDeadlineController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const result = await extendTransactionDeadlineService(
+      Number(req.params.id),
+      userId,
+      req.body.deadline,
+      req.body.reason
+    );
+    return res.status(200).json({
+      message: "Transaction deadline extended successfully",
+      data: result,
+    });
+  } catch (error) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        name: error.name,
+      });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const extendMilestoneDeadlineController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const result = await extendMilestoneDeadlineService(
+      Number(req.params.id),
+      Number(req.params.milestoneId),
+      userId,
+      req.body.deadline,
+      req.body.reason
+    );
+    return res.status(200).json({
+      message: "Milestone deadline extended successfully",
+      data: result,
+    });
+  } catch (error) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        name: error.name,
+      });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 

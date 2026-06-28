@@ -2,7 +2,7 @@ import { RequestHandler, Router } from "express";
 
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
-import { TransactionSchema, RejectTransactionSchema } from "../zod/TicketSchema.js";
+import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema } from "../zod/TicketSchema.js";
 import {
   approveTransactionController,
   createTransactionController,
@@ -13,7 +13,9 @@ import {
   resolveTransactionController,
   acceptResolutionController,
   rejectResolutionController,
-  updateTicketToOngoingController
+  updateTicketToOngoingController,
+  extendTransactionDeadlineController,
+  extendMilestoneDeadlineController
 } from "../controllers/ticket.controller.js";
 
 import { upload } from "../config/cloudinary.js";
@@ -48,6 +50,20 @@ ticketRouter.put("/:id/milestones/:milestoneId/resolve", authenticateTokenMiddle
 ticketRouter.put("/:id/milestones/:milestoneId/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/milestones/:milestoneId/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
 ticketRouter.put("/:id/update-status-to-ongoing", authenticateTokenMiddleware, updateTicketToOngoingController as RequestHandler);
+
+ticketRouter.patch(
+  "/:id/deadline",
+  authenticateTokenMiddleware,
+  validateSchema(DeadlineExtensionSchema),
+  extendTransactionDeadlineController as RequestHandler
+);
+
+ticketRouter.patch(
+  "/:id/milestones/:milestoneId/deadline",
+  authenticateTokenMiddleware,
+  validateSchema(DeadlineExtensionSchema),
+  extendMilestoneDeadlineController as RequestHandler
+);
   
 // Request Token to Validate Transaction
 ticketRouter.post("/:id/request-token", 

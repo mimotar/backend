@@ -8,11 +8,11 @@ datasource db {
 }
 
 model Transaction {
-  id                        Int             @id @default(autoincrement())
-  title                     String          @default("") @db.VarChar(200)
+  id                        Int                 @id @default(autoincrement())
+  title                     String              @default("") @db.VarChar(200)
   amount                    Int
   user_id                   Int?
-  additional_agreement      String          @db.VarChar(200)
+  additional_agreement      String              @db.VarChar(200)
   creator_fullname          String
   creator_email             String
   creator_no                String
@@ -20,55 +20,58 @@ model Transaction {
   receiver_fullname         String
   receiver_no               String
   receiver_address          String?
-  link_expires              Boolean         @default(false)
+  link_expires              Boolean             @default(false)
   txn_link                  String
-  created_at                DateTime        @default(now())
+  created_at                DateTime            @default(now())
   inspection_duration       Int
   reciever_role             Role
   terms                     String?
   transactionType           TransactionType
-  transaction_description   String          @db.VarChar(200)
+  transaction_description   String              @db.VarChar(200)
   pay_escrow_fee            EscrowFeePayer
   pay_shipping_cost         EscrowFeePayer
   creator_role              Role
-  status                    StatusEnum      @default(CREATED)
+  status                    StatusEnum          @default(CREATED)
   expiresAt                 DateTime
-  transactionToken          String          @unique
+  transactionToken          String              @unique
   reciever_email            String
-  approveStatus             Boolean         @default(false)
+  approveStatus             Boolean             @default(false)
   rejection_reason          String?
-  files                     Json?           @db.Json
+  files                     Json?               @db.Json
   otp                       String?
   otp_created_at            DateTime?
   payment_id                Int?
-  currency                  CurrencyEnum    @default(NGN)
+  currency                  CurrencyEnum        @default(NGN)
   agreement_accepted_at     DateTime?
   payment_sent_to_escrow_at DateTime?
   inspection_started_at     DateTime?
   inspection_completed_at   DateTime?
   transaction_completed_at  DateTime?
+  deadline                  DateTime
+  deadlineExtensions        DeadlineExtension[]
   dispute                   Dispute[]
   earnings                  Earnings[]
   payment                   Payment?
-  user                      User?           @relation(fields: [user_id], references: [id])
+  user                      User?               @relation(fields: [user_id], references: [id])
   milestones                Milestone[]
 }
 
 model Milestone {
-  id             Int         @id @default(autoincrement())
-  transaction_id Int
-  sequence       Int
-  name           String
-  amount         Int
-  deadline       DateTime
-  files          Json?       @db.Json
-  status         StatusEnum  @default(CREATED)
-  activatedAt    DateTime?
-  completedAt    DateTime?
-  releasedAt     DateTime?
-  disputes       Dispute[]
-  earnings       Earnings?
-  transaction    Transaction @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
+  id                 Int                 @id @default(autoincrement())
+  transaction_id     Int
+  sequence           Int
+  name               String
+  amount             Int
+  deadline           DateTime
+  files              Json?               @db.Json
+  status             StatusEnum          @default(CREATED)
+  activatedAt        DateTime?
+  completedAt        DateTime?
+  releasedAt         DateTime?
+  deadlineExtensions DeadlineExtension[]
+  disputes           Dispute[]
+  earnings           Earnings?
+  transaction        Transaction         @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
 
   @@unique([transaction_id, sequence])
   @@index([transaction_id, status])
@@ -120,6 +123,25 @@ model User {
   setting             Setting?
   transaction         Transaction[]
   walletTransactions  WalletTransaction[]
+  deadlineExtensions  DeadlineExtension[]
+}
+
+model DeadlineExtension {
+  id               Int         @id @default(autoincrement())
+  transactionId    Int
+  milestoneId      Int?
+  previousDeadline DateTime
+  newDeadline      DateTime
+  reason           String?     @db.VarChar(500)
+  extendedById     Int
+  createdAt        DateTime    @default(now())
+  transaction      Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  milestone        Milestone?  @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  extendedBy       User        @relation(fields: [extendedById], references: [id], onDelete: Restrict)
+
+  @@index([transactionId, createdAt])
+  @@index([milestoneId, createdAt])
+  @@index([extendedById])
 }
 
 model Earnings {

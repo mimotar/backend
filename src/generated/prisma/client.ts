@@ -62,6 +62,11 @@ export type Payment = Prisma.PaymentModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model DeadlineExtension
+ * 
+ */
+export type DeadlineExtension = Prisma.DeadlineExtensionModel
+/**
  * Model Earnings
  * 
  */

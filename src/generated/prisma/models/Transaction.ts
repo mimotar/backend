@@ -81,6 +81,7 @@ export type TransactionMinAggregateOutputType = {
   inspection_started_at: Date | null
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
+  deadline: Date | null
 }
 
 export type TransactionMaxAggregateOutputType = {
@@ -122,6 +123,7 @@ export type TransactionMaxAggregateOutputType = {
   inspection_started_at: Date | null
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
+  deadline: Date | null
 }
 
 export type TransactionCountAggregateOutputType = {
@@ -164,6 +166,7 @@ export type TransactionCountAggregateOutputType = {
   inspection_started_at: number
   inspection_completed_at: number
   transaction_completed_at: number
+  deadline: number
   _all: number
 }
 
@@ -223,6 +226,7 @@ export type TransactionMinAggregateInputType = {
   inspection_started_at?: true
   inspection_completed_at?: true
   transaction_completed_at?: true
+  deadline?: true
 }
 
 export type TransactionMaxAggregateInputType = {
@@ -264,6 +268,7 @@ export type TransactionMaxAggregateInputType = {
   inspection_started_at?: true
   inspection_completed_at?: true
   transaction_completed_at?: true
+  deadline?: true
 }
 
 export type TransactionCountAggregateInputType = {
@@ -306,6 +311,7 @@ export type TransactionCountAggregateInputType = {
   inspection_started_at?: true
   inspection_completed_at?: true
   transaction_completed_at?: true
+  deadline?: true
   _all?: true
 }
 
@@ -435,6 +441,7 @@ export type TransactionGroupByOutputType = {
   inspection_started_at: Date | null
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
+  deadline: Date
   _count: TransactionCountAggregateOutputType | null
   _avg: TransactionAvgAggregateOutputType | null
   _sum: TransactionSumAggregateOutputType | null
@@ -500,6 +507,8 @@ export type TransactionWhereInput = {
   inspection_started_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   dispute?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.EarningsListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -547,6 +556,8 @@ export type TransactionOrderByWithRelationInput = {
   inspection_started_at?: Prisma.SortOrderInput | Prisma.SortOrder
   inspection_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  deadline?: Prisma.SortOrder
+  deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
   dispute?: Prisma.DisputeOrderByRelationAggregateInput
   earnings?: Prisma.EarningsOrderByRelationAggregateInput
   payment?: Prisma.PaymentOrderByWithRelationInput
@@ -597,6 +608,8 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   inspection_started_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   dispute?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.EarningsListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -644,6 +657,7 @@ export type TransactionOrderByWithAggregationInput = {
   inspection_started_at?: Prisma.SortOrderInput | Prisma.SortOrder
   inspection_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  deadline?: Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
   _avg?: Prisma.TransactionAvgOrderByAggregateInput
   _max?: Prisma.TransactionMaxOrderByAggregateInput
@@ -694,6 +708,7 @@ export type TransactionScalarWhereWithAggregatesInput = {
   inspection_started_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   inspection_completed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
+  deadline?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
 }
 
 export type TransactionCreateInput = {
@@ -734,6 +749,8 @@ export type TransactionCreateInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -781,6 +798,8 @@ export type TransactionUncheckedCreateInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -825,6 +844,8 @@ export type TransactionUpdateInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -872,6 +893,8 @@ export type TransactionUncheckedUpdateInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -918,6 +941,7 @@ export type TransactionCreateManyInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
 }
 
 export type TransactionUpdateManyMutationInput = {
@@ -958,6 +982,7 @@ export type TransactionUpdateManyMutationInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TransactionUncheckedUpdateManyInput = {
@@ -1000,6 +1025,7 @@ export type TransactionUncheckedUpdateManyInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TransactionCountOrderByAggregateInput = {
@@ -1042,6 +1068,7 @@ export type TransactionCountOrderByAggregateInput = {
   inspection_started_at?: Prisma.SortOrder
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
+  deadline?: Prisma.SortOrder
 }
 
 export type TransactionAvgOrderByAggregateInput = {
@@ -1091,6 +1118,7 @@ export type TransactionMaxOrderByAggregateInput = {
   inspection_started_at?: Prisma.SortOrder
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
+  deadline?: Prisma.SortOrder
 }
 
 export type TransactionMinOrderByAggregateInput = {
@@ -1132,6 +1160,7 @@ export type TransactionMinOrderByAggregateInput = {
   inspection_started_at?: Prisma.SortOrder
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
+  deadline?: Prisma.SortOrder
 }
 
 export type TransactionSumOrderByAggregateInput = {
@@ -1283,6 +1312,20 @@ export type TransactionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
+export type TransactionCreateNestedOneWithoutDeadlineExtensionsInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutDeadlineExtensionsInput
+  connect?: Prisma.TransactionWhereUniqueInput
+}
+
+export type TransactionUpdateOneRequiredWithoutDeadlineExtensionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutDeadlineExtensionsInput
+  upsert?: Prisma.TransactionUpsertWithoutDeadlineExtensionsInput
+  connect?: Prisma.TransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TransactionUpdateToOneWithWhereWithoutDeadlineExtensionsInput, Prisma.TransactionUpdateWithoutDeadlineExtensionsInput>, Prisma.TransactionUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
 export type TransactionCreateNestedOneWithoutEarningsInput = {
   create?: Prisma.XOR<Prisma.TransactionCreateWithoutEarningsInput, Prisma.TransactionUncheckedCreateWithoutEarningsInput>
   connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutEarningsInput
@@ -1349,6 +1392,8 @@ export type TransactionCreateWithoutMilestonesInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -1395,6 +1440,8 @@ export type TransactionUncheckedCreateWithoutMilestonesInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -1454,6 +1501,8 @@ export type TransactionUpdateWithoutMilestonesInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -1500,6 +1549,8 @@ export type TransactionUncheckedUpdateWithoutMilestonesInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -1543,6 +1594,8 @@ export type TransactionCreateWithoutPaymentInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   user?: Prisma.UserCreateNestedOneWithoutTransactionInput
@@ -1589,6 +1642,8 @@ export type TransactionUncheckedCreateWithoutPaymentInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutTransactionInput
@@ -1648,6 +1703,8 @@ export type TransactionUpdateWithoutPaymentInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
@@ -1694,6 +1751,8 @@ export type TransactionUncheckedUpdateWithoutPaymentInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutTransactionNestedInput
@@ -1737,6 +1796,8 @@ export type TransactionCreateWithoutUserInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -1782,6 +1843,8 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -1857,6 +1920,209 @@ export type TransactionScalarWhereInput = {
   inspection_started_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+}
+
+export type TransactionCreateWithoutDeadlineExtensionsInput = {
+  title?: string
+  amount: number
+  additional_agreement: string
+  creator_fullname: string
+  creator_email: string
+  creator_no: string
+  creator_address?: string | null
+  receiver_fullname: string
+  receiver_no: string
+  receiver_address?: string | null
+  link_expires?: boolean
+  txn_link: string
+  created_at?: Date | string
+  inspection_duration: number
+  reciever_role: $Enums.Role
+  terms?: string | null
+  transactionType: $Enums.TransactionType
+  transaction_description: string
+  pay_escrow_fee: $Enums.EscrowFeePayer
+  pay_shipping_cost: $Enums.EscrowFeePayer
+  creator_role: $Enums.Role
+  status?: $Enums.StatusEnum
+  expiresAt: Date | string
+  transactionToken: string
+  reciever_email: string
+  approveStatus?: boolean
+  rejection_reason?: string | null
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  otp?: string | null
+  otp_created_at?: Date | string | null
+  payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
+  agreement_accepted_at?: Date | string | null
+  payment_sent_to_escrow_at?: Date | string | null
+  inspection_started_at?: Date | string | null
+  inspection_completed_at?: Date | string | null
+  transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
+  earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
+  user?: Prisma.UserCreateNestedOneWithoutTransactionInput
+  milestones?: Prisma.MilestoneCreateNestedManyWithoutTransactionInput
+}
+
+export type TransactionUncheckedCreateWithoutDeadlineExtensionsInput = {
+  id?: number
+  title?: string
+  amount: number
+  user_id?: number | null
+  additional_agreement: string
+  creator_fullname: string
+  creator_email: string
+  creator_no: string
+  creator_address?: string | null
+  receiver_fullname: string
+  receiver_no: string
+  receiver_address?: string | null
+  link_expires?: boolean
+  txn_link: string
+  created_at?: Date | string
+  inspection_duration: number
+  reciever_role: $Enums.Role
+  terms?: string | null
+  transactionType: $Enums.TransactionType
+  transaction_description: string
+  pay_escrow_fee: $Enums.EscrowFeePayer
+  pay_shipping_cost: $Enums.EscrowFeePayer
+  creator_role: $Enums.Role
+  status?: $Enums.StatusEnum
+  expiresAt: Date | string
+  transactionToken: string
+  reciever_email: string
+  approveStatus?: boolean
+  rejection_reason?: string | null
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  otp?: string | null
+  otp_created_at?: Date | string | null
+  payment_id?: number | null
+  currency?: $Enums.CurrencyEnum
+  agreement_accepted_at?: Date | string | null
+  payment_sent_to_escrow_at?: Date | string | null
+  inspection_started_at?: Date | string | null
+  inspection_completed_at?: Date | string | null
+  transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutTransactionInput
+}
+
+export type TransactionCreateOrConnectWithoutDeadlineExtensionsInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedCreateWithoutDeadlineExtensionsInput>
+}
+
+export type TransactionUpsertWithoutDeadlineExtensionsInput = {
+  update: Prisma.XOR<Prisma.TransactionUpdateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedUpdateWithoutDeadlineExtensionsInput>
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedCreateWithoutDeadlineExtensionsInput>
+  where?: Prisma.TransactionWhereInput
+}
+
+export type TransactionUpdateToOneWithWhereWithoutDeadlineExtensionsInput = {
+  where?: Prisma.TransactionWhereInput
+  data: Prisma.XOR<Prisma.TransactionUpdateWithoutDeadlineExtensionsInput, Prisma.TransactionUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
+export type TransactionUpdateWithoutDeadlineExtensionsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  additional_agreement?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_fullname?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_email?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_no?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiver_fullname?: Prisma.StringFieldUpdateOperationsInput | string
+  receiver_no?: Prisma.StringFieldUpdateOperationsInput | string
+  receiver_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link_expires?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  txn_link?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inspection_duration?: Prisma.IntFieldUpdateOperationsInput | number
+  reciever_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transaction_description?: Prisma.StringFieldUpdateOperationsInput | string
+  pay_escrow_fee?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
+  pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
+  creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
+  reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
+  approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
+  agreement_accepted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_sent_to_escrow_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
+  earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
+  user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
+  milestones?: Prisma.MilestoneUpdateManyWithoutTransactionNestedInput
+}
+
+export type TransactionUncheckedUpdateWithoutDeadlineExtensionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  additional_agreement?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_fullname?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_email?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_no?: Prisma.StringFieldUpdateOperationsInput | string
+  creator_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiver_fullname?: Prisma.StringFieldUpdateOperationsInput | string
+  receiver_no?: Prisma.StringFieldUpdateOperationsInput | string
+  receiver_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link_expires?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  txn_link?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inspection_duration?: Prisma.IntFieldUpdateOperationsInput | number
+  reciever_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transaction_description?: Prisma.StringFieldUpdateOperationsInput | string
+  pay_escrow_fee?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
+  pay_shipping_cost?: Prisma.EnumEscrowFeePayerFieldUpdateOperationsInput | $Enums.EscrowFeePayer
+  creator_role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactionToken?: Prisma.StringFieldUpdateOperationsInput | string
+  reciever_email?: Prisma.StringFieldUpdateOperationsInput | string
+  approveStatus?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.EnumCurrencyEnumFieldUpdateOperationsInput | $Enums.CurrencyEnum
+  agreement_accepted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_sent_to_escrow_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutTransactionNestedInput
 }
 
 export type TransactionCreateWithoutEarningsInput = {
@@ -1897,6 +2163,8 @@ export type TransactionCreateWithoutEarningsInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
   user?: Prisma.UserCreateNestedOneWithoutTransactionInput
@@ -1943,6 +2211,8 @@ export type TransactionUncheckedCreateWithoutEarningsInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutTransactionInput
@@ -2002,6 +2272,8 @@ export type TransactionUpdateWithoutEarningsInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
   user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
@@ -2048,6 +2320,8 @@ export type TransactionUncheckedUpdateWithoutEarningsInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutTransactionNestedInput
@@ -2091,6 +2365,8 @@ export type TransactionCreateWithoutDisputeInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
   user?: Prisma.UserCreateNestedOneWithoutTransactionInput
@@ -2137,6 +2413,8 @@ export type TransactionUncheckedCreateWithoutDisputeInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutTransactionInput
@@ -2196,6 +2474,8 @@ export type TransactionUpdateWithoutDisputeInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
   user?: Prisma.UserUpdateOneWithoutTransactionNestedInput
@@ -2242,6 +2522,8 @@ export type TransactionUncheckedUpdateWithoutDisputeInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutTransactionNestedInput
@@ -2286,6 +2568,7 @@ export type TransactionCreateManyUserInput = {
   inspection_started_at?: Date | string | null
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
+  deadline: Date | string
 }
 
 export type TransactionUpdateWithoutUserInput = {
@@ -2326,6 +2609,8 @@ export type TransactionUpdateWithoutUserInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -2371,6 +2656,8 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -2416,6 +2703,7 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   inspection_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -2424,12 +2712,14 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
  */
 
 export type TransactionCountOutputType = {
+  deadlineExtensions: number
   dispute: number
   earnings: number
   milestones: number
 }
 
 export type TransactionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  deadlineExtensions?: boolean | TransactionCountOutputTypeCountDeadlineExtensionsArgs
   dispute?: boolean | TransactionCountOutputTypeCountDisputeArgs
   earnings?: boolean | TransactionCountOutputTypeCountEarningsArgs
   milestones?: boolean | TransactionCountOutputTypeCountMilestonesArgs
@@ -2443,6 +2733,13 @@ export type TransactionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
    * Select specific fields to fetch from the TransactionCountOutputType
    */
   select?: Prisma.TransactionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TransactionCountOutputType without action
+ */
+export type TransactionCountOutputTypeCountDeadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeadlineExtensionWhereInput
 }
 
 /**
@@ -2507,6 +2804,8 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   inspection_started_at?: boolean
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
+  deadline?: boolean
+  deadlineExtensions?: boolean | Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
   earnings?: boolean | Prisma.Transaction$earningsArgs<ExtArgs>
   payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
@@ -2555,6 +2854,7 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   inspection_started_at?: boolean
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
+  deadline?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2598,6 +2898,7 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   inspection_started_at?: boolean
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
+  deadline?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2641,10 +2942,12 @@ export type TransactionSelectScalar = {
   inspection_started_at?: boolean
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
+  deadline?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at" | "deadline", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  deadlineExtensions?: boolean | Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
   earnings?: boolean | Prisma.Transaction$earningsArgs<ExtArgs>
   payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
@@ -2662,6 +2965,7 @@ export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Transaction"
   objects: {
+    deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
     dispute: Prisma.$DisputePayload<ExtArgs>[]
     earnings: Prisma.$EarningsPayload<ExtArgs>[]
     payment: Prisma.$PaymentPayload<ExtArgs> | null
@@ -2708,6 +3012,7 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     inspection_started_at: Date | null
     inspection_completed_at: Date | null
     transaction_completed_at: Date | null
+    deadline: Date
   }, ExtArgs["result"]["transaction"]>
   composites: {}
 }
@@ -3102,6 +3407,7 @@ readonly fields: TransactionFieldRefs;
  */
 export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  deadlineExtensions<T extends Prisma.Transaction$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dispute<T extends Prisma.Transaction$disputeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$disputeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   earnings<T extends Prisma.Transaction$earningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$earningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EarningsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payment<T extends Prisma.Transaction$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -3175,6 +3481,7 @@ export interface TransactionFieldRefs {
   readonly inspection_started_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly inspection_completed_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly transaction_completed_at: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly deadline: Prisma.FieldRef<"Transaction", 'DateTime'>
 }
     
 
@@ -3573,6 +3880,30 @@ export type TransactionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Transactions to delete.
    */
   limit?: number
+}
+
+/**
+ * Transaction.deadlineExtensions
+ */
+export type Transaction$deadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeadlineExtension
+   */
+  select?: Prisma.DeadlineExtensionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeadlineExtension
+   */
+  omit?: Prisma.DeadlineExtensionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeadlineExtensionInclude<ExtArgs> | null
+  where?: Prisma.DeadlineExtensionWhereInput
+  orderBy?: Prisma.DeadlineExtensionOrderByWithRelationInput | Prisma.DeadlineExtensionOrderByWithRelationInput[]
+  cursor?: Prisma.DeadlineExtensionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeadlineExtensionScalarFieldEnum | Prisma.DeadlineExtensionScalarFieldEnum[]
 }
 
 /**

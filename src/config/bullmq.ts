@@ -6,12 +6,39 @@ import { sendEmail } from "../services/emailService.js";
 import { settleEscrowScope } from "../services/escrow-settlement.service.js";
 
 export const TRANSACTION_CLOSURE_QUEUE = "transaction-closure-queue";
+export const TRANSACTION_CLOSURE_DELAY_HOURS = 48;
+export const TRANSACTION_CLOSURE_DELAY_MS =
+  TRANSACTION_CLOSURE_DELAY_HOURS * 60 * 60 * 1000;
 
 export const transactionClosureQueue = new Queue(TRANSACTION_CLOSURE_QUEUE, {
   connection: redisConnection,
 });
 
-// Worker handles the auto-completion of a transaction if it hasn't been closed after 24hrs
+async function normalizeExistingClosureDelays() {
+  const delayedJobs = await transactionClosureQueue.getJobs(["delayed"]);
+  const now = Date.now();
+
+  await Promise.all(
+    delayedJobs.map(async (job) => {
+      const currentRunAt = job.timestamp + job.delay;
+      const requiredRunAt = job.timestamp + TRANSACTION_CLOSURE_DELAY_MS;
+
+      if (currentRunAt >= requiredRunAt || requiredRunAt <= now) {
+        return;
+      }
+
+      await job.changeDelay(requiredRunAt - now);
+    })
+  );
+}
+
+// Jobs created before this change retain their original BullMQ delay. Bring
+// those pending jobs up to the same 48-hour period without delaying them twice.
+void normalizeExistingClosureDelays().catch((error) => {
+  console.error("Failed to normalize existing closure delays:", error);
+});
+
+// Worker handles auto-completion after the 48-hour review period.
 const worker = new Worker(
   TRANSACTION_CLOSURE_QUEUE,
   async (job: Job) => {

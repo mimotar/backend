@@ -388,6 +388,7 @@ export const ModelName = {
   Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
+  DeadlineExtension: 'DeadlineExtension',
   Earnings: 'Earnings',
   WalletTransaction: 'WalletTransaction',
   Dispute: 'Dispute',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "transaction" | "milestone" | "payment" | "user" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact"
+    modelProps: "transaction" | "milestone" | "payment" | "user" | "deadlineExtension" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -710,6 +711,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeadlineExtension: {
+      payload: Prisma.$DeadlineExtensionPayload<ExtArgs>
+      fields: Prisma.DeadlineExtensionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeadlineExtensionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeadlineExtensionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        findFirst: {
+          args: Prisma.DeadlineExtensionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeadlineExtensionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        findMany: {
+          args: Prisma.DeadlineExtensionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        create: {
+          args: Prisma.DeadlineExtensionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        createMany: {
+          args: Prisma.DeadlineExtensionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeadlineExtensionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        delete: {
+          args: Prisma.DeadlineExtensionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        update: {
+          args: Prisma.DeadlineExtensionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeadlineExtensionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeadlineExtensionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeadlineExtensionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeadlineExtensionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        aggregate: {
+          args: Prisma.DeadlineExtensionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeadlineExtension>
+        }
+        groupBy: {
+          args: Prisma.DeadlineExtensionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeadlineExtensionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeadlineExtensionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeadlineExtensionCountAggregateOutputType> | number
         }
       }
     }
@@ -1531,7 +1606,8 @@ export const TransactionScalarFieldEnum = {
   payment_sent_to_escrow_at: 'payment_sent_to_escrow_at',
   inspection_started_at: 'inspection_started_at',
   inspection_completed_at: 'inspection_completed_at',
-  transaction_completed_at: 'transaction_completed_at'
+  transaction_completed_at: 'transaction_completed_at',
+  deadline: 'deadline'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -1593,6 +1669,20 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DeadlineExtensionScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  milestoneId: 'milestoneId',
+  previousDeadline: 'previousDeadline',
+  newDeadline: 'newDeadline',
+  reason: 'reason',
+  extendedById: 'extendedById',
+  createdAt: 'createdAt'
+} as const
+
+export type DeadlineExtensionScalarFieldEnum = (typeof DeadlineExtensionScalarFieldEnum)[keyof typeof DeadlineExtensionScalarFieldEnum]
 
 
 export const EarningsScalarFieldEnum = {
@@ -2235,6 +2325,7 @@ export type GlobalOmitConfig = {
   milestone?: Prisma.MilestoneOmit
   payment?: Prisma.PaymentOmit
   user?: Prisma.UserOmit
+  deadlineExtension?: Prisma.DeadlineExtensionOmit
   earnings?: Prisma.EarningsOmit
   walletTransaction?: Prisma.WalletTransactionOmit
   dispute?: Prisma.DisputeOmit

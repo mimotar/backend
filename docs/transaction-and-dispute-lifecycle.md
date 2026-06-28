@@ -4,7 +4,7 @@ This document describes how Mimotar transactions move from creation to escrow re
 
 ## Core concepts
 
-A `Transaction` is the escrow agreement between a buyer and a seller. The transaction records the full agreed amount, currency, fee payer, participants, payment, and overall status.
+A `Transaction` is the escrow agreement between a buyer and a seller. The transaction records the full agreed amount, currency, fee payer, participants, payment, overall status, and required expected-completion `deadline`.
 
 A `Milestone` is one ordered portion of a `MILESTONE_BASED_PROJECT`. The full project is funded through the transaction payment flow, but escrow is released to the seller one milestone at a time.
 
@@ -50,7 +50,7 @@ CREATED -> APPROVED -> ONGOING -> PENDING_CLOSURE -> COMPLETED
 3. Payment is initialized for the complete transaction amount plus any buyer-paid escrow fee.
 4. After confirmed funding, `PUT /api/ticket/:id/update-status-to-ongoing` changes the transaction to `ONGOING`.
 5. A participant requests closure with `PUT /api/ticket/:id/resolve`.
-6. The transaction becomes `PENDING_CLOSURE`, and a delayed 24-hour closure job is scheduled.
+6. The transaction becomes `PENDING_CLOSURE`, and a delayed 48-hour closure job is scheduled.
 7. The buyer accepts through `PUT /api/ticket/:id/accept-resolution`, or the delayed job completes the transaction if it is still pending.
 8. Settlement creates one earnings record with `releaseKey = transaction:<id>`, creates one wallet inflow, credits the seller, and marks the transaction `COMPLETED`.
 
@@ -100,9 +100,23 @@ The operation runs in one database transaction:
 
 If the same release is retried, database uniqueness prevents a second earning or wallet credit.
 
+## Transaction deadlines
+
+Every transaction type requires `deadline`, including ordinary service, product, rental, and milestone-based transactions. It is the date the work or delivery is expected to finish. This is separate from `expiresAt`, which only controls how long the approval link remains valid.
+
+Either registered participant can extend an active transaction deadline:
+
+```http
+PATCH /api/ticket/:transactionId/deadline
+```
+
+The new date must be in the future and later than the existing deadline. Completed, cancelled, or expired transactions cannot be extended. Each change creates a `DeadlineExtension` audit record containing the previous date, new date, reason, participant, and timestamp.
+
 ## Milestone-based transaction
 
 ### Creation and funding
+
+Milestone-based projects use the transaction-wide `deadline` as the date the whole project is expected to finish. A project must have at least one milestone, and every milestone requires its own deadline on or before the transaction deadline.
 
 Milestones are stored in the order supplied by the client. Each receives a one-based `sequence` value. The transaction amount is the sum of all milestone amounts.
 
@@ -111,6 +125,7 @@ Example:
 ```json
 {
   "transactionType": "MILESTONE_BASED_PROJECT",
+  "deadline": "2026-08-15T23:59:59.000Z",
   "milestones": [
     { "name": "Design", "amount": 100000, "deadline": "2026-07-01" },
     { "name": "Implementation", "amount": 250000, "deadline": "2026-08-01" },
@@ -120,6 +135,42 @@ Example:
 ```
 
 All milestones initially have `CREATED` status. When funding is confirmed and the transaction becomes `ONGOING`, milestone sequence 1 becomes `ONGOING` and receives `activatedAt`. Later milestones remain `CREATED`. Only one milestone is intended to be active at a time.
+
+### Extending transaction and milestone deadlines
+
+Either registered transaction participant can extend a deadline. Extensions can only move a deadline later; they cannot shorten it. Finished or inactive projects and completed milestones cannot be extended.
+
+Extend the transaction deadline:
+
+```http
+PATCH /api/ticket/:transactionId/deadline
+Authorization: Bearer <participant-token>
+Content-Type: application/json
+```
+
+```json
+{
+  "deadline": "2026-09-15T23:59:59.000Z",
+  "reason": "The approved scope now includes an additional integration"
+}
+```
+
+Extend one milestone deadline:
+
+```http
+PATCH /api/ticket/:transactionId/milestones/:milestoneId/deadline
+Authorization: Bearer <participant-token>
+Content-Type: application/json
+```
+
+```json
+{
+  "deadline": "2026-08-10T23:59:59.000Z",
+  "reason": "The external API credentials arrived late"
+}
+```
+
+A milestone deadline cannot move beyond the parent transaction `deadline`. When that is necessary, extend the transaction deadline first and then extend the milestone. Concurrent updates use the previous deadline as a guard so one request cannot silently overwrite another.
 
 ### Completing a milestone normally
 
@@ -133,7 +184,7 @@ PUT /api/ticket/:transactionId/milestones/:milestoneId/reject-resolution
 
 1. A participant requests completion of the active milestone using `/resolve`.
 2. The milestone and parent transaction become `PENDING_CLOSURE`.
-3. A 24-hour job is scheduled specifically for that milestone.
+3. A 48-hour job is scheduled specifically for that milestone.
 4. The buyer accepts, or the job settles the milestone if it remains pending.
 5. Only the milestone amount, less the seller's applicable fee share, is released.
 6. The milestone becomes `COMPLETED` and records `completedAt` and `releasedAt`.
@@ -225,7 +276,7 @@ Disputes are retained with `ongoing`, `cancel`, or `closed` status. Closed dispu
 
 ## Delayed auto-closure
 
-Closure requests schedule a BullMQ job for 24 hours later. Transaction jobs use `closure-<transactionId>`. Milestone jobs use `closure-<transactionId>-milestone-<milestoneId>`.
+Closure requests schedule a BullMQ job for 48 hours later. Transaction jobs use `closure-<transactionId>`. Milestone jobs use `closure-<transactionId>-milestone-<milestoneId>`.
 
 When a job runs, it first checks that its exact scope is still `PENDING_CLOSURE`. If it is, the worker calls the same idempotent settlement service used by manual acceptance. If the scope was disputed, cancelled, or already completed, the job performs no release.
 
@@ -237,11 +288,11 @@ A future refund implementation should add explicit resolution outcomes such as `
 
 ## Database deployment
 
-The migration `20260622120000_add_milestone_disputes_and_releases` must be deployed before starting application code generated from the updated Prisma schema:
+The migrations through `20260622170000_make_transaction_deadline_universal` must be deployed before starting application code generated from the updated Prisma schema:
 
 ```bash
 npx prisma migrate deploy --schema=prisma/schema/schema.prisma
 npx prisma generate --schema=prisma/schema/schema.prisma
 ```
 
-The migration assigns sequence numbers to existing milestones by their current IDs and converts existing earnings into transaction release records using `transaction:<transactionId>` keys.
+The original deadline migration backfills milestone projects and creates the audit ledger. The corrective universal-deadline migration renames the field to `deadline`, backfills older non-milestone transactions from their approval expiry, and requires the field for every new transaction.

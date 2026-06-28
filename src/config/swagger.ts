@@ -119,6 +119,11 @@ Welcome to the **Mimotar API** documentation. This API supports:
           activatedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
           completedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
           releasedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
+          deadlineExtensions: {
+            type: "array",
+            readOnly: true,
+            items: { $ref: "#/components/schemas/DeadlineExtension" },
+          },
           files: {
             type: "array",
             items: {
@@ -150,6 +155,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "pay_shipping_cost", "creator_fullname", "creator_email", "creator_no", "creator_role",
           "receiver_fullname", "reciever_email", "receiver_no", "reciever_role", "transactionType",
           "inspection_duration", "expiresAt",
+          "deadline",
         ],
         properties: {
           title: { type: "string", maxLength: 200 },
@@ -172,6 +178,11 @@ Welcome to the **Mimotar API** documentation. This API supports:
           reciever_role: { $ref: "#/components/schemas/RoleEnum" },
           terms: { type: "string", nullable: true },
           transactionType: { $ref: "#/components/schemas/TransactionTypeEnum" },
+          deadline: {
+            type: "string",
+            format: "date-time",
+            description: "Required expected completion date for every transaction. For milestone projects, every milestone deadline must be on or before it.",
+          },
           inspection_duration: { type: "integer", minimum: 1 },
           expiresAt: { type: "integer", description: "Unix timestamp" },
           isApproved: { type: "boolean" },
@@ -203,6 +214,31 @@ Welcome to the **Mimotar API** documentation. This API supports:
           inspection_started_at: { type: "string", format: "date-time", nullable: true },
           inspection_completed_at: { type: "string", format: "date-time", nullable: true },
           transaction_completed_at: { type: "string", format: "date-time", nullable: true },
+        },
+      },
+      DeadlineExtension: {
+        type: "object",
+        properties: {
+          id: { type: "integer", readOnly: true },
+          transactionId: { type: "integer", readOnly: true },
+          milestoneId: { type: "integer", nullable: true, readOnly: true },
+          previousDeadline: { type: "string", format: "date-time", readOnly: true },
+          newDeadline: { type: "string", format: "date-time", readOnly: true },
+          reason: { type: "string", maxLength: 500, nullable: true },
+          extendedById: { type: "integer", readOnly: true },
+          createdAt: { type: "string", format: "date-time", readOnly: true },
+        },
+      },
+      DeadlineExtensionBody: {
+        type: "object",
+        required: ["deadline"],
+        properties: {
+          deadline: {
+            type: "string",
+            format: "date-time",
+            description: "A future date later than the current deadline",
+          },
+          reason: { type: "string", minLength: 2, maxLength: 500 },
         },
       },
       // Dispute
@@ -907,7 +943,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket": {
       post: {
         summary: "Create transaction",
-        description: "Create a new escrow transaction (ticket). Requires authentication. You may upload up to 2 files (multipart/form-data). Body fields match TransactionCreateBody.",
+        description: "Create a new escrow transaction. Every transaction requires deadline, its expected completion date. A MILESTONE_BASED_PROJECT additionally requires at least one milestone, each with a deadline on or before the transaction deadline. expiresAt controls approval-link expiry, not completion.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -936,6 +972,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                   reciever_role: { $ref: "#/components/schemas/RoleEnum" },
                   terms: { type: "string" },
                   transactionType: { $ref: "#/components/schemas/TransactionTypeEnum" },
+                  deadline: { type: "string", format: "date-time", description: "Required expected completion date for every transaction" },
                   inspection_duration: { type: "integer" },
                   expiresAt: { type: "integer" },
                   files: { type: "array", items: { type: "string", format: "binary" }, maxItems: 2 },
@@ -946,7 +983,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "200": { description: "Transaction created" },
+          "201": { description: "Transaction created with ordered project milestones when applicable" },
           "400": { description: "Validation error" },
           "401": { description: "Unauthorized" },
         },
@@ -1017,7 +1054,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/resolve": {
       put: {
         summary: "Request closure of a non-milestone transaction",
-        description: "Moves an ordinary transaction to PENDING_CLOSURE and schedules auto-closure after 24 hours. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
+        description: "Moves an ordinary transaction to PENDING_CLOSURE and schedules auto-closure after 48 hours. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1033,7 +1070,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/accept-resolution": {
       put: {
         summary: "Accept closure of a non-milestone transaction",
-        description: "The buyer accepts the closure request. Escrow is released exactly once, the transaction becomes COMPLETED, and the 24-hour timer is removed.",
+        description: "The buyer accepts the closure request. Escrow is released exactly once, the transaction becomes COMPLETED, and the 48-hour timer is removed.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1049,7 +1086,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/reject-resolution": {
       put: {
         summary: "Reject transaction resolution",
-        description: "Rejects the closure request and moves the transaction to DISPUTE status. Cancels the 24-hour auto-completion timer.",
+        description: "Rejects the closure request and moves the transaction to DISPUTE status. Cancels the 48-hour auto-completion timer.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1076,10 +1113,59 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/ticket/{id}/deadline": {
+      patch: {
+        summary: "Extend transaction deadline",
+        description: "Extends the expected completion date of any active transaction, including non-milestone transactions. The new date must be later than the current deadline and cannot be earlier than any milestone deadline. The change is retained in the deadline-extension audit history.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Project transaction ID" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/DeadlineExtensionBody" } },
+          },
+        },
+        responses: {
+          "200": { description: "Transaction deadline extended and audit record created" },
+          "400": { description: "Invalid deadline" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only a transaction participant can extend the deadline" },
+          "404": { description: "Transaction not found" },
+          "409": { description: "Deadline did not move later, project is inactive, or concurrent update conflict" },
+        },
+      },
+    },
+    "/api/ticket/{id}/milestones/{milestoneId}/deadline": {
+      patch: {
+        summary: "Extend milestone deadline",
+        description: "Extends an incomplete milestone deadline. The new date must be later than its current deadline and cannot exceed the parent transaction deadline. Extend the transaction first when more room is required. Every change is audited.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Project transaction ID" },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Milestone ID" },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/DeadlineExtensionBody" } },
+          },
+        },
+        responses: {
+          "200": { description: "Milestone deadline extended and audit record created" },
+          "400": { description: "Invalid date, milestone mismatch, or transaction deadline would be exceeded" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only a transaction participant can extend the deadline" },
+          "404": { description: "Milestone or transaction not found" },
+          "409": { description: "Deadline did not move later, milestone is completed, or concurrent update conflict" },
+        },
+      },
+    },
     "/api/ticket/{id}/milestones/{milestoneId}/resolve": {
       put: {
         summary: "Request closure of a milestone",
-        description: "Moves the active milestone and parent transaction to PENDING_CLOSURE and schedules auto-closure after 24 hours. Only an ONGOING or DISPUTE-marked milestone belonging to the transaction can enter closure.",
+        description: "Moves the active milestone and parent transaction to PENDING_CLOSURE and schedules auto-closure after 48 hours. Only an ONGOING or DISPUTE-marked milestone belonging to the transaction can enter closure.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [
@@ -1171,6 +1257,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
                         amount: { type: "integer" },
                         transaction_description: { type: "string" },
                         status: { type: "string" },
+                        deadline: { type: "string", format: "date-time" },
+                        deadlineExtensions: {
+                          type: "array",
+                          items: { $ref: "#/components/schemas/DeadlineExtension" },
+                        },
+                        milestones: {
+                          type: "array",
+                          items: { $ref: "#/components/schemas/Milestone" },
+                        },
                         history: { $ref: "#/components/schemas/TransactionHistory" },
                       },
                     },

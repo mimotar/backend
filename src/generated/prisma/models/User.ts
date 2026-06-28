@@ -372,6 +372,7 @@ export type UserWhereInput = {
   setting?: Prisma.XOR<Prisma.SettingNullableScalarRelationFilter, Prisma.SettingWhereInput> | null
   transaction?: Prisma.TransactionListRelationFilter
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -407,6 +408,7 @@ export type UserOrderByWithRelationInput = {
   setting?: Prisma.SettingOrderByWithRelationInput
   transaction?: Prisma.TransactionOrderByRelationAggregateInput
   walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
+  deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -445,6 +447,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   setting?: Prisma.XOR<Prisma.SettingNullableScalarRelationFilter, Prisma.SettingWhereInput> | null
   transaction?: Prisma.TransactionListRelationFilter
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -533,6 +536,7 @@ export type UserCreateInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -568,6 +572,7 @@ export type UserUncheckedCreateInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUpdateInput = {
@@ -602,6 +607,7 @@ export type UserUpdateInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -637,6 +643,7 @@ export type UserUncheckedUpdateInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -834,6 +841,20 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type UserCreateNestedOneWithoutDeadlineExtensionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeadlineExtensionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeadlineExtensionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeadlineExtensionsInput
+  upsert?: Prisma.UserUpsertWithoutDeadlineExtensionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeadlineExtensionsInput, Prisma.UserUpdateWithoutDeadlineExtensionsInput>, Prisma.UserUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
 export type UserCreateNestedOneWithoutEarningsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutEarningsInput, Prisma.UserUncheckedCreateWithoutEarningsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutEarningsInput
@@ -1023,6 +1044,7 @@ export type UserCreateWithoutTransactionInput = {
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutTransactionInput = {
@@ -1057,6 +1079,7 @@ export type UserUncheckedCreateWithoutTransactionInput = {
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutTransactionInput = {
@@ -1106,6 +1129,7 @@ export type UserUpdateWithoutTransactionInput = {
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionInput = {
@@ -1140,6 +1164,161 @@ export type UserUncheckedUpdateWithoutTransactionInput = {
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
+}
+
+export type UserCreateWithoutDeadlineExtensionsInput = {
+  email: string
+  password: string
+  createdAt?: Date | string
+  verified?: boolean
+  verificationToken?: string | null
+  firstName: string
+  lastName: string
+  provider?: string | null
+  subject?: string | null
+  otp?: string | null
+  otpCreatedAt?: Date | string | null
+  otpPurpose?: $Enums.OtpPurpose | null
+  pendingPasswordHash?: string | null
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
+  disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
+  disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
+  disputesAsSeller?: Prisma.DisputeCreateNestedManyWithoutSellerInput
+  disputesResolved?: Prisma.DisputeCreateNestedManyWithoutResolverInput
+  earnings?: Prisma.EarningsCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notification?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  setting?: Prisma.SettingCreateNestedOneWithoutUserInput
+  transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
+  id?: number
+  email: string
+  password: string
+  createdAt?: Date | string
+  verified?: boolean
+  verificationToken?: string | null
+  firstName: string
+  lastName: string
+  provider?: string | null
+  subject?: string | null
+  otp?: string | null
+  otpCreatedAt?: Date | string | null
+  otpPurpose?: $Enums.OtpPurpose | null
+  pendingPasswordHash?: string | null
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
+  disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
+  disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
+  disputesAsSeller?: Prisma.DisputeUncheckedCreateNestedManyWithoutSellerInput
+  disputesResolved?: Prisma.DisputeUncheckedCreateNestedManyWithoutResolverInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notification?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDeadlineExtensionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedCreateWithoutDeadlineExtensionsInput>
+}
+
+export type UserUpsertWithoutDeadlineExtensionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedUpdateWithoutDeadlineExtensionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedCreateWithoutDeadlineExtensionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeadlineExtensionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeadlineExtensionsInput, Prisma.UserUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
+export type UserUpdateWithoutDeadlineExtensionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  otpPurpose?: Prisma.NullableEnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose | null
+  pendingPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
+  disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
+  disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
+  disputesAsSeller?: Prisma.DisputeUpdateManyWithoutSellerNestedInput
+  disputesResolved?: Prisma.DisputeUpdateManyWithoutResolverNestedInput
+  earnings?: Prisma.EarningsUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notification?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
+  transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  otpPurpose?: Prisma.NullableEnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose | null
+  pendingPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
+  disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
+  disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
+  disputesAsSeller?: Prisma.DisputeUncheckedUpdateManyWithoutSellerNestedInput
+  disputesResolved?: Prisma.DisputeUncheckedUpdateManyWithoutResolverNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notification?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEarningsInput = {
@@ -1173,6 +1352,7 @@ export type UserCreateWithoutEarningsInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutEarningsInput = {
@@ -1207,6 +1387,7 @@ export type UserUncheckedCreateWithoutEarningsInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutEarningsInput = {
@@ -1256,6 +1437,7 @@ export type UserUpdateWithoutEarningsInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEarningsInput = {
@@ -1290,6 +1472,7 @@ export type UserUncheckedUpdateWithoutEarningsInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutWalletTransactionsInput = {
@@ -1323,6 +1506,7 @@ export type UserCreateWithoutWalletTransactionsInput = {
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1357,6 +1541,7 @@ export type UserUncheckedCreateWithoutWalletTransactionsInput = {
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1406,6 +1591,7 @@ export type UserUpdateWithoutWalletTransactionsInput = {
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1440,6 +1626,7 @@ export type UserUncheckedUpdateWithoutWalletTransactionsInput = {
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutDisputesAsBuyerInput = {
@@ -1473,6 +1660,7 @@ export type UserCreateWithoutDisputesAsBuyerInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutDisputesAsBuyerInput = {
@@ -1507,6 +1695,7 @@ export type UserUncheckedCreateWithoutDisputesAsBuyerInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutDisputesAsBuyerInput = {
@@ -1545,6 +1734,7 @@ export type UserCreateWithoutDisputesCreatedInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutDisputesCreatedInput = {
@@ -1579,6 +1769,7 @@ export type UserUncheckedCreateWithoutDisputesCreatedInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutDisputesCreatedInput = {
@@ -1617,6 +1808,7 @@ export type UserCreateWithoutDisputesResolvedInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutDisputesResolvedInput = {
@@ -1651,6 +1843,7 @@ export type UserUncheckedCreateWithoutDisputesResolvedInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutDisputesResolvedInput = {
@@ -1689,6 +1882,7 @@ export type UserCreateWithoutDisputesAsSellerInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutDisputesAsSellerInput = {
@@ -1723,6 +1917,7 @@ export type UserUncheckedCreateWithoutDisputesAsSellerInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutDisputesAsSellerInput = {
@@ -1772,6 +1967,7 @@ export type UserUpdateWithoutDisputesAsBuyerInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesAsBuyerInput = {
@@ -1806,6 +2002,7 @@ export type UserUncheckedUpdateWithoutDisputesAsBuyerInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUpsertWithoutDisputesCreatedInput = {
@@ -1850,6 +2047,7 @@ export type UserUpdateWithoutDisputesCreatedInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesCreatedInput = {
@@ -1884,6 +2082,7 @@ export type UserUncheckedUpdateWithoutDisputesCreatedInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUpsertWithoutDisputesResolvedInput = {
@@ -1928,6 +2127,7 @@ export type UserUpdateWithoutDisputesResolvedInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesResolvedInput = {
@@ -1962,6 +2162,7 @@ export type UserUncheckedUpdateWithoutDisputesResolvedInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUpsertWithoutDisputesAsSellerInput = {
@@ -2006,6 +2207,7 @@ export type UserUpdateWithoutDisputesAsSellerInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesAsSellerInput = {
@@ -2040,6 +2242,7 @@ export type UserUncheckedUpdateWithoutDisputesAsSellerInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutChatsInput = {
@@ -2073,6 +2276,7 @@ export type UserCreateWithoutChatsInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutChatsInput = {
@@ -2107,6 +2311,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutChatsInput = {
@@ -2156,6 +2361,7 @@ export type UserUpdateWithoutChatsInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatsInput = {
@@ -2190,6 +2396,7 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -2223,6 +2430,7 @@ export type UserCreateWithoutMessagesInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -2257,6 +2465,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -2306,6 +2515,7 @@ export type UserUpdateWithoutMessagesInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -2340,6 +2550,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
@@ -2373,6 +2584,7 @@ export type UserCreateWithoutProfileInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -2407,6 +2619,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -2456,6 +2669,7 @@ export type UserUpdateWithoutProfileInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -2490,6 +2704,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutSettingInput = {
@@ -2523,6 +2738,7 @@ export type UserCreateWithoutSettingInput = {
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutSettingInput = {
@@ -2557,6 +2773,7 @@ export type UserUncheckedCreateWithoutSettingInput = {
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutSettingInput = {
@@ -2606,6 +2823,7 @@ export type UserUpdateWithoutSettingInput = {
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingInput = {
@@ -2640,6 +2858,7 @@ export type UserUncheckedUpdateWithoutSettingInput = {
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserCreateWithoutNotificationInput = {
@@ -2673,6 +2892,7 @@ export type UserCreateWithoutNotificationInput = {
   setting?: Prisma.SettingCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationInput = {
@@ -2707,6 +2927,7 @@ export type UserUncheckedCreateWithoutNotificationInput = {
   setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
   transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationInput = {
@@ -2756,6 +2977,7 @@ export type UserUpdateWithoutNotificationInput = {
   setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationInput = {
@@ -2790,6 +3012,7 @@ export type UserUncheckedUpdateWithoutNotificationInput = {
   setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
 }
 
 
@@ -2808,6 +3031,7 @@ export type UserCountOutputType = {
   notification: number
   transaction: number
   walletTransactions: number
+  deadlineExtensions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2821,6 +3045,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   notification?: boolean | UserCountOutputTypeCountNotificationArgs
   transaction?: boolean | UserCountOutputTypeCountTransactionArgs
   walletTransactions?: boolean | UserCountOutputTypeCountWalletTransactionsArgs
+  deadlineExtensions?: boolean | UserCountOutputTypeCountDeadlineExtensionsArgs
 }
 
 /**
@@ -2903,6 +3128,13 @@ export type UserCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends runti
   where?: Prisma.WalletTransactionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeadlineExtensionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2937,6 +3169,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   setting?: boolean | Prisma.User$settingArgs<ExtArgs>
   transaction?: boolean | Prisma.User$transactionArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.User$walletTransactionsArgs<ExtArgs>
+  deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3023,6 +3256,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   setting?: boolean | Prisma.User$settingArgs<ExtArgs>
   transaction?: boolean | Prisma.User$transactionArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.User$walletTransactionsArgs<ExtArgs>
+  deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3043,6 +3277,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     setting: Prisma.$SettingPayload<ExtArgs> | null
     transaction: Prisma.$TransactionPayload<ExtArgs>[]
     walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
+    deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3471,6 +3706,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   setting<T extends Prisma.User$settingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingArgs<ExtArgs>>): Prisma.Prisma__SettingClient<runtime.Types.Result.GetResult<Prisma.$SettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transaction<T extends Prisma.User$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   walletTransactions<T extends Prisma.User$walletTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deadlineExtensions<T extends Prisma.User$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4188,6 +4424,30 @@ export type User$walletTransactionsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.WalletTransactionScalarFieldEnum | Prisma.WalletTransactionScalarFieldEnum[]
+}
+
+/**
+ * User.deadlineExtensions
+ */
+export type User$deadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeadlineExtension
+   */
+  select?: Prisma.DeadlineExtensionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeadlineExtension
+   */
+  omit?: Prisma.DeadlineExtensionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeadlineExtensionInclude<ExtArgs> | null
+  where?: Prisma.DeadlineExtensionWhereInput
+  orderBy?: Prisma.DeadlineExtensionOrderByWithRelationInput | Prisma.DeadlineExtensionOrderByWithRelationInput[]
+  cursor?: Prisma.DeadlineExtensionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeadlineExtensionScalarFieldEnum | Prisma.DeadlineExtensionScalarFieldEnum[]
 }
 
 /**

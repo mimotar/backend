@@ -8,7 +8,10 @@ import { sendEmailWithTemplate } from "./emailService.js";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import { generateSixDigitString } from "../utils/OTPGenerator.js";
 
-import { transactionClosureQueue } from "../config/bullmq.js";
+import {
+  transactionClosureQueue,
+  TRANSACTION_CLOSURE_DELAY_MS,
+} from "../config/bullmq.js";
 import { sendEmail } from "./emailService.js";
 import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
@@ -132,7 +135,14 @@ export const createTransactionService = async (data: TransactionType) => {
       txn_link: `${frontendUrl}/${transactionToken}`,
     },
     include: {
-      milestones: true,
+      milestones: {
+        include: { deadlineExtensions: { orderBy: { createdAt: "desc" } } },
+        orderBy: { sequence: "asc" },
+      },
+      deadlineExtensions: {
+        where: { milestoneId: null },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 };
@@ -143,7 +153,14 @@ export const getTransactionByIdService = async (id: number) => {
       id,
     },
     include: {
-      milestones: true,
+      milestones: {
+        include: { deadlineExtensions: { orderBy: { createdAt: "desc" } } },
+        orderBy: { sequence: "asc" },
+      },
+      deadlineExtensions: {
+        where: { milestoneId: null },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 
@@ -411,7 +428,17 @@ export const getAUserTransactionService = async (userEmail: string) => {
       inspection_started_at: true,
       inspection_completed_at: true,
       transaction_completed_at: true,
-      milestones: true,
+      deadline: true,
+      deadlineExtensions: {
+        where: { milestoneId: null },
+        orderBy: { createdAt: "desc" },
+      },
+      milestones: {
+        include: {
+          deadlineExtensions: { orderBy: { createdAt: "desc" } },
+        },
+        orderBy: { sequence: "asc" },
+      },
     },
     orderBy: {
       created_at: 'desc'
@@ -495,12 +522,12 @@ export const resolveTransactionService = async (
     },
   });
 
-  // Delay for 24h
+  // Give the counterparty 48 hours to accept or reject closure.
   await transactionClosureQueue.add(
     milestoneId ? `closure-${transactionId}-milestone-${milestoneId}` : `closure-${transactionId}`,
     { transactionId, milestoneId },
     {
-      delay: 24 * 60 * 60 * 1000,
+      delay: TRANSACTION_CLOSURE_DELAY_MS,
       jobId: milestoneId ? `closure-${transactionId}-milestone-${milestoneId}` : `closure-${transactionId}`,
     }
   );
