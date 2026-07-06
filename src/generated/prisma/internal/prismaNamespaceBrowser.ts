@@ -55,6 +55,7 @@ export const ModelName = {
   Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
+  UserKYC: 'UserKYC',
   DeadlineExtension: 'DeadlineExtension',
   Earnings: 'Earnings',
   WalletTransaction: 'WalletTransaction',
@@ -65,7 +66,8 @@ export const ModelName = {
   Profile: 'Profile',
   Setting: 'Setting',
   Notification: 'Notification',
-  Contact: 'Contact'
+  Contact: 'Contact',
+  BankAccountDetail: 'BankAccountDetail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -170,7 +172,9 @@ export const UserScalarFieldEnum = {
   verified: 'verified',
   verificationToken: 'verificationToken',
   firstName: 'firstName',
+  middleName: 'middleName',
   lastName: 'lastName',
+  sureName: 'sureName',
   provider: 'provider',
   subject: 'subject',
   otp: 'otp',
@@ -186,6 +190,19 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserKYCScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  isVerified: 'isVerified',
+  kycDocumentType: 'kycDocumentType',
+  kycDocumentNumber: 'kycDocumentNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserKYCScalarFieldEnum = (typeof UserKYCScalarFieldEnum)[keyof typeof UserKYCScalarFieldEnum]
 
 
 export const DeadlineExtensionScalarFieldEnum = {
@@ -345,6 +362,20 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const BankAccountDetailScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  bankCode: 'bankCode',
+  accountName: 'accountName',
+  accountNumber: 'accountNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankAccountDetailScalarFieldEnum = (typeof BankAccountDetailScalarFieldEnum)[keyof typeof BankAccountDetailScalarFieldEnum]
 
 
 export const SortOrder = {

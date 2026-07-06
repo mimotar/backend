@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "prembly",
+      "source": "@prembly/v2.0#5y2md9vmm4no9f0",
+      "integrity": "sha512-ZVBfBG5sAqIoFPBmSPQQp9f232lyE4vPNnt+krI+fjRiclq18HvwVOTfAk1DoaW6XvuCHGh3mlVQcF67AuKa7g==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}

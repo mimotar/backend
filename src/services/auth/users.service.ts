@@ -40,6 +40,7 @@ export const registerUserWithEmailService = async (data: {
           verified: false, 
           firstName, 
           lastName, 
+          sureName: lastName,
           otp,
           otpCreatedAt,
           otpPurpose: "EMAIL_VERIFICATION",

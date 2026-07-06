@@ -2,7 +2,7 @@ services:
   - type: web
     name: usermanager
     env: node
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run prisma:migrate:deploy && npm run prisma:generate && npm run build
     startCommand: npm start
     envVars:
       - key: PORT

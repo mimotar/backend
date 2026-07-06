@@ -85,6 +85,7 @@ export const HandleSocialAuth = async (
           email,
           firstName,
           lastName,
+          sureName: lastName,
           password: Math.random().toString(36).slice(-10),
           provider,
           subject,

@@ -8,7 +8,7 @@ import prisma from "../utils/prisma.js";
 // const prisma = new PrismaClient();
 
 export const registerUserWithEmail = async (data: any) => {
-  const {email, password, firstName, lastName} = data;
+  const {email, password, firstName, lastName, sureName} = data;
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) throw new Error("Email already registered");
@@ -26,6 +26,7 @@ export const registerUserWithEmail = async (data: any) => {
       verified: false,
       firstName,
       lastName,
+      sureName: sureName || lastName,
       otp,
       otpCreatedAt,
       otpPurpose: "EMAIL_VERIFICATION",
@@ -36,4 +37,3 @@ export const registerUserWithEmail = async (data: any) => {
 export const generateVerificationToken = (email: string) => {
   return jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: "1h" });
 };
-

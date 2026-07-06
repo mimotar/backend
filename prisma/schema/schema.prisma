@@ -98,7 +98,9 @@ model User {
   verified            Boolean             @default(false)
   verificationToken   String?
   firstName           String
+  middleName          String?
   lastName            String
+  sureName            String
   provider            String?
   subject             String?
   otp                 String?
@@ -124,8 +126,21 @@ model User {
   transaction         Transaction[]
   walletTransactions  WalletTransaction[]
   deadlineExtensions  DeadlineExtension[]
+  bankAccountDetails  BankAccountDetail[]
+  userKYC             UserKYC?
 }
 
+
+model UserKYC {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @unique
+  isVerified         Boolean   @default(false)
+  kycDocumentType   String?
+  kycDocumentNumber String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+}
 model DeadlineExtension {
   id               Int         @id @default(autoincrement())
   transactionId    Int
@@ -294,6 +309,20 @@ model Contact {
   @@index([message])
   @@index([createdAt])
   @@index([updatedAt])
+}
+
+model BankAccountDetail {
+  id            Int      @id @default(autoincrement())
+  userId       Int      @unique
+  bankName     String
+  bankCode      String
+  accountName  String
+  accountNumber String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id])
+
+  @@unique([bankCode, accountNumber, userId])
 }
 
 enum EscrowFeePayer {

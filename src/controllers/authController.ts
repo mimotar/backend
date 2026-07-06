@@ -125,6 +125,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           password: "", // Provide a default or placeholder value
           firstName: "OAuth", // Provide a default or placeholder value
           lastName: "User", // Provide a default or placeholder value
+          sureName: "User",
         },
       });
     } else {
@@ -139,6 +140,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           verificationToken,
           firstName: "DefaultFirstName",
           lastName: "DefaultLastName",
+          sureName: "DefaultLastName",
         },
       });
 

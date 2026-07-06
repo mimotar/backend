@@ -38,6 +38,11 @@ export type Payment = Prisma.PaymentModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model UserKYC
+ * 
+ */
+export type UserKYC = Prisma.UserKYCModel
+/**
  * Model DeadlineExtension
  * 
  */
@@ -92,3 +97,8 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type Contact = Prisma.ContactModel
+/**
+ * Model BankAccountDetail
+ * 
+ */
+export type BankAccountDetail = Prisma.BankAccountDetailModel

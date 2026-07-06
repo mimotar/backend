@@ -9,10 +9,11 @@ export const TransactionTypeEnum = z.enum([
     "MILESTONE_BASED_PROJECT"
 ]);
 export const StatusEnum = z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
+const FutureDeadlineSchema = z.coerce.date().refine((deadline) => deadline.getTime() > Date.now(), "Deadline must be in the future");
 export const MilestoneSchema = z.object({
     name: z.string().min(1, "Milestone name is required"),
     amount: z.coerce.number().int().positive("Milestone amount must be positive"),
-    deadline: z.string().or(z.date()),
+    deadline: FutureDeadlineSchema,
     files: z
         .array(z.object({
         fileName: z.string(),
@@ -44,6 +45,7 @@ export const TransactionSchema = z.object({
     reciever_role: RoleEnum,
     terms: z.string().nullable(),
     transactionType: TransactionTypeEnum,
+    deadline: FutureDeadlineSchema,
     inspection_duration: z.coerce.number().int().positive(),
     expiresAt: z.coerce.number(),
     isApproved: z.coerce.boolean().optional(),
@@ -66,6 +68,39 @@ export const TransactionSchema = z.object({
         }
         return val;
     }, z.array(MilestoneSchema).optional()),
+}).superRefine((transaction, ctx) => {
+    if (transaction.transactionType !== "MILESTONE_BASED_PROJECT") {
+        if (transaction.milestones?.length) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["milestones"],
+                message: "Milestones are only valid for milestone-based projects",
+            });
+        }
+        return;
+    }
+    if (!transaction.milestones?.length) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["milestones"],
+            message: "At least one milestone is required for milestone-based projects",
+        });
+    }
+    if (transaction.milestones) {
+        transaction.milestones.forEach((milestone, index) => {
+            if (milestone.deadline > transaction.deadline) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ["milestones", index, "deadline"],
+                    message: "Milestone deadline cannot be later than the transaction deadline",
+                });
+            }
+        });
+    }
+});
+export const DeadlineExtensionSchema = z.object({
+    deadline: FutureDeadlineSchema,
+    reason: z.string().trim().min(2).max(500).optional(),
 });
 export const RejectTransactionSchema = z.object({
     otp: z.string().min(1, "OTP is required"),

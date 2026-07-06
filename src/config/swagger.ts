@@ -457,6 +457,90 @@ Welcome to the **Mimotar API** documentation. This API supports:
           id_number: { type: "string", nullable: true },
         },
       },
+      KycChannel: {
+        type: "object",
+        properties: {
+          key: {
+            type: "string",
+            example: "nin",
+            description: "Channel identifier to pass as `channel` when verifying identity.",
+          },
+          endpoint: { type: "string", example: "verification/vnin-basic" },
+          requiredFields: {
+            type: "array",
+            items: { type: "string" },
+            example: ["number"],
+          },
+        },
+      },
+      KycCountryChannels: {
+        type: "object",
+        properties: {
+          code: { type: "string", example: "NG" },
+          name: { type: "string", example: "Nigeria" },
+          channels: {
+            type: "array",
+            items: { $ref: "#/components/schemas/KycChannel" },
+          },
+        },
+      },
+      VerifyIdentityBody: {
+        type: "object",
+        required: ["country", "channel", "data"],
+        properties: {
+          country: {
+            type: "string",
+            example: "NG",
+            description: "Country code from `/api/kyc/channels`.",
+          },
+          channel: {
+            type: "string",
+            example: "nin",
+            description: "Verification channel key from `/api/kyc/channels`.",
+          },
+          data: {
+            type: "object",
+            additionalProperties: true,
+            description: "Fields required by the selected channel. Send identity numbers as strings, not JSON numbers, so leading zeros or letters are preserved.",
+            example: { number: "12345678901" },
+          },
+        },
+      },
+      NormalizedIdentity: {
+        type: "object",
+        properties: {
+          firstName: { type: "string", example: "Ada" },
+          middleName: { type: "string", example: "Nneka" },
+          lastName: { type: "string", example: "Lovelace" },
+          sureName: { type: "string", example: "Lovelace" },
+        },
+      },
+      UserKyc: {
+        type: "object",
+        nullable: true,
+        properties: {
+          id: { type: "integer", example: 1 },
+          userId: { type: "integer", example: 12 },
+          isVerified: { type: "boolean", example: true },
+          kycDocumentType: { type: "string", example: "nin", nullable: true },
+          kycDocumentNumber: { type: "string", example: "12345678901", nullable: true },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      VerifyIdentityResponse: {
+        type: "object",
+        properties: {
+          isVerified: { type: "boolean", example: true },
+          kyc: { $ref: "#/components/schemas/UserKyc" },
+          identity: { $ref: "#/components/schemas/NormalizedIdentity" },
+          providerResponse: {
+            type: "object",
+            additionalProperties: true,
+            description: "Raw response returned by Prembly.",
+          },
+        },
+      },
       CreateNotificationBody: {
         type: "object",
         required: ["title", "avatar", "sender_user_id", "receiver_user_id"],
@@ -1878,6 +1962,120 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
           "400": { description: "No image file provided" },
           "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    // ----- KYC -----
+    "/api/kyc/channels": {
+      get: {
+        summary: "List supported KYC channels",
+        description: "Returns the country/channel combinations configured for Prembly identity verification and their required payload fields.",
+        tags: ["KYC"],
+        responses: {
+          "200": {
+            description: "KYC channels fetched successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/KycCountryChannels" },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "500": { description: "Failed to fetch KYC channels" },
+        },
+      },
+    },
+    "/api/kyc/status": {
+      get: {
+        summary: "Get authenticated user's KYC status",
+        description: "Returns the current KYC record for the authenticated user, or null if no identity verification has been attempted.",
+        tags: ["KYC"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "KYC status fetched successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: { $ref: "#/components/schemas/UserKyc" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+          "500": { description: "Failed to fetch KYC status" },
+        },
+      },
+    },
+    "/api/kyc/verify": {
+      post: {
+        summary: "Verify authenticated user's identity",
+        description: "Uses the configured Prembly country/channel mapping to verify identity. On successful verification, the user table is updated with normalized firstName, middleName, lastName, and sureName values returned by the provider.",
+        tags: ["KYC"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/VerifyIdentityBody" },
+              examples: {
+                nin: {
+                  summary: "Nigeria NIN",
+                  value: {
+                    country: "NG",
+                    channel: "nin",
+                    data: { number: "12345678901" },
+                  },
+                },
+                driversLicense: {
+                  summary: "Nigeria driver's license",
+                  value: {
+                    country: "NG",
+                    channel: "driver_license",
+                    data: {
+                      number: "ABC12345678",
+                      first_name: "Ada",
+                      last_name: "Lovelace",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Identity verification completed",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean" },
+                    data: { $ref: "#/components/schemas/VerifyIdentityResponse" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Missing fields or unsupported country/channel" },
+          "401": { description: "Unauthorized" },
+          "502": { description: "Prembly rejected the request or returned an upstream error. The response includes provider status and response data when available." },
         },
       },
     },

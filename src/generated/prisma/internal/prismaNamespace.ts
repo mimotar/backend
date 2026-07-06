@@ -388,6 +388,7 @@ export const ModelName = {
   Milestone: 'Milestone',
   Payment: 'Payment',
   User: 'User',
+  UserKYC: 'UserKYC',
   DeadlineExtension: 'DeadlineExtension',
   Earnings: 'Earnings',
   WalletTransaction: 'WalletTransaction',
@@ -398,7 +399,8 @@ export const ModelName = {
   Profile: 'Profile',
   Setting: 'Setting',
   Notification: 'Notification',
-  Contact: 'Contact'
+  Contact: 'Contact',
+  BankAccountDetail: 'BankAccountDetail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "transaction" | "milestone" | "payment" | "user" | "deadlineExtension" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact"
+    modelProps: "transaction" | "milestone" | "payment" | "user" | "userKYC" | "deadlineExtension" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact" | "bankAccountDetail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -711,6 +713,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserKYC: {
+      payload: Prisma.$UserKYCPayload<ExtArgs>
+      fields: Prisma.UserKYCFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserKYCFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserKYCFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        findFirst: {
+          args: Prisma.UserKYCFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserKYCFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        findMany: {
+          args: Prisma.UserKYCFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>[]
+        }
+        create: {
+          args: Prisma.UserKYCCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        createMany: {
+          args: Prisma.UserKYCCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserKYCCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>[]
+        }
+        delete: {
+          args: Prisma.UserKYCDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        update: {
+          args: Prisma.UserKYCUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserKYCDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserKYCUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserKYCUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserKYCUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserKYCPayload>
+        }
+        aggregate: {
+          args: Prisma.UserKYCAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserKYC>
+        }
+        groupBy: {
+          args: Prisma.UserKYCGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserKYCGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserKYCCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserKYCCountAggregateOutputType> | number
         }
       }
     }
@@ -1528,6 +1604,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BankAccountDetail: {
+      payload: Prisma.$BankAccountDetailPayload<ExtArgs>
+      fields: Prisma.BankAccountDetailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BankAccountDetailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BankAccountDetailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        findFirst: {
+          args: Prisma.BankAccountDetailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BankAccountDetailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        findMany: {
+          args: Prisma.BankAccountDetailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>[]
+        }
+        create: {
+          args: Prisma.BankAccountDetailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        createMany: {
+          args: Prisma.BankAccountDetailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BankAccountDetailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>[]
+        }
+        delete: {
+          args: Prisma.BankAccountDetailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        update: {
+          args: Prisma.BankAccountDetailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        deleteMany: {
+          args: Prisma.BankAccountDetailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BankAccountDetailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BankAccountDetailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>[]
+        }
+        upsert: {
+          args: Prisma.BankAccountDetailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountDetailPayload>
+        }
+        aggregate: {
+          args: Prisma.BankAccountDetailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBankAccountDetail>
+        }
+        groupBy: {
+          args: Prisma.BankAccountDetailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankAccountDetailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BankAccountDetailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankAccountDetailCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1653,7 +1803,9 @@ export const UserScalarFieldEnum = {
   verified: 'verified',
   verificationToken: 'verificationToken',
   firstName: 'firstName',
+  middleName: 'middleName',
   lastName: 'lastName',
+  sureName: 'sureName',
   provider: 'provider',
   subject: 'subject',
   otp: 'otp',
@@ -1669,6 +1821,19 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserKYCScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  isVerified: 'isVerified',
+  kycDocumentType: 'kycDocumentType',
+  kycDocumentNumber: 'kycDocumentNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserKYCScalarFieldEnum = (typeof UserKYCScalarFieldEnum)[keyof typeof UserKYCScalarFieldEnum]
 
 
 export const DeadlineExtensionScalarFieldEnum = {
@@ -1828,6 +1993,20 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const BankAccountDetailScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  bankCode: 'bankCode',
+  accountName: 'accountName',
+  accountNumber: 'accountNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankAccountDetailScalarFieldEnum = (typeof BankAccountDetailScalarFieldEnum)[keyof typeof BankAccountDetailScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2325,6 +2504,7 @@ export type GlobalOmitConfig = {
   milestone?: Prisma.MilestoneOmit
   payment?: Prisma.PaymentOmit
   user?: Prisma.UserOmit
+  userKYC?: Prisma.UserKYCOmit
   deadlineExtension?: Prisma.DeadlineExtensionOmit
   earnings?: Prisma.EarningsOmit
   walletTransaction?: Prisma.WalletTransactionOmit
@@ -2336,6 +2516,7 @@ export type GlobalOmitConfig = {
   setting?: Prisma.SettingOmit
   notification?: Prisma.NotificationOmit
   contact?: Prisma.ContactOmit
+  bankAccountDetail?: Prisma.BankAccountDetailOmit
 }
 
 /* Types for Logging */
