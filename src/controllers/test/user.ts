@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 
 export const createUser = async (req: Request, res: Response, NextFunction: NextFunction) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, sureName, email, password } = req.body;
     
     try {
         // Validate required fields
@@ -28,6 +28,7 @@ export const createUser = async (req: Request, res: Response, NextFunction: Next
             data: {
                 firstName,
                 lastName,
+                sureName: sureName || lastName,
                 email,
                 password: hashedPassword,
             }
