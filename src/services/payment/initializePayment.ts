@@ -118,7 +118,7 @@ export const initializeFlutterwavePaymentService = async (
     const logo = "https://example.com/logo.png";
 
     const user =
-      transaction.reciever_role === "BUYER"
+      transaction.reciever_role === "CLIENT"
         ? {
             email: transaction.reciever_email,
             name: transaction.receiver_fullname,

@@ -10,8 +10,8 @@
 */
 
 export const EscrowFeePayer = {
-  BUYER: 'BUYER',
-  SELLER: 'SELLER',
+  CLIENT: 'CLIENT',
+  FREELANCER: 'FREELANCER',
   BOTH: 'BOTH'
 } as const
 
@@ -19,8 +19,8 @@ export type EscrowFeePayer = (typeof EscrowFeePayer)[keyof typeof EscrowFeePayer
 
 
 export const Role = {
-  BUYER: 'BUYER',
-  SELLER: 'SELLER'
+  CLIENT: 'CLIENT',
+  FREELANCER: 'FREELANCER'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]

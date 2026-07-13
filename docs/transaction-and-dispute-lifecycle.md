@@ -255,8 +255,8 @@ For backward API compatibility this remains a `DELETE` route, but it does not re
 
 The project uses a 3% escrow fee. The fee payer determines the seller deduction:
 
-- `BUYER`: seller receives the full transaction or milestone amount.
-- `SELLER`: seller receives the amount minus the full 3% fee.
+- `CLIENT`: freelancer receives the full transaction or milestone amount.
+- `FREELANCER`: freelancer receives the amount minus the full 3% fee.
 - `BOTH`: seller receives the amount minus half of the 3% fee.
 
 For milestone projects, the same calculation is applied to each milestone amount. Because the fee is percentage-based, the sum of milestone-level fee shares equals the corresponding fee share for the full project, subject only to the database decimal precision.

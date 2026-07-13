@@ -12,7 +12,7 @@ model Transaction {
   title                     String              @default("") @db.VarChar(200)
   amount                    Int
   user_id                   Int?
-  additional_agreement      String              @db.VarChar(200)
+  additional_agreement      String?              @db.VarChar(200)
   creator_fullname          String
   creator_email             String
   creator_no                String
@@ -29,7 +29,7 @@ model Transaction {
   transactionType           TransactionType
   transaction_description   String              @db.VarChar(200)
   pay_escrow_fee            EscrowFeePayer
-  pay_shipping_cost         EscrowFeePayer
+  pay_shipping_cost         EscrowFeePayer?
   creator_role              Role
   status                    StatusEnum          @default(CREATED)
   expiresAt                 DateTime
@@ -326,14 +326,14 @@ model BankAccountDetail {
 }
 
 enum EscrowFeePayer {
-  BUYER
-  SELLER
+  CLIENT
+  FREELANCER
   BOTH
 }
 
 enum Role {
-  BUYER
-  SELLER
+  CLIENT
+  FREELANCER
 }
 
 enum OtpPurpose {

@@ -23,7 +23,7 @@ export const SettingSchema = z.object({
   notificationPreference: NotificationPreferenceEnum,
   securityQuestions: z.array(z.string()).length(4),
   twoFactorAuth: z.boolean(),
-  accountStatus: z.enum(["ACTIVE", "DISABLED", "DELETED"]),
+  accountStatus: z.enum(["ACTIVE", "DISABLED", "DELETED"]).nullable(),
   user: UserSchema,
 });
 

@@ -103,6 +103,13 @@ export type EnumEscrowFeePayerFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel> | $Enums.EscrowFeePayer
 }
 
+export type EnumEscrowFeePayerNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.EscrowFeePayer | Prisma.EnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel> | $Enums.EscrowFeePayer | null
+}
+
 export type EnumStatusEnumFilter<$PrismaModel = never> = {
   equals?: $Enums.StatusEnum | Prisma.EnumStatusEnumFieldRefInput<$PrismaModel>
   in?: $Enums.StatusEnum[] | Prisma.ListEnumStatusEnumFieldRefInput<$PrismaModel>
@@ -275,6 +282,16 @@ export type EnumEscrowFeePayerWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel>
   _max?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel>
+}
+
+export type EnumEscrowFeePayerNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EscrowFeePayer | Prisma.EnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEscrowFeePayerNullableWithAggregatesFilter<$PrismaModel> | $Enums.EscrowFeePayer | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel>
 }
 
 export type EnumStatusEnumWithAggregatesFilter<$PrismaModel = never> = {
@@ -724,6 +741,13 @@ export type NestedEnumEscrowFeePayerFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel> | $Enums.EscrowFeePayer
 }
 
+export type NestedEnumEscrowFeePayerNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.EscrowFeePayer | Prisma.EnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel> | $Enums.EscrowFeePayer | null
+}
+
 export type NestedEnumStatusEnumFilter<$PrismaModel = never> = {
   equals?: $Enums.StatusEnum | Prisma.EnumStatusEnumFieldRefInput<$PrismaModel>
   in?: $Enums.StatusEnum[] | Prisma.ListEnumStatusEnumFieldRefInput<$PrismaModel>
@@ -887,6 +911,16 @@ export type NestedEnumEscrowFeePayerWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel>
   _max?: Prisma.NestedEnumEscrowFeePayerFilter<$PrismaModel>
+}
+
+export type NestedEnumEscrowFeePayerNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EscrowFeePayer | Prisma.EnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EscrowFeePayer[] | Prisma.ListEnumEscrowFeePayerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEscrowFeePayerNullableWithAggregatesFilter<$PrismaModel> | $Enums.EscrowFeePayer | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEscrowFeePayerNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumStatusEnumWithAggregatesFilter<$PrismaModel = never> = {

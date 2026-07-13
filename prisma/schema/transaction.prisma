@@ -51,14 +51,14 @@
 // }
 
 // enum EscrowFeePayer {
-//   BUYER
-//   SELLER
+//   CLIENT
+//   FREELANCER
 //   BOTH
 // }
 
 // enum Role {
-//   BUYER
-//   SELLER
+//   CLIENT
+//   FREELANCER
 // }
 
 // enum TransactionType {

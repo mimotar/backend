@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const DisputeSchema = z.object({
   id: z.number().optional(),
   transactionId: z.coerce.number(),
-  milestoneId: z.coerce.number().int().positive().optional(),
+  milestoneId: z.coerce.number().int().positive().nullable().optional(),
   reason: z.string().min(2).max(100),
   description: z.string().min(2).max(500),
   resolutionOption: z.enum([
@@ -20,7 +20,7 @@ export const DisputeSchema = z.object({
   evidenceId: z.array(z.string()).optional(),
   status: z.enum(["ongoing", "closed", "cancel"]).default("ongoing"),
 
-  elapsesAt: z.date().optional(),
+  elapsesAt: z.date().nullable().optional(),
   // creatorId: z.number(),
   // buyerId: z.number(),
   // sellerId: z.number(),

@@ -9,10 +9,10 @@ jest.mock("../utils/prisma.js", () => ({
 const transaction = {
   id: 7,
   amount: 300,
-  creator_role: "BUYER",
+  creator_role: "CLIENT",
   creator_email: "buyer@example.com",
   reciever_email: "seller@example.com",
-  pay_escrow_fee: "BUYER",
+  pay_escrow_fee: "CLIENT",
   currency: "NGN",
   transaction_completed_at: null,
   inspection_started_at: new Date("2026-01-01"),

@@ -18,20 +18,20 @@ interface EscrowCalculation {
 }
 
 enum EscrowFeePayer {
-  BUYER = 'BUYER',
-  SELLER = 'SELLER',
+  CLIENT = 'CLIENT',
+  FREELANCER = 'FREELANCER',
   BOTH = 'BOTH'
 }
 
 /**
  * Calculate escrow payment based on who pays the fee
  * @param amount - Original transaction amount
- * @param payerType - Who pays the escrow fee (BUYER, SELLER, or BOTH)
+ * @param payerType - Who pays the escrow fee (CLIENT, FREELANCER, or BOTH)
  * @returns EscrowCalculation with detailed breakdown
  */
 function calculateEscrowPayment(
   amount: number, 
-  payerType: EscrowFeePayer = EscrowFeePayer.BUYER
+  payerType: EscrowFeePayer = EscrowFeePayer.CLIENT
 ): EscrowCalculation {
   
   // Input validation
@@ -52,11 +52,11 @@ function calculateEscrowPayment(
   let sellerCommissionShare: number;
 
   switch (payerType) {
-    case EscrowFeePayer.BUYER:
+    case EscrowFeePayer.CLIENT:
       buyerCommissionShare = totalCommission;
       sellerCommissionShare = 0;
       break;
-    case EscrowFeePayer.SELLER:
+    case EscrowFeePayer.FREELANCER:
       buyerCommissionShare = 0;
       sellerCommissionShare = totalCommission;
       break;
@@ -101,11 +101,11 @@ function calculateEscrowPayment(
 function getAmountToPay(
   amount: number,
   payerType: EscrowFeePayer,
-  requestingParty: 'BUYER' | 'SELLER'
+  requestingParty: 'CLIENT' | 'FREELANCER'
 ): number {
   const calculation = calculateEscrowPayment(amount, payerType);
   
-  return requestingParty === 'BUYER' 
+  return requestingParty === 'CLIENT' 
     ? calculation.buyerTotalPayment 
     : calculation.sellerTotalPayment;
 }
@@ -114,11 +114,11 @@ function getAmountToPay(
 // console.log('=== Testing with ₦150,000 ===');
 
 // // Test 1: Buyer pays all
-// const test1 = calculateEscrowPayment(150000, EscrowFeePayer.BUYER);
+// const test1 = calculateEscrowPayment(150000, EscrowFeePayer.CLIENT);
 // console.log('Buyer pays all:', test1);
 
 // // Test 2: Seller pays all  
-// const test2 = calculateEscrowPayment(150000, EscrowFeePayer.SELLER);
+// const test2 = calculateEscrowPayment(150000, EscrowFeePayer.FREELANCER);
 // console.log('Seller pays all:', test2);
 
 // // Test 3: Both split 50/50

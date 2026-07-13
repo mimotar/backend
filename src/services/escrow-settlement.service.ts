@@ -38,7 +38,7 @@ async function creditSellerOnce(
   }
 
   const sellerEmail =
-    transaction.creator_role === "SELLER"
+    transaction.creator_role === "FREELANCER"
       ? transaction.creator_email
       : transaction.reciever_email;
   const seller = await tx.user.findUnique({ where: { email: sellerEmail } });

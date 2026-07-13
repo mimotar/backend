@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const EscrowFeePayerEnum = z.enum(["BUYER", "SELLER", "BOTH"]);
-export const RoleEnum = z.enum(["BUYER", "SELLER"]);
+export const EscrowFeePayerEnum = z.enum(["CLIENT", "FREELANCER", "BOTH"]);
+export const RoleEnum = z.enum(["CLIENT", "FREELANCER"]);
 export const TransactionTypeEnum = z.enum([
   "PHYSICAL_PRODUCT",
   "ONLINE_PRODUCT",
@@ -10,7 +10,17 @@ export const TransactionTypeEnum = z.enum([
   "MILESTONE_BASED_PROJECT" 
 ]);
 
-export const StatusEnum = z.enum(["ONGOING", "DISPUTE", "CANCEL", "COMPLETED"]);
+export const StatusEnum = z.enum([
+  "CREATED",
+  "APPROVED",
+  "ONGOING",
+  "COMPLETED",
+  "DISPUTE",
+  "REJECTED",
+  "CANCELED",
+  "EXPIRED",
+  "PENDING_CLOSURE",
+]);
 
 const FutureDeadlineSchema = z.coerce.date().refine(
   (deadline) => deadline.getTime() > Date.now(),
@@ -33,6 +43,7 @@ export const MilestoneSchema = z.object({
     .optional(),
 });
 
+// Transaction settlement currently has dedicated wallet handling for NGN and USD only.
 export const CurrencyEnum = z.enum(["NGN", "USD"]);
 
 export const TransactionSchema = z.object({
@@ -40,26 +51,22 @@ export const TransactionSchema = z.object({
   currency: CurrencyEnum,
   amount: z.coerce.number().int(),
   transaction_description: z.string().max(200),
-  user_id: z.coerce.number().positive().optional(),
   pay_escrow_fee: EscrowFeePayerEnum,
-  additional_agreement: z.string().max(200),
-  pay_shipping_cost: EscrowFeePayerEnum,
+  additional_agreement: z.string().max(200).nullable().optional(),
   creator_fullname: z.string().min(1),
   creator_email: z.string().email(),
   creator_no: z.string().min(1),
-  creator_address: z.string().nullable(),
+  creator_address: z.string().nullable().optional(),
   creator_role: RoleEnum,
   receiver_fullname: z.string().min(1),
   reciever_email: z.string().email(),
   receiver_no: z.string().min(1),
-  receiver_address: z.string().nullable(),
-  reciever_role: RoleEnum,
-  terms: z.string().nullable(),
+  receiver_address: z.string().nullable().optional(),
+  terms: z.string().nullable().optional(),
   transactionType: TransactionTypeEnum,
   deadline: FutureDeadlineSchema,
   inspection_duration: z.coerce.number().int().positive(),
   expiresAt: z.coerce.number(),
-  isApproved: z.coerce.boolean().optional(),
   files: z
     .array(
       z.object({
@@ -114,11 +121,19 @@ export const TransactionSchema = z.object({
       }
     });
   }
-});
+}).transform((transaction) => ({
+  ...transaction,
+  reciever_role:
+    transaction.creator_role === "CLIENT"
+      ? ("FREELANCER" as const)
+      : ("CLIENT" as const),
+}));
 
 
 
-export type TransactionType = z.infer<typeof TransactionSchema>;
+export type TransactionType = z.infer<typeof TransactionSchema> & {
+  user_id?: number;
+};
 
 export const DeadlineExtensionSchema = z.object({
   deadline: FutureDeadlineSchema,

@@ -11,19 +11,17 @@ const baseTransaction = {
   currency: "NGN",
   amount: 1000,
   transaction_description: "Build a website",
-  pay_escrow_fee: "BUYER",
+  pay_escrow_fee: "CLIENT",
   additional_agreement: "Standard agreement",
-  pay_shipping_cost: "BUYER",
   creator_fullname: "Buyer Name",
   creator_email: "buyer@example.com",
   creator_no: "123",
   creator_address: null,
-  creator_role: "BUYER",
+  creator_role: "CLIENT",
   receiver_fullname: "Seller Name",
   reciever_email: "seller@example.com",
   receiver_no: "456",
   receiver_address: null,
-  reciever_role: "SELLER",
   terms: null,
   transactionType: "MILESTONE_BASED_PROJECT",
   inspection_duration: 3,
@@ -65,6 +63,61 @@ describe("project and milestone deadlines", () => {
       ],
     });
     expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.reciever_role).toBe("FREELANCER");
+    }
+  });
+
+  it("assigns CLIENT to the receiver when the creator is FREELANCER", () => {
+    const result = TransactionSchema.safeParse({
+      ...baseTransaction,
+      creator_role: "FREELANCER",
+      transactionType: "SERVICE",
+      deadline: futureDate(30),
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.reciever_role).toBe("CLIENT");
+    }
+  });
+
+  it("accepts omitted nullable transaction fields", () => {
+    const {
+      additional_agreement,
+      creator_address,
+      receiver_address,
+      terms,
+      ...requiredTransaction
+    } = baseTransaction;
+
+    const result = TransactionSchema.safeParse({
+      ...requiredTransaction,
+      transactionType: "SERVICE",
+      deadline: futureDate(30),
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("strips server-managed and removed create fields", () => {
+    const result = TransactionSchema.safeParse({
+      ...baseTransaction,
+      transactionType: "SERVICE",
+      deadline: futureDate(30),
+      reciever_role: "CLIENT",
+      pay_shipping_cost: "CLIENT",
+      user_id: 999,
+      isApproved: true,
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.reciever_role).toBe("FREELANCER");
+      expect(result.data).not.toHaveProperty("pay_shipping_cost");
+      expect(result.data).not.toHaveProperty("user_id");
+      expect(result.data).not.toHaveProperty("isApproved");
+    }
   });
 
   it("rejects a milestone later than the transaction deadline", () => {

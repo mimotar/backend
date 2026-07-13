@@ -57,7 +57,7 @@ export async function getTransactionParticipants(transactionId: number): Promise
   };
 
   const participants =
-    transaction.creator_role === 'BUYER'
+    transaction.creator_role === 'CLIENT'
       ? {
           buyer: creatorDetails,
           seller: receiverDetails,
