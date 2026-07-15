@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Transaction: 'Transaction',
   Milestone: 'Milestone',
+  MilestoneImage: 'MilestoneImage',
   Payment: 'Payment',
   User: 'User',
   UserKYC: 'UserKYC',
@@ -147,6 +148,17 @@ export const MilestoneScalarFieldEnum = {
 } as const
 
 export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
+export const MilestoneImageScalarFieldEnum = {
+  id: 'id',
+  milestoneId: 'milestoneId',
+  url: 'url',
+  publicId: 'publicId',
+  createdAt: 'createdAt'
+} as const
+
+export type MilestoneImageScalarFieldEnum = (typeof MilestoneImageScalarFieldEnum)[keyof typeof MilestoneImageScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {

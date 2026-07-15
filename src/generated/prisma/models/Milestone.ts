@@ -273,6 +273,7 @@ export type MilestoneWhereInput = {
   completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
+  images?: Prisma.MilestoneImageListRelationFilter
   disputes?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
@@ -291,6 +292,7 @@ export type MilestoneOrderByWithRelationInput = {
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   releasedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
+  images?: Prisma.MilestoneImageOrderByRelationAggregateInput
   disputes?: Prisma.DisputeOrderByRelationAggregateInput
   earnings?: Prisma.EarningsOrderByWithRelationInput
   transaction?: Prisma.TransactionOrderByWithRelationInput
@@ -313,6 +315,7 @@ export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
   completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
+  images?: Prisma.MilestoneImageListRelationFilter
   disputes?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.XOR<Prisma.EarningsNullableScalarRelationFilter, Prisma.EarningsWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionScalarRelationFilter, Prisma.TransactionWhereInput>
@@ -365,6 +368,7 @@ export type MilestoneCreateInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
   transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
@@ -383,6 +387,7 @@ export type MilestoneUncheckedCreateInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageUncheckedCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
@@ -398,6 +403,7 @@ export type MilestoneUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
@@ -416,6 +422,7 @@ export type MilestoneUncheckedUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUncheckedUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
@@ -529,6 +536,11 @@ export type MilestoneSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
 }
 
+export type MilestoneScalarRelationFilter = {
+  is?: Prisma.MilestoneWhereInput
+  isNot?: Prisma.MilestoneWhereInput
+}
+
 export type MilestoneNullableScalarRelationFilter = {
   is?: Prisma.MilestoneWhereInput | null
   isNot?: Prisma.MilestoneWhereInput | null
@@ -574,6 +586,20 @@ export type MilestoneUncheckedUpdateManyWithoutTransactionNestedInput = {
   update?: Prisma.MilestoneUpdateWithWhereUniqueWithoutTransactionInput | Prisma.MilestoneUpdateWithWhereUniqueWithoutTransactionInput[]
   updateMany?: Prisma.MilestoneUpdateManyWithWhereWithoutTransactionInput | Prisma.MilestoneUpdateManyWithWhereWithoutTransactionInput[]
   deleteMany?: Prisma.MilestoneScalarWhereInput | Prisma.MilestoneScalarWhereInput[]
+}
+
+export type MilestoneCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutImagesInput, Prisma.MilestoneUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutImagesInput
+  connect?: Prisma.MilestoneWhereUniqueInput
+}
+
+export type MilestoneUpdateOneRequiredWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutImagesInput, Prisma.MilestoneUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.MilestoneUpsertWithoutImagesInput
+  connect?: Prisma.MilestoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MilestoneUpdateToOneWithWhereWithoutImagesInput, Prisma.MilestoneUpdateWithoutImagesInput>, Prisma.MilestoneUncheckedUpdateWithoutImagesInput>
 }
 
 export type MilestoneCreateNestedOneWithoutDeadlineExtensionsInput = {
@@ -635,6 +661,7 @@ export type MilestoneCreateWithoutTransactionInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
 }
@@ -651,6 +678,7 @@ export type MilestoneUncheckedCreateWithoutTransactionInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageUncheckedCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
@@ -698,6 +726,88 @@ export type MilestoneScalarWhereInput = {
   releasedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
 }
 
+export type MilestoneCreateWithoutImagesInput = {
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutMilestoneInput
+  disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
+  transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
+}
+
+export type MilestoneUncheckedCreateWithoutImagesInput = {
+  id?: number
+  transaction_id: number
+  sequence: number
+  name: string
+  amount: number
+  deadline: Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: $Enums.StatusEnum
+  activatedAt?: Date | string | null
+  completedAt?: Date | string | null
+  releasedAt?: Date | string | null
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutMilestoneInput
+  disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
+}
+
+export type MilestoneCreateOrConnectWithoutImagesInput = {
+  where: Prisma.MilestoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutImagesInput, Prisma.MilestoneUncheckedCreateWithoutImagesInput>
+}
+
+export type MilestoneUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.MilestoneUpdateWithoutImagesInput, Prisma.MilestoneUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutImagesInput, Prisma.MilestoneUncheckedCreateWithoutImagesInput>
+  where?: Prisma.MilestoneWhereInput
+}
+
+export type MilestoneUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.MilestoneWhereInput
+  data: Prisma.XOR<Prisma.MilestoneUpdateWithoutImagesInput, Prisma.MilestoneUncheckedUpdateWithoutImagesInput>
+}
+
+export type MilestoneUpdateWithoutImagesInput = {
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutMilestoneNestedInput
+  disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
+  transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
+}
+
+export type MilestoneUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  transaction_id?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutMilestoneNestedInput
+  disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
+}
+
 export type MilestoneCreateWithoutDeadlineExtensionsInput = {
   sequence: number
   name: string
@@ -708,6 +818,7 @@ export type MilestoneCreateWithoutDeadlineExtensionsInput = {
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
+  images?: Prisma.MilestoneImageCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
   transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
@@ -725,6 +836,7 @@ export type MilestoneUncheckedCreateWithoutDeadlineExtensionsInput = {
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
+  images?: Prisma.MilestoneImageUncheckedCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
@@ -755,6 +867,7 @@ export type MilestoneUpdateWithoutDeadlineExtensionsInput = {
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  images?: Prisma.MilestoneImageUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
@@ -772,6 +885,7 @@ export type MilestoneUncheckedUpdateWithoutDeadlineExtensionsInput = {
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  images?: Prisma.MilestoneImageUncheckedUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
@@ -787,6 +901,7 @@ export type MilestoneCreateWithoutEarningsInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeCreateNestedManyWithoutMilestoneInput
   transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
 }
@@ -804,6 +919,7 @@ export type MilestoneUncheckedCreateWithoutEarningsInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageUncheckedCreateNestedManyWithoutMilestoneInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutMilestoneInput
 }
 
@@ -834,6 +950,7 @@ export type MilestoneUpdateWithoutEarningsInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
 }
@@ -851,6 +968,7 @@ export type MilestoneUncheckedUpdateWithoutEarningsInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUncheckedUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
 }
 
@@ -865,6 +983,7 @@ export type MilestoneCreateWithoutDisputesInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsCreateNestedOneWithoutMilestoneInput
   transaction: Prisma.TransactionCreateNestedOneWithoutMilestonesInput
 }
@@ -882,6 +1001,7 @@ export type MilestoneUncheckedCreateWithoutDisputesInput = {
   completedAt?: Date | string | null
   releasedAt?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutMilestoneInput
+  images?: Prisma.MilestoneImageUncheckedCreateNestedManyWithoutMilestoneInput
   earnings?: Prisma.EarningsUncheckedCreateNestedOneWithoutMilestoneInput
 }
 
@@ -912,6 +1032,7 @@ export type MilestoneUpdateWithoutDisputesInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutMilestonesNestedInput
 }
@@ -929,6 +1050,7 @@ export type MilestoneUncheckedUpdateWithoutDisputesInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUncheckedUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
 
@@ -956,6 +1078,7 @@ export type MilestoneUpdateWithoutTransactionInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUpdateOneWithoutMilestoneNestedInput
 }
@@ -972,6 +1095,7 @@ export type MilestoneUncheckedUpdateWithoutTransactionInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutMilestoneNestedInput
+  images?: Prisma.MilestoneImageUncheckedUpdateManyWithoutMilestoneNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutMilestoneNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateOneWithoutMilestoneNestedInput
 }
@@ -996,11 +1120,13 @@ export type MilestoneUncheckedUpdateManyWithoutTransactionInput = {
 
 export type MilestoneCountOutputType = {
   deadlineExtensions: number
+  images: number
   disputes: number
 }
 
 export type MilestoneCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deadlineExtensions?: boolean | MilestoneCountOutputTypeCountDeadlineExtensionsArgs
+  images?: boolean | MilestoneCountOutputTypeCountImagesArgs
   disputes?: boolean | MilestoneCountOutputTypeCountDisputesArgs
 }
 
@@ -1024,6 +1150,13 @@ export type MilestoneCountOutputTypeCountDeadlineExtensionsArgs<ExtArgs extends 
 /**
  * MilestoneCountOutputType without action
  */
+export type MilestoneCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MilestoneImageWhereInput
+}
+
+/**
+ * MilestoneCountOutputType without action
+ */
 export type MilestoneCountOutputTypeCountDisputesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DisputeWhereInput
 }
@@ -1042,6 +1175,7 @@ export type MilestoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   completedAt?: boolean
   releasedAt?: boolean
   deadlineExtensions?: boolean | Prisma.Milestone$deadlineExtensionsArgs<ExtArgs>
+  images?: boolean | Prisma.Milestone$imagesArgs<ExtArgs>
   disputes?: boolean | Prisma.Milestone$disputesArgs<ExtArgs>
   earnings?: boolean | Prisma.Milestone$earningsArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
@@ -1095,6 +1229,7 @@ export type MilestoneSelectScalar = {
 export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaction_id" | "sequence" | "name" | "amount" | "deadline" | "files" | "status" | "activatedAt" | "completedAt" | "releasedAt", ExtArgs["result"]["milestone"]>
 export type MilestoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deadlineExtensions?: boolean | Prisma.Milestone$deadlineExtensionsArgs<ExtArgs>
+  images?: boolean | Prisma.Milestone$imagesArgs<ExtArgs>
   disputes?: boolean | Prisma.Milestone$disputesArgs<ExtArgs>
   earnings?: boolean | Prisma.Milestone$earningsArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
@@ -1111,6 +1246,7 @@ export type $MilestonePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Milestone"
   objects: {
     deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
+    images: Prisma.$MilestoneImagePayload<ExtArgs>[]
     disputes: Prisma.$DisputePayload<ExtArgs>[]
     earnings: Prisma.$EarningsPayload<ExtArgs> | null
     transaction: Prisma.$TransactionPayload<ExtArgs>
@@ -1522,6 +1658,7 @@ readonly fields: MilestoneFieldRefs;
 export interface Prisma__MilestoneClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   deadlineExtensions<T extends Prisma.Milestone$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.Milestone$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MilestoneImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disputes<T extends Prisma.Milestone$disputesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$disputesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   earnings<T extends Prisma.Milestone$earningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$earningsArgs<ExtArgs>>): Prisma.Prisma__EarningsClient<runtime.Types.Result.GetResult<Prisma.$EarningsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transaction<T extends Prisma.TransactionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransactionDefaultArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -1987,6 +2124,30 @@ export type Milestone$deadlineExtensionsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.DeadlineExtensionScalarFieldEnum | Prisma.DeadlineExtensionScalarFieldEnum[]
+}
+
+/**
+ * Milestone.images
+ */
+export type Milestone$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MilestoneImage
+   */
+  select?: Prisma.MilestoneImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MilestoneImage
+   */
+  omit?: Prisma.MilestoneImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MilestoneImageInclude<ExtArgs> | null
+  where?: Prisma.MilestoneImageWhereInput
+  orderBy?: Prisma.MilestoneImageOrderByWithRelationInput | Prisma.MilestoneImageOrderByWithRelationInput[]
+  cursor?: Prisma.MilestoneImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MilestoneImageScalarFieldEnum | Prisma.MilestoneImageScalarFieldEnum[]
 }
 
 /**

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { GlobalError } from "./GlobalErrorHandler.js";
+import multer from "multer";
 
 export const GlobalErrorMiddleware = (
   err: Error,
@@ -7,7 +8,13 @@ export const GlobalErrorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  if (err instanceof GlobalError) {
+  if (err instanceof multer.MulterError) {
+    res.status(400).json({
+      name: err.code,
+      message: err.message,
+    });
+    return;
+  } else if (err instanceof GlobalError) {
     if (err.operational) {
       res.status(err.statusCode).json({
         name: err.name,

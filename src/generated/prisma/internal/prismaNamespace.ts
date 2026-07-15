@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Transaction: 'Transaction',
   Milestone: 'Milestone',
+  MilestoneImage: 'MilestoneImage',
   Payment: 'Payment',
   User: 'User',
   UserKYC: 'UserKYC',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "transaction" | "milestone" | "payment" | "user" | "userKYC" | "deadlineExtension" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact" | "bankAccountDetail"
+    modelProps: "transaction" | "milestone" | "milestoneImage" | "payment" | "user" | "userKYC" | "deadlineExtension" | "earnings" | "walletTransaction" | "dispute" | "chat" | "chatrParticipants" | "message" | "profile" | "setting" | "notification" | "contact" | "bankAccountDetail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -565,6 +566,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MilestoneCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MilestoneCountAggregateOutputType> | number
+        }
+      }
+    }
+    MilestoneImage: {
+      payload: Prisma.$MilestoneImagePayload<ExtArgs>
+      fields: Prisma.MilestoneImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MilestoneImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MilestoneImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        findFirst: {
+          args: Prisma.MilestoneImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MilestoneImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        findMany: {
+          args: Prisma.MilestoneImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>[]
+        }
+        create: {
+          args: Prisma.MilestoneImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        createMany: {
+          args: Prisma.MilestoneImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MilestoneImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>[]
+        }
+        delete: {
+          args: Prisma.MilestoneImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        update: {
+          args: Prisma.MilestoneImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.MilestoneImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MilestoneImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MilestoneImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.MilestoneImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MilestoneImagePayload>
+        }
+        aggregate: {
+          args: Prisma.MilestoneImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMilestoneImage>
+        }
+        groupBy: {
+          args: Prisma.MilestoneImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MilestoneImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MilestoneImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MilestoneImageCountAggregateOutputType> | number
         }
       }
     }
@@ -1780,6 +1855,17 @@ export const MilestoneScalarFieldEnum = {
 export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
 
 
+export const MilestoneImageScalarFieldEnum = {
+  id: 'id',
+  milestoneId: 'milestoneId',
+  url: 'url',
+  publicId: 'publicId',
+  createdAt: 'createdAt'
+} as const
+
+export type MilestoneImageScalarFieldEnum = (typeof MilestoneImageScalarFieldEnum)[keyof typeof MilestoneImageScalarFieldEnum]
+
+
 export const PaymentScalarFieldEnum = {
   id: 'id',
   transaction_id: 'transaction_id',
@@ -2502,6 +2588,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   transaction?: Prisma.TransactionOmit
   milestone?: Prisma.MilestoneOmit
+  milestoneImage?: Prisma.MilestoneImageOmit
   payment?: Prisma.PaymentOmit
   user?: Prisma.UserOmit
   userKYC?: Prisma.UserKYCOmit

@@ -6,7 +6,7 @@ import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
 import axios from "axios";
 import { sendEmailWithTemplate } from "../../services/emailService.js";
 import { getTransactionParticipants } from "../../utils/payment/getTransactionParticipants.js";
-import { deleteAllTransactionService, deleteTransactionService } from "../../services/ticket.service.js";
+import { deleteTransactionService } from "../../services/transaction-deletion.service.js";
 import { mapFlutterwavePaymentTypeToEnum } from "./normalizepaymentType.js";
 import { PaymentStatus, Prisma } from "../../generated/prisma/client.js";
 // import PaymentStatus from "@prisma/client";
@@ -59,37 +59,38 @@ export const initiatePaymentController = async (
   }
 };
 
-export const deleteTransactionController = async(req: Request, res:Response) => {
-    try {
-        const transactionId = req.params.id;
-        const deleteTransaction = await deleteTransactionService(Number(transactionId));
-        
-        res.status(200).json({
-            message: "Transaction deleted successfully",
-            transaction: deleteTransaction
-        });
-    } catch (error) {
-        new GlobalError("FAILED", "Could not delete transaction", 400, false);
-        res.status(400).json({ message: "Could not delete transaction" });
-        return;
+export const deleteTransactionController = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-}
 
+    const transactionId = Number(req.params.id);
+    if (!Number.isInteger(transactionId) || transactionId <= 0) {
+      return res.status(400).json({ message: "Transaction ID must be a positive integer" });
+    }
 
+    const deletedTransaction = await deleteTransactionService(
+      transactionId,
+      userId
+    );
 
-export const deleteAllTransactionController = async(req: Request, res:Response) => {
-    try {
-        const transactions = await deleteAllTransactionService();
-        res.status(200).json({
-            message: "All transactions deleted successfully",
-            transactions: transactions
-        }); 
-    } catch (error) {
-        new GlobalError("FAILED", "Could not delete transactions", 400, false);
-        res.status(400).json({ message: "Could not delete transactions" });
-        return;
-
-    }}
+    return res.status(200).json({
+      message: "Transaction deleted successfully",
+      transaction: deletedTransaction,
+    });
+  } catch (error) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        name: error.name,
+        message: error.message,
+      });
+    }
+    console.error("Transaction deletion error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export const PaymentWebhookController = async (
   req: Request,

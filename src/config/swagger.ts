@@ -135,6 +135,21 @@ Welcome to the **Mimotar API** documentation. This API supports:
               },
             },
           },
+          images: {
+            type: "array",
+            readOnly: true,
+            description: "Cloudinary-hosted milestone images. publicId is retained privately by the server for deletion.",
+            items: { $ref: "#/components/schemas/MilestoneImage" },
+          },
+        },
+      },
+      MilestoneImage: {
+        type: "object",
+        required: ["id", "url", "createdAt"],
+        properties: {
+          id: { type: "integer", readOnly: true },
+          url: { type: "string", format: "uri", readOnly: true },
+          createdAt: { type: "string", format: "date-time", readOnly: true },
         },
       },
       // Transaction (Ticket)
@@ -1078,12 +1093,6 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "401": { description: "Unauthorized" },
         },
       },
-      delete: {
-        summary: "Delete all transactions",
-        description: "Deletes all transactions. Use with caution.",
-        tags: ["Transactions (Tickets)"],
-        responses: { "200": { description: "All transactions deleted" } },
-      },
     },
     "/api/ticket/transactions": {
       get: {
@@ -1252,6 +1261,64 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/ticket/{id}/milestones/{milestoneId}/images": {
+      post: {
+        summary: "Attach images to a milestone",
+        description: "Uploads up to five images to Cloudinary and immediately stores their references. Only the transaction creator may upload, and only while the transaction is CREATED. A milestone may contain at most five images in total.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "multipart/form-data": {
+              schema: {
+                type: "object",
+                required: ["images"],
+                properties: {
+                  images: {
+                    type: "array",
+                    maxItems: 5,
+                    items: { type: "string", format: "binary" },
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": { description: "Images uploaded and saved" },
+          "400": { description: "Invalid file, image limit exceeded, or invalid path parameter" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only the transaction creator can manage images" },
+          "404": { description: "Milestone does not belong to the transaction" },
+          "409": { description: "Transaction is no longer editable" },
+        },
+      },
+    },
+    "/api/ticket/{id}/milestones/{milestoneId}/images/{imageId}": {
+      delete: {
+        summary: "Remove a milestone image",
+        description: "Deletes the asset from Cloudinary and then removes its database record. Only the transaction creator may delete images while the transaction is CREATED.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "integer" } },
+          { name: "imageId", in: "path", required: true, schema: { type: "integer" } },
+        ],
+        responses: {
+          "204": { description: "Image deleted" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only the transaction creator can manage images" },
+          "404": { description: "Milestone or image not found" },
+          "409": { description: "Transaction is no longer editable" },
+        },
+      },
+    },
     "/api/ticket/{id}/milestones/{milestoneId}/resolve": {
       put: {
         summary: "Request closure of a milestone",
@@ -1370,13 +1437,17 @@ Welcome to the **Mimotar API** documentation. This API supports:
       },
       delete: {
         summary: "Delete transaction",
-        description: "Deletes a single transaction by ID.",
+        description: "Deletes a CREATED transaction and its Cloudinary attachments. Only the transaction creator can perform this operation.",
         tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
           "200": { description: "Transaction deleted" },
-          "400": { description: "Could not delete" },
-          "404": { description: "Not found" },
+          "400": { description: "Invalid transaction ID" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Only the transaction creator can delete it" },
+          "404": { description: "Transaction not found" },
+          "409": { description: "Transaction is no longer in CREATED status" },
         },
       },
     },

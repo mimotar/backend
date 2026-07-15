@@ -15,12 +15,14 @@ import {
   rejectResolutionController,
   updateTicketToOngoingController,
   extendTransactionDeadlineController,
-  extendMilestoneDeadlineController
+  extendMilestoneDeadlineController,
+  uploadMilestoneImagesController,
+  deleteMilestoneImageController,
 } from "../controllers/ticket.controller.js";
 
-import { upload } from "../config/cloudinary.js";
+import { milestoneImageUpload, upload } from "../config/cloudinary.js";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware.js";
-import { deleteAllTransactionController, deleteTransactionController } from "../controllers/payment/initiatePaymentController.js";
+import { deleteTransactionController } from "../controllers/payment/initiatePaymentController.js";
 
 const ticketRouter = Router();
 
@@ -58,6 +60,19 @@ ticketRouter.patch(
   extendTransactionDeadlineController as RequestHandler
 );
 
+ticketRouter.post(
+  "/:id/milestones/:milestoneId/images",
+  authenticateTokenMiddleware,
+  milestoneImageUpload.array("images", 5),
+  uploadMilestoneImagesController as RequestHandler
+);
+
+ticketRouter.delete(
+  "/:id/milestones/:milestoneId/images/:imageId",
+  authenticateTokenMiddleware,
+  deleteMilestoneImageController as RequestHandler
+);
+
 ticketRouter.patch(
   "/:id/milestones/:milestoneId/deadline",
   authenticateTokenMiddleware,
@@ -88,8 +103,11 @@ ticketRouter.get(
 );
 
 
-ticketRouter.delete("/:id", deleteTransactionController as RequestHandler);
-ticketRouter.delete("/", deleteAllTransactionController as RequestHandler);
+ticketRouter.delete(
+  "/:id",
+  authenticateTokenMiddleware,
+  deleteTransactionController as RequestHandler
+);
 
 
 export default ticketRouter;

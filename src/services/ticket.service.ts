@@ -136,7 +136,13 @@ export const createTransactionService = async (data: TransactionType) => {
     },
     include: {
       milestones: {
-        include: { deadlineExtensions: { orderBy: { createdAt: "desc" } } },
+        include: {
+          images: {
+            select: { id: true, url: true, createdAt: true },
+            orderBy: { createdAt: "asc" },
+          },
+          deadlineExtensions: { orderBy: { createdAt: "desc" } },
+        },
         orderBy: { sequence: "asc" },
       },
       deadlineExtensions: {
@@ -154,7 +160,13 @@ export const getTransactionByIdService = async (id: number) => {
     },
     include: {
       milestones: {
-        include: { deadlineExtensions: { orderBy: { createdAt: "desc" } } },
+        include: {
+          images: {
+            select: { id: true, url: true, createdAt: true },
+            orderBy: { createdAt: "asc" },
+          },
+          deadlineExtensions: { orderBy: { createdAt: "desc" } },
+        },
         orderBy: { sequence: "asc" },
       },
       deadlineExtensions: {
@@ -353,38 +365,6 @@ export const validateTransactionOtpService = async (id: number, otp: string) => 
   return transaction;
 };
 
-export const deleteTransactionService = async (id: number) => {
-  const transaction = await prisma.transaction.findUnique({
-    where: { id },
-  });
-  if (!transaction) {
-    throw new Error("Transaction not found");
-  }
-  
-  const deletedTransaction = await prisma.transaction.delete({
-    where: { id },
-  });
-  if (!deletedTransaction) {
-    throw new Error("Failed to delete transaction");
-  }
-  return deletedTransaction;
-}
-
-export const deleteAllTransactionService = async () => {
-  const transactions = await prisma.transaction.findMany();
-  if (!transactions) {
-    throw new Error("No transactions found");
-  }
-  const deletedTransactions = await prisma.transaction.deleteMany();
-  if (!deletedTransactions) {
-    throw new Error("Failed to delete transactions");
-  } 
-  return deletedTransactions;
-}
-
-
-
-
 export const getAUserTransactionService = async (userEmail: string) => {
   const transactions = await prisma.transaction.findMany({
     where: {
@@ -435,6 +415,10 @@ export const getAUserTransactionService = async (userEmail: string) => {
       },
       milestones: {
         include: {
+          images: {
+            select: { id: true, url: true, createdAt: true },
+            orderBy: { createdAt: "asc" },
+          },
           deadlineExtensions: { orderBy: { createdAt: "desc" } },
         },
         orderBy: { sequence: "asc" },

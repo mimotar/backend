@@ -23,6 +23,90 @@ import {
   extendMilestoneDeadlineService,
   extendTransactionDeadlineService,
 } from "../services/deadline.service.js";
+import {
+  deleteMilestoneImageService,
+  uploadMilestoneImagesService,
+} from "../services/milestone-image.service.js";
+
+function positiveIntegerParam(value: unknown, name: string) {
+  if (Array.isArray(value)) {
+    throw new GlobalError(
+      "INVALID_PARAMETER",
+      `${name} must be a positive integer`,
+      400,
+      true
+    );
+  }
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new GlobalError(
+      "INVALID_PARAMETER",
+      `${name} must be a positive integer`,
+      400,
+      true
+    );
+  }
+  return parsed;
+}
+
+export const uploadMilestoneImagesController = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const images = await uploadMilestoneImagesService(
+      positiveIntegerParam(req.params.id, "transactionId"),
+      positiveIntegerParam(req.params.milestoneId, "milestoneId"),
+      userId,
+      (req.files as Express.Multer.File[] | undefined) ?? []
+    );
+
+    return res.status(201).json({
+      message: "Milestone images uploaded successfully",
+      data: images,
+    });
+  } catch (error) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        name: error.name,
+        message: error.message,
+      });
+    }
+    console.error("Milestone image upload error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteMilestoneImageController = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    await deleteMilestoneImageService(
+      positiveIntegerParam(req.params.id, "transactionId"),
+      positiveIntegerParam(req.params.milestoneId, "milestoneId"),
+      positiveIntegerParam(req.params.imageId, "imageId"),
+      userId
+    );
+
+    return res.status(204).send();
+  } catch (error) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({
+        name: error.name,
+        message: error.message,
+      });
+    }
+    console.error("Milestone image deletion error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export const createTransactionController = async (
   req: Request,

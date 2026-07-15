@@ -12,7 +12,7 @@ model Transaction {
   title                     String              @default("") @db.VarChar(200)
   amount                    Int
   user_id                   Int?
-  additional_agreement      String?              @db.VarChar(200)
+  additional_agreement      String?             @db.VarChar(200)
   creator_fullname          String
   creator_email             String
   creator_no                String
@@ -69,12 +69,24 @@ model Milestone {
   completedAt        DateTime?
   releasedAt         DateTime?
   deadlineExtensions DeadlineExtension[]
+  images             MilestoneImage[]
   disputes           Dispute[]
   earnings           Earnings?
   transaction        Transaction         @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
 
   @@unique([transaction_id, sequence])
   @@index([transaction_id, status])
+}
+
+model MilestoneImage {
+  id          Int       @id @default(autoincrement())
+  milestoneId Int
+  url         String
+  publicId    String    @unique
+  createdAt   DateTime  @default(now())
+  milestone   Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@index([milestoneId])
 }
 
 model Payment {
@@ -130,17 +142,17 @@ model User {
   userKYC             UserKYC?
 }
 
-
 model UserKYC {
   id                Int      @id @default(autoincrement())
   userId            Int      @unique
-  isVerified         Boolean   @default(false)
+  isVerified        Boolean  @default(false)
   kycDocumentType   String?
   kycDocumentNumber String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id])
 }
+
 model DeadlineExtension {
   id               Int         @id @default(autoincrement())
   transactionId    Int
@@ -313,10 +325,10 @@ model Contact {
 
 model BankAccountDetail {
   id            Int      @id @default(autoincrement())
-  userId       Int      @unique
-  bankName     String
+  userId        Int      @unique
+  bankName      String
   bankCode      String
-  accountName  String
+  accountName   String
   accountNumber String   @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
