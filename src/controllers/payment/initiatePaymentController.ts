@@ -8,8 +8,12 @@ import { sendEmailWithTemplate } from "../../services/emailService.js";
 import { getTransactionParticipants } from "../../utils/payment/getTransactionParticipants.js";
 import { deleteTransactionService } from "../../services/transaction-deletion.service.js";
 import { mapFlutterwavePaymentTypeToEnum } from "./normalizepaymentType.js";
-import { PaymentStatus, Prisma } from "../../generated/prisma/client.js";
-// import PaymentStatus from "@prisma/client";
+import { PaymentStatus } from "../../generated/prisma/client.js";
+import {
+  calculateEscrowPayment,
+  EscrowFeePayer,
+} from "../../utils/payment/calculateAmountToPay.js";
+import { activateTransactionAfterPayment } from "../../services/payment/activate-after-payment.service.js";
 
 export const initiatePaymentController = async (
   req: Request,
@@ -29,18 +33,13 @@ export const initiatePaymentController = async (
   }
 
   if (transaction.status !== "APPROVED") {
-    res
-      .status(400)
-      .json({
-        message:
-          "Transaction is not in a valid state for payment, ensure it is approved by counter party",
-      });
+    res.status(400).json({
+      message:
+        "Transaction is not in a valid state for payment, ensure it is approved by counter party",
+    });
     return;
   }
   try {
-    // Validate required fields
-
-    // Initialize payment
     const paymentResponse = await initializeFlutterwavePaymentService({
       transaction_id: Number(transactionId),
     });
@@ -102,14 +101,18 @@ export const PaymentWebhookController = async (
     return;
   }
 
-  const payload = req.body;
+  const webhookPayload = req.body;
   const baseUrl = "https://api.flutterwave.com/v3/";
 
-  const user = await getTransactionParticipants(payload.meta?.transaction_id);
-
   try {
+    const flwTransactionId = webhookPayload?.id ?? webhookPayload?.data?.id;
+    if (!flwTransactionId) {
+      res.status(400).json({ message: "Missing Flutterwave transaction id" });
+      return;
+    }
+
     const verification = await axios.get(
-      `${baseUrl}/transactions/${payload.id}/verify`,
+      `${baseUrl}/transactions/${flwTransactionId}/verify`,
       {
         headers: {
           Authorization: `Bearer ${env.FLW_API_SECRET_KEY}`,
@@ -118,66 +121,133 @@ export const PaymentWebhookController = async (
       }
     );
 
-    // console.log("Verification response:", verification.data);
+    if (verification.data?.status !== "success") {
+      res.status(400).json({ message: "Flutterwave verification failed" });
+      return;
+    }
 
-    
-    // console.log("Payload received");
-    const data = verification?.data?.data;
-    if (verification.data.data.status === "successful") {
-        console.log("Payment successful, processing transaction...");
-        
-        const payload = {
-             status: PaymentStatus.COMPLETED,
-                payment_method: mapFlutterwavePaymentTypeToEnum(data?.payment_type),
-                transaction_reference: data?.tx_ref,
-                amount: data?.amount,
-                transaction_id: Number(data?.meta?.transaction_id),
-                title: data?.meta?.description,
-        }
-        console.log("Payload to be saved:", payload);
+    const data = verification.data?.data;
+    if (!data || data.status !== "successful") {
+      res.status(200).json({
+        success: false,
+        message: "Payment not successful; transaction left unchanged",
+      });
+      return;
+    }
 
-      await prisma.$transaction([
-       
-        prisma.payment.create({
-            data: payload
-        }),
-        prisma.transaction.update({
-          where: { id: Number(data?.meta?.transaction_id) },
-          data: {
-            status: "ONGOING",
-            payment_sent_to_escrow_at: new Date(),
-            inspection_started_at: new Date(),
-          },
-        }),
-      ]);
+    const transactionId = Number(
+      data.meta?.transaction_id ?? webhookPayload?.meta?.transaction_id
+    );
+    if (!Number.isInteger(transactionId) || transactionId <= 0) {
+      res.status(400).json({ message: "Invalid transaction id in payment meta" });
+      return;
+    }
 
-      //Send email to the seller on payment success
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: transactionId },
+      include: { payment: true },
+    });
 
-       sendEmailWithTemplate(
-        user.seller.email,
-        { buyer: user.buyer.fullname, buyer_email: user.buyer.email, seller: user.seller.fullname,
-            description: data?.description, amount: data?.amount, transaction_id: data?.meta?.transaction_id },
-         
-        9
-      );
+    if (!transaction) {
+      res.status(404).json({ message: "Transaction not found" });
+      return;
+    }
 
-
-     
-
-    //   Send email to buyer 
-     await sendEmailWithTemplate(
-        user.seller.email,
-        { sender: user.buyer.fullname, seller: user.buyer.fullname },
-        9
-      );
-     
-    //   console.log("Webhook processed successfully")
+    // Idempotent: already funded
+    if (transaction.status === "ONGOING" && transaction.payment) {
       res.status(200).json({
         success: true,
-        message: "Webhook processed successfully"
-      })
+        message: "Payment already processed",
+      });
+      return;
     }
+
+    if (transaction.status !== "APPROVED") {
+      res.status(409).json({
+        message: `Cannot fund a transaction in status ${transaction.status}`,
+      });
+      return;
+    }
+
+    const { buyerTotalPayment } = calculateEscrowPayment(
+      transaction.amount,
+      transaction.pay_escrow_fee as EscrowFeePayer
+    );
+    const paidAmount = Number(data.amount);
+    if (Number.isFinite(paidAmount) && Math.abs(paidAmount - buyerTotalPayment) > 0.01) {
+      res.status(409).json({
+        message: "Paid amount does not match expected escrow total",
+      });
+      return;
+    }
+
+    if (
+      data.currency &&
+      transaction.currency &&
+      String(data.currency).toUpperCase() !== String(transaction.currency).toUpperCase()
+    ) {
+      res.status(409).json({
+        message: "Paid currency does not match transaction currency",
+      });
+      return;
+    }
+
+    const existingByRef = data.tx_ref
+      ? await prisma.payment.findUnique({
+          where: { transaction_reference: data.tx_ref },
+        })
+      : null;
+    if (existingByRef) {
+      res.status(200).json({
+        success: true,
+        message: "Payment reference already recorded",
+      });
+      return;
+    }
+
+    const participants = await getTransactionParticipants(transactionId);
+
+    await prisma.$transaction(async (tx) => {
+      await tx.payment.create({
+        data: {
+          status: PaymentStatus.COMPLETED,
+          payment_method: mapFlutterwavePaymentTypeToEnum(data?.payment_type),
+          transaction_reference: data.tx_ref,
+          amount: Math.round(paidAmount || buyerTotalPayment),
+          transaction_id: transactionId,
+          title:
+            data?.meta?.description ||
+            transaction.transaction_description ||
+            "Payment for transaction",
+        },
+      });
+
+      await activateTransactionAfterPayment(transactionId, tx);
+    });
+
+    await sendEmailWithTemplate(
+      participants.seller.email,
+      {
+        buyer: participants.buyer.fullname,
+        buyer_email: participants.buyer.email,
+        seller: participants.seller.fullname,
+        description: data?.meta?.description || transaction.transaction_description,
+        amount: paidAmount || buyerTotalPayment,
+        transaction_id: transactionId,
+      },
+      9
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Webhook processed successfully",
+    });
   } catch (error) {
-    new GlobalError("FAILED", "Could not run webhook", 400, false);
+    console.error("Payment webhook error:", error);
+    if (error instanceof GlobalError) {
+      res.status(error.statusCode).json({ message: error.message, name: error.name });
+      return;
+    }
+    res.status(500).json({ message: "Could not process webhook" });
   }
 };

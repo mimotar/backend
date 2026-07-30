@@ -41,7 +41,6 @@ export class SettingsService {
             update: payload,
         })
     }
-
     /** Returns the settings record for the current user, or null if none. */
     async getSettings() {
         return this.prisma.setting.findUnique({

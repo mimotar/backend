@@ -1198,17 +1198,55 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
-    "/api/ticket/{id}/update-status-to-ongoing": {
-      put: {
-        summary: "Mark escrow as funded and start work",
-        description: "Moves the transaction to ONGOING after payment confirmation. For a milestone project, this also activates milestone sequence 1 while later milestones remain CREATED.",
+    "/api/ticket/{id}/cancel-request": {
+      post: {
+        summary: "Request or apply transaction cancel",
+        description:
+          "For CREATED/APPROVED (unpaid), cancels immediately. For ONGOING/PENDING_CLOSURE/DISPUTE, creates a mutual cancel request that the counterparty must approve. On funded cancel approval, escrow is refunded to the buyer wallet and payment is marked REFUNDED.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
-        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: false,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: { reason: { type: "string", maxLength: 500 } },
+              },
+            },
+          },
+        },
         responses: {
-          "200": { description: "Transaction started; first milestone activated when applicable" },
+          "200": { description: "Canceled immediately or cancel request pending" },
           "401": { description: "Unauthorized" },
-          "404": { description: "Transaction not found" },
+          "403": { description: "Not a participant" },
+          "409": { description: "Invalid status or cancel already requested" },
+        },
+      },
+    },
+    "/api/ticket/{id}/cancel-approve": {
+      post: {
+        summary: "Approve a pending mutual cancel request",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Transaction canceled; escrow refunded when applicable" },
+          "403": { description: "Requester cannot approve their own cancel" },
+          "409": { description: "No pending cancel request" },
+        },
+      },
+    },
+    "/api/ticket/{id}/cancel-reject": {
+      post: {
+        summary: "Reject a pending mutual cancel request",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Cancel request cleared; transaction continues" },
+          "409": { description: "No pending cancel request" },
         },
       },
     },

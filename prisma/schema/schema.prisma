@@ -48,6 +48,10 @@ model Transaction {
   inspection_completed_at   DateTime?
   transaction_completed_at  DateTime?
   deadline                  DateTime
+  cancel_requested_by_email String?
+  cancel_requested_at       DateTime?
+  cancel_reason             String?             @db.VarChar(500)
+  cancel_approved_at        DateTime?
   deadlineExtensions        DeadlineExtension[]
   dispute                   Dispute[]
   earnings                  Earnings[]

@@ -82,6 +82,10 @@ export type TransactionMinAggregateOutputType = {
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
   deadline: Date | null
+  cancel_requested_by_email: string | null
+  cancel_requested_at: Date | null
+  cancel_reason: string | null
+  cancel_approved_at: Date | null
 }
 
 export type TransactionMaxAggregateOutputType = {
@@ -124,6 +128,10 @@ export type TransactionMaxAggregateOutputType = {
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
   deadline: Date | null
+  cancel_requested_by_email: string | null
+  cancel_requested_at: Date | null
+  cancel_reason: string | null
+  cancel_approved_at: Date | null
 }
 
 export type TransactionCountAggregateOutputType = {
@@ -167,6 +175,10 @@ export type TransactionCountAggregateOutputType = {
   inspection_completed_at: number
   transaction_completed_at: number
   deadline: number
+  cancel_requested_by_email: number
+  cancel_requested_at: number
+  cancel_reason: number
+  cancel_approved_at: number
   _all: number
 }
 
@@ -227,6 +239,10 @@ export type TransactionMinAggregateInputType = {
   inspection_completed_at?: true
   transaction_completed_at?: true
   deadline?: true
+  cancel_requested_by_email?: true
+  cancel_requested_at?: true
+  cancel_reason?: true
+  cancel_approved_at?: true
 }
 
 export type TransactionMaxAggregateInputType = {
@@ -269,6 +285,10 @@ export type TransactionMaxAggregateInputType = {
   inspection_completed_at?: true
   transaction_completed_at?: true
   deadline?: true
+  cancel_requested_by_email?: true
+  cancel_requested_at?: true
+  cancel_reason?: true
+  cancel_approved_at?: true
 }
 
 export type TransactionCountAggregateInputType = {
@@ -312,6 +332,10 @@ export type TransactionCountAggregateInputType = {
   inspection_completed_at?: true
   transaction_completed_at?: true
   deadline?: true
+  cancel_requested_by_email?: true
+  cancel_requested_at?: true
+  cancel_reason?: true
+  cancel_approved_at?: true
   _all?: true
 }
 
@@ -442,6 +466,10 @@ export type TransactionGroupByOutputType = {
   inspection_completed_at: Date | null
   transaction_completed_at: Date | null
   deadline: Date
+  cancel_requested_by_email: string | null
+  cancel_requested_at: Date | null
+  cancel_reason: string | null
+  cancel_approved_at: Date | null
   _count: TransactionCountAggregateOutputType | null
   _avg: TransactionAvgAggregateOutputType | null
   _sum: TransactionSumAggregateOutputType | null
@@ -508,6 +536,10 @@ export type TransactionWhereInput = {
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  cancel_requested_by_email?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_requested_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  cancel_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_approved_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   dispute?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.EarningsListRelationFilter
@@ -557,6 +589,10 @@ export type TransactionOrderByWithRelationInput = {
   inspection_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   deadline?: Prisma.SortOrder
+  cancel_requested_by_email?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_requested_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_approved_at?: Prisma.SortOrderInput | Prisma.SortOrder
   deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
   dispute?: Prisma.DisputeOrderByRelationAggregateInput
   earnings?: Prisma.EarningsOrderByRelationAggregateInput
@@ -609,6 +645,10 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  cancel_requested_by_email?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_requested_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  cancel_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_approved_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   dispute?: Prisma.DisputeListRelationFilter
   earnings?: Prisma.EarningsListRelationFilter
@@ -658,6 +698,10 @@ export type TransactionOrderByWithAggregationInput = {
   inspection_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   deadline?: Prisma.SortOrder
+  cancel_requested_by_email?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_requested_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_approved_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
   _avg?: Prisma.TransactionAvgOrderByAggregateInput
   _max?: Prisma.TransactionMaxOrderByAggregateInput
@@ -709,6 +753,10 @@ export type TransactionScalarWhereWithAggregatesInput = {
   inspection_completed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   deadline?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
+  cancel_requested_by_email?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  cancel_requested_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
+  cancel_reason?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  cancel_approved_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
 }
 
 export type TransactionCreateInput = {
@@ -750,6 +798,10 @@ export type TransactionCreateInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
@@ -799,6 +851,10 @@ export type TransactionUncheckedCreateInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
@@ -845,6 +901,10 @@ export type TransactionUpdateInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
@@ -894,6 +954,10 @@ export type TransactionUncheckedUpdateInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
@@ -942,6 +1006,10 @@ export type TransactionCreateManyInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
 }
 
 export type TransactionUpdateManyMutationInput = {
@@ -983,6 +1051,10 @@ export type TransactionUpdateManyMutationInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TransactionUncheckedUpdateManyInput = {
@@ -1026,6 +1098,10 @@ export type TransactionUncheckedUpdateManyInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TransactionCountOrderByAggregateInput = {
@@ -1069,6 +1145,10 @@ export type TransactionCountOrderByAggregateInput = {
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
+  cancel_requested_by_email?: Prisma.SortOrder
+  cancel_requested_at?: Prisma.SortOrder
+  cancel_reason?: Prisma.SortOrder
+  cancel_approved_at?: Prisma.SortOrder
 }
 
 export type TransactionAvgOrderByAggregateInput = {
@@ -1119,6 +1199,10 @@ export type TransactionMaxOrderByAggregateInput = {
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
+  cancel_requested_by_email?: Prisma.SortOrder
+  cancel_requested_at?: Prisma.SortOrder
+  cancel_reason?: Prisma.SortOrder
+  cancel_approved_at?: Prisma.SortOrder
 }
 
 export type TransactionMinOrderByAggregateInput = {
@@ -1161,6 +1245,10 @@ export type TransactionMinOrderByAggregateInput = {
   inspection_completed_at?: Prisma.SortOrder
   transaction_completed_at?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
+  cancel_requested_by_email?: Prisma.SortOrder
+  cancel_requested_at?: Prisma.SortOrder
+  cancel_reason?: Prisma.SortOrder
+  cancel_approved_at?: Prisma.SortOrder
 }
 
 export type TransactionSumOrderByAggregateInput = {
@@ -1397,6 +1485,10 @@ export type TransactionCreateWithoutMilestonesInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
@@ -1445,6 +1537,10 @@ export type TransactionUncheckedCreateWithoutMilestonesInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
@@ -1506,6 +1602,10 @@ export type TransactionUpdateWithoutMilestonesInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
@@ -1554,6 +1654,10 @@ export type TransactionUncheckedUpdateWithoutMilestonesInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
@@ -1599,6 +1703,10 @@ export type TransactionCreateWithoutPaymentInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
@@ -1647,6 +1755,10 @@ export type TransactionUncheckedCreateWithoutPaymentInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
@@ -1708,6 +1820,10 @@ export type TransactionUpdateWithoutPaymentInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
@@ -1756,6 +1872,10 @@ export type TransactionUncheckedUpdateWithoutPaymentInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
@@ -1801,6 +1921,10 @@ export type TransactionCreateWithoutUserInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
@@ -1848,6 +1972,10 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
@@ -1925,6 +2053,10 @@ export type TransactionScalarWhereInput = {
   inspection_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   transaction_completed_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   deadline?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  cancel_requested_by_email?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_requested_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  cancel_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  cancel_approved_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
 }
 
 export type TransactionCreateWithoutDeadlineExtensionsInput = {
@@ -1966,6 +2098,10 @@ export type TransactionCreateWithoutDeadlineExtensionsInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -2014,6 +2150,10 @@ export type TransactionUncheckedCreateWithoutDeadlineExtensionsInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -2075,6 +2215,10 @@ export type TransactionUpdateWithoutDeadlineExtensionsInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -2123,6 +2267,10 @@ export type TransactionUncheckedUpdateWithoutDeadlineExtensionsInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -2168,6 +2316,10 @@ export type TransactionCreateWithoutEarningsInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -2216,6 +2368,10 @@ export type TransactionUncheckedCreateWithoutEarningsInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   dispute?: Prisma.DisputeUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -2277,6 +2433,10 @@ export type TransactionUpdateWithoutEarningsInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -2325,6 +2485,10 @@ export type TransactionUncheckedUpdateWithoutEarningsInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -2370,6 +2534,10 @@ export type TransactionCreateWithoutDisputeInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
@@ -2418,6 +2586,10 @@ export type TransactionUncheckedCreateWithoutDisputeInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutTransactionInput
   earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
@@ -2479,6 +2651,10 @@ export type TransactionUpdateWithoutDisputeInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
@@ -2527,6 +2703,10 @@ export type TransactionUncheckedUpdateWithoutDisputeInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
@@ -2573,6 +2753,10 @@ export type TransactionCreateManyUserInput = {
   inspection_completed_at?: Date | string | null
   transaction_completed_at?: Date | string | null
   deadline: Date | string
+  cancel_requested_by_email?: string | null
+  cancel_requested_at?: Date | string | null
+  cancel_reason?: string | null
+  cancel_approved_at?: Date | string | null
 }
 
 export type TransactionUpdateWithoutUserInput = {
@@ -2614,6 +2798,10 @@ export type TransactionUpdateWithoutUserInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUpdateManyWithoutTransactionNestedInput
@@ -2661,6 +2849,10 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutTransactionNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateManyWithoutTransactionNestedInput
   earnings?: Prisma.EarningsUncheckedUpdateManyWithoutTransactionNestedInput
@@ -2708,6 +2900,10 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   inspection_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaction_completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancel_requested_by_email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_requested_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancel_approved_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -2809,6 +3005,10 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
   deadline?: boolean
+  cancel_requested_by_email?: boolean
+  cancel_requested_at?: boolean
+  cancel_reason?: boolean
+  cancel_approved_at?: boolean
   deadlineExtensions?: boolean | Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
   earnings?: boolean | Prisma.Transaction$earningsArgs<ExtArgs>
@@ -2859,6 +3059,10 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
   deadline?: boolean
+  cancel_requested_by_email?: boolean
+  cancel_requested_at?: boolean
+  cancel_reason?: boolean
+  cancel_approved_at?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2903,6 +3107,10 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
   deadline?: boolean
+  cancel_requested_by_email?: boolean
+  cancel_requested_at?: boolean
+  cancel_reason?: boolean
+  cancel_approved_at?: boolean
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -2947,9 +3155,13 @@ export type TransactionSelectScalar = {
   inspection_completed_at?: boolean
   transaction_completed_at?: boolean
   deadline?: boolean
+  cancel_requested_by_email?: boolean
+  cancel_requested_at?: boolean
+  cancel_reason?: boolean
+  cancel_approved_at?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at" | "deadline", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at" | "deadline" | "cancel_requested_by_email" | "cancel_requested_at" | "cancel_reason" | "cancel_approved_at", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deadlineExtensions?: boolean | Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
@@ -3017,6 +3229,10 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     inspection_completed_at: Date | null
     transaction_completed_at: Date | null
     deadline: Date
+    cancel_requested_by_email: string | null
+    cancel_requested_at: Date | null
+    cancel_reason: string | null
+    cancel_approved_at: Date | null
   }, ExtArgs["result"]["transaction"]>
   composites: {}
 }
@@ -3486,6 +3702,10 @@ export interface TransactionFieldRefs {
   readonly inspection_completed_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly transaction_completed_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly deadline: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly cancel_requested_by_email: Prisma.FieldRef<"Transaction", 'String'>
+  readonly cancel_requested_at: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly cancel_reason: Prisma.FieldRef<"Transaction", 'String'>
+  readonly cancel_approved_at: Prisma.FieldRef<"Transaction", 'DateTime'>
 }
     
 

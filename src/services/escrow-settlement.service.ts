@@ -149,6 +149,20 @@ export async function settleEscrowScope(
       );
     }
 
+    const settleableTransactionStatuses = ["PENDING_CLOSURE", "DISPUTE"] as const;
+    if (
+      !settleableTransactionStatuses.includes(
+        transaction.status as (typeof settleableTransactionStatuses)[number]
+      )
+    ) {
+      throw new GlobalError(
+        `Cannot settle escrow while transaction is ${transaction.status}`,
+        "INVALID_TRANSACTION_STATUS",
+        409,
+        true
+      );
+    }
+
     if (options.disputeId !== undefined) {
       const dispute = await tx.dispute.findUnique({
         where: { id: options.disputeId },

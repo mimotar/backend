@@ -1832,7 +1832,11 @@ export const TransactionScalarFieldEnum = {
   inspection_started_at: 'inspection_started_at',
   inspection_completed_at: 'inspection_completed_at',
   transaction_completed_at: 'transaction_completed_at',
-  deadline: 'deadline'
+  deadline: 'deadline',
+  cancel_requested_by_email: 'cancel_requested_by_email',
+  cancel_requested_at: 'cancel_requested_at',
+  cancel_reason: 'cancel_reason',
+  cancel_approved_at: 'cancel_approved_at'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]

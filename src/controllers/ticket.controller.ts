@@ -14,7 +14,6 @@ import {
   getTransactionByIdService,
   rejectTransactionService,
   requestTokenToValidateTransactionService,
-  updateTicketToOngoing,
   validateTransactionOtpService,
 } from "../services/ticket.service.js";
 import { env } from "../config/env.js";
@@ -296,18 +295,6 @@ export const getTransactionByIdCotroller = async (
   });
 }
 
-export const updateTicketToOngoingController = async (
-  req: Request,
-  res: Response
-): Promise<Response | void> => {
-  const { id } = req.params;
-  const updatedTransaction = await updateTicketToOngoing(Number(id))
-  res.status(200).json({
-    message: "Transaction updated successfully",
-    data: updatedTransaction,
-  });
-}
-
 export const extendTransactionDeadlineController = async (
   req: Request,
   res: Response
@@ -510,5 +497,105 @@ export const rejectResolutionController = async (req: Request, res: Response): P
       return res.status(error.statusCode).json({ message: error.message, name: error.name });
     }
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+import {
+  requestCancelTransactionService,
+  approveCancelTransactionService,
+  rejectCancelTransactionService,
+} from "../services/transaction-cancel.service.js";
+
+export const requestCancelTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const result = await requestCancelTransactionService(
+      Number(req.params.id),
+      userId,
+      user.email,
+      typeof req.body?.reason === "string" ? req.body.reason : undefined
+    );
+
+    return res.status(200).json({
+      message: result.pendingApproval
+        ? "Cancel requested; waiting for counterparty approval"
+        : "Transaction canceled successfully",
+      data: result.transaction,
+      pendingApproval: result.pendingApproval,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("requestCancelTransactionController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const approveCancelTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const canceled = await approveCancelTransactionService(
+      Number(req.params.id),
+      userId,
+      user.email
+    );
+
+    return res.status(200).json({
+      message: "Transaction canceled successfully",
+      data: canceled,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("approveCancelTransactionController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const rejectCancelTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const updated = await rejectCancelTransactionService(
+      Number(req.params.id),
+      userId,
+      user.email
+    );
+
+    return res.status(200).json({
+      message: "Cancel request rejected; transaction continues",
+      data: updated,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("rejectCancelTransactionController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

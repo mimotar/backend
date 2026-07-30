@@ -24,7 +24,7 @@ export * as $Enums from './enums.js'
 export * from "./enums.js"
 /**
  * ## Prisma Client
- *
+ * 
  * Type-safe database client for TypeScript
  * @example
  * ```
@@ -53,7 +53,7 @@ export type Transaction = Prisma.TransactionModel
 export type Milestone = Prisma.MilestoneModel
 /**
  * Model MilestoneImage
- *
+ * 
  */
 export type MilestoneImage = Prisma.MilestoneImageModel
 /**

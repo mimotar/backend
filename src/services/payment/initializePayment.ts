@@ -61,23 +61,23 @@ const validateTransaction = async (transactionId: number) => {
     );
   }
 
+  await checkAndExpireAllTransactionService(transactionId);
+
   const transaction = await prisma.transaction.findUnique({
     where: { id: transactionId },
   });
 
-  await checkAndExpireAllTransactionService(transactionId);
+  if (!transaction) {
+    throw new GlobalError("Transaction not found", "NOT_FOUND", 404, false);
+  }
 
-  if (transaction?.status === "EXPIRED") {
+  if (transaction.status === "EXPIRED") {
     throw new GlobalError(
       "Transaction has expired",
       "EXPIRED_TRANSACTION",
       400,
       false
     );
-  }
-
-  if (!transaction) {
-    throw new GlobalError("Transaction not found", "NOT_FOUND", 404, false);
   }
 
   if (transaction.status === "ONGOING") {

@@ -13,11 +13,13 @@ import {
   resolveTransactionController,
   acceptResolutionController,
   rejectResolutionController,
-  updateTicketToOngoingController,
   extendTransactionDeadlineController,
   extendMilestoneDeadlineController,
   uploadMilestoneImagesController,
   deleteMilestoneImageController,
+  requestCancelTransactionController,
+  approveCancelTransactionController,
+  rejectCancelTransactionController,
 } from "../controllers/ticket.controller.js";
 
 import { milestoneImageUpload, upload } from "../config/cloudinary.js";
@@ -51,7 +53,10 @@ ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectRe
 ticketRouter.put("/:id/milestones/:milestoneId/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
 ticketRouter.put("/:id/milestones/:milestoneId/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/milestones/:milestoneId/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
-ticketRouter.put("/:id/update-status-to-ongoing", authenticateTokenMiddleware, updateTicketToOngoingController as RequestHandler);
+
+ticketRouter.post("/:id/cancel-request", authenticateTokenMiddleware, requestCancelTransactionController as RequestHandler);
+ticketRouter.post("/:id/cancel-approve", authenticateTokenMiddleware, approveCancelTransactionController as RequestHandler);
+ticketRouter.post("/:id/cancel-reject", authenticateTokenMiddleware, rejectCancelTransactionController as RequestHandler);
 
 ticketRouter.patch(
   "/:id/deadline",

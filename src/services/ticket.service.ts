@@ -199,21 +199,35 @@ export const getTransactionByIdService = async (id: number) => {
   }
 };
 
+/**
+ * Expires invite/payment windows only:
+ * - CREATED past expiresAt → EXPIRED
+ * - APPROVED past expiresAt with no completed payment → EXPIRED
+ * Does not touch funded or terminal statuses.
+ */
 export const checkAndExpireAllTransactionService = async (id: number) => {
-  const transaction = await prisma.transaction.findUnique({ where: { id } });
+  const transaction = await prisma.transaction.findUnique({
+    where: { id },
+    include: { payment: true },
+  });
 
-  if (
-    transaction &&
-    transaction.status === "CREATED" &&
-    new Date() > transaction.expiresAt
-  ) {
-    await prisma.transaction.update({
+  if (!transaction || new Date() <= transaction.expiresAt) {
+    return transaction;
+  }
+
+  const unpaidApproved =
+    transaction.status === "APPROVED" &&
+    (!transaction.payment || transaction.payment.status !== "COMPLETED");
+
+  if (transaction.status === "CREATED" || unpaidApproved) {
+    return prisma.transaction.update({
       where: { id },
       data: { status: "EXPIRED" },
+      include: { payment: true },
     });
-
-    transaction.status = "EXPIRED";
   }
+
+  return transaction;
 };
 
 export const approveTransactionService = async (id: number) => {
@@ -223,11 +237,16 @@ export const approveTransactionService = async (id: number) => {
   if (!transaction) {
     throw new Error("Transaction not found");
   }
-  if (transaction.status === "APPROVED") {
-    throw new Error("Transaction already approved");
-  }
   if (transaction.status === "EXPIRED") {
-    throw new Error("Transaction expired");
+    throw new GlobalError("Transaction expired", "EXPIRED_TRANSACTION", 400, true);
+  }
+  if (transaction.status !== "CREATED") {
+    throw new GlobalError(
+      `Cannot approve a transaction in status ${transaction.status}`,
+      "INVALID_STATUS",
+      409,
+      true
+    );
   }
   const updatedTransaction = await prisma.transaction.update({
     where: {
@@ -255,11 +274,16 @@ export const rejectTransactionService = async (id: number, rejection_reason: str
   if (!transaction) {
     throw new Error("Transaction not found");
   }
-  if (transaction.status === "APPROVED") {
-    throw new Error("Transaction already approved");
-  }
   if (transaction.status === "EXPIRED") {
-    throw new Error("Transaction expired");
+    throw new GlobalError("Transaction expired", "EXPIRED_TRANSACTION", 400, true);
+  }
+  if (transaction.status !== "CREATED") {
+    throw new GlobalError(
+      `Cannot reject a transaction in status ${transaction.status}`,
+      "INVALID_STATUS",
+      409,
+      true
+    );
   }
   const updatedTransaction = await prisma.transaction.update({
     where: {
@@ -278,42 +302,6 @@ export const rejectTransactionService = async (id: number, rejection_reason: str
   );
 
   return updatedTransaction;
-}
-
-export const updateTicketToOngoing = async (id: number) => {
-  return prisma.$transaction(async (tx) => {
-    const transaction = await tx.transaction.findUnique({
-      where: { id },
-      include: { milestones: { orderBy: { sequence: "asc" } } },
-    });
-
-    if (!transaction) {
-      throw new Error("Transaction not found");
-    }
-
-    const now = new Date();
-    const updatedTransaction = await tx.transaction.update({
-      where: { id },
-      data: {
-        status: "ONGOING",
-        payment_sent_to_escrow_at: now,
-        inspection_started_at: now,
-      },
-    });
-
-    if (
-      transaction.transactionType === "MILESTONE_BASED_PROJECT" &&
-      transaction.milestones.length > 0
-    ) {
-      const [firstMilestone] = transaction.milestones;
-      await tx.milestone.update({
-        where: { id: firstMilestone.id },
-        data: { status: "ONGOING", activatedAt: now },
-      });
-    }
-
-    return updatedTransaction;
-  });
 }
 
 export const requestTokenToValidateTransactionService = async (id: number) => {
@@ -452,10 +440,56 @@ export const getAUserTransactionService = async (userEmail: string) => {
     };
   });
 };
-export const closeATransactionService = async (userId: number, transactionId: number) => {
+export const closeATransactionService = async (
+  userId: number,
+  transactionId: number,
+  milestoneId?: number
+) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+  });
+  if (!transaction) {
+    throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
+  }
+
+  const participants = await getTransactionParticipants(transactionId);
+  if (
+    participants.buyer.userId !== userId &&
+    participants.seller.userId !== userId
+  ) {
+    throw new GlobalError(
+      "User is not a participant in this transaction",
+      "FORBIDDEN",
+      403,
+      true
+    );
+  }
+
+  if (transaction.transactionType === "MILESTONE_BASED_PROJECT") {
+    if (!milestoneId) {
+      throw new GlobalError(
+        "milestoneId is required when closing a milestone project",
+        "MILESTONE_REQUIRED",
+        400,
+        true
+      );
+    }
+    const result = await settleEscrowScope(transactionId, { milestoneId });
+    return result.transaction;
+  }
+
+  if (milestoneId) {
+    throw new GlobalError(
+      "This transaction does not use milestones",
+      "INVALID_MILESTONE",
+      400,
+      true
+    );
+  }
+
   const result = await settleEscrowScope(transactionId);
   return result.transaction;
-}
+};
 
 export const resolveTransactionService = async (
   transactionId: number,
