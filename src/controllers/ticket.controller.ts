@@ -406,6 +406,43 @@ export const getAUserTransactionsController = async (req: Request, res: Response
   }
 }
 
+import { listUserProjectsService } from "../services/project-list.service.js";
+import { ProjectsQuerySchema } from "../zod/TicketSchema.js";
+
+export const listUserProjectsController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const parsed = ProjectsQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: parsed.error.flatten().fieldErrors,
+      });
+    }
+
+    const data = await listUserProjectsService(user.email, parsed.data);
+    return res.status(200).json({
+      message: "Projects retrieved successfully",
+      data,
+    });
+  } catch (error) {
+    console.error("listUserProjectsController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 import {
   resolveTransactionService,
   acceptResolutionService,

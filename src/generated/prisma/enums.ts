@@ -9,6 +9,18 @@
 * 🟢 You can import this file directly.
 */
 
+export const WithdrawalStatus = {
+  OTP_PENDING: 'OTP_PENDING',
+  PROCESSING: 'PROCESSING',
+  PENDING_MANUAL: 'PENDING_MANUAL',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type WithdrawalStatus = (typeof WithdrawalStatus)[keyof typeof WithdrawalStatus]
+
+
 export const EscrowFeePayer = {
   CLIENT: 'CLIENT',
   FREELANCER: 'FREELANCER',
@@ -29,7 +41,8 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const OtpPurpose = {
   EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
   PASSWORD_RESET: 'PASSWORD_RESET',
-  CHANGE_PASSWORD: 'CHANGE_PASSWORD'
+  CHANGE_PASSWORD: 'CHANGE_PASSWORD',
+  WITHDRAWAL: 'WITHDRAWAL'
 } as const
 
 export type OtpPurpose = (typeof OtpPurpose)[keyof typeof OtpPurpose]

@@ -68,7 +68,8 @@ export const ModelName = {
   Setting: 'Setting',
   Notification: 'Notification',
   Contact: 'Contact',
-  BankAccountDetail: 'BankAccountDetail'
+  BankAccountDetail: 'BankAccountDetail',
+  Withdrawal: 'Withdrawal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -396,6 +397,30 @@ export const BankAccountDetailScalarFieldEnum = {
 } as const
 
 export type BankAccountDetailScalarFieldEnum = (typeof BankAccountDetailScalarFieldEnum)[keyof typeof BankAccountDetailScalarFieldEnum]
+
+
+export const WithdrawalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  reference: 'reference',
+  bankAccountId: 'bankAccountId',
+  accountBank: 'accountBank',
+  accountNumber: 'accountNumber',
+  accountName: 'accountName',
+  providerTransferId: 'providerTransferId',
+  failureReason: 'failureReason',
+  otp: 'otp',
+  otpCreatedAt: 'otpCreatedAt',
+  processedAt: 'processedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WithdrawalScalarFieldEnum = (typeof WithdrawalScalarFieldEnum)[keyof typeof WithdrawalScalarFieldEnum]
 
 
 export const SortOrder = {

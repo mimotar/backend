@@ -38,6 +38,7 @@ export const env = {
   FLW_WEBHOOK_SECRET: process.env.FLW_WEBHOOK_SECRET,
 
   REDIS_URL: process.env.REDIS_URL,
+  ADMIN_API_KEY: process.env.ADMIN_API_KEY,
 };
 
 

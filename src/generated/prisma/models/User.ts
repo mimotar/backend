@@ -391,6 +391,7 @@ export type UserWhereInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   bankAccountDetails?: Prisma.BankAccountDetailListRelationFilter
   userKYC?: Prisma.XOR<Prisma.UserKYCNullableScalarRelationFilter, Prisma.UserKYCWhereInput> | null
+  withdrawals?: Prisma.WithdrawalListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -431,6 +432,7 @@ export type UserOrderByWithRelationInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
   bankAccountDetails?: Prisma.BankAccountDetailOrderByRelationAggregateInput
   userKYC?: Prisma.UserKYCOrderByWithRelationInput
+  withdrawals?: Prisma.WithdrawalOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -474,6 +476,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   bankAccountDetails?: Prisma.BankAccountDetailListRelationFilter
   userKYC?: Prisma.XOR<Prisma.UserKYCNullableScalarRelationFilter, Prisma.UserKYCWhereInput> | null
+  withdrawals?: Prisma.WithdrawalListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -571,6 +574,7 @@ export type UserCreateInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -611,6 +615,7 @@ export type UserUncheckedCreateInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -650,6 +655,7 @@ export type UserUpdateInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -690,6 +696,7 @@ export type UserUncheckedUpdateInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1099,6 +1106,20 @@ export type UserUpdateOneRequiredWithoutBankAccountDetailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBankAccountDetailsInput, Prisma.UserUpdateWithoutBankAccountDetailsInput>, Prisma.UserUncheckedUpdateWithoutBankAccountDetailsInput>
 }
 
+export type UserCreateNestedOneWithoutWithdrawalsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsInput, Prisma.UserUncheckedCreateWithoutWithdrawalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWithdrawalsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWithdrawalsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsInput, Prisma.UserUncheckedCreateWithoutWithdrawalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWithdrawalsInput
+  upsert?: Prisma.UserUpsertWithoutWithdrawalsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWithdrawalsInput, Prisma.UserUpdateWithoutWithdrawalsInput>, Prisma.UserUncheckedUpdateWithoutWithdrawalsInput>
+}
+
 export type UserCreateWithoutTransactionInput = {
   email: string
   password: string
@@ -1135,6 +1156,7 @@ export type UserCreateWithoutTransactionInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionInput = {
@@ -1174,6 +1196,7 @@ export type UserUncheckedCreateWithoutTransactionInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionInput = {
@@ -1228,6 +1251,7 @@ export type UserUpdateWithoutTransactionInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionInput = {
@@ -1267,6 +1291,7 @@ export type UserUncheckedUpdateWithoutTransactionInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserKYCInput = {
@@ -1305,6 +1330,7 @@ export type UserCreateWithoutUserKYCInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserKYCInput = {
@@ -1344,6 +1370,7 @@ export type UserUncheckedCreateWithoutUserKYCInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserKYCInput = {
@@ -1398,6 +1425,7 @@ export type UserUpdateWithoutUserKYCInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserKYCInput = {
@@ -1437,6 +1465,7 @@ export type UserUncheckedUpdateWithoutUserKYCInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeadlineExtensionsInput = {
@@ -1475,6 +1504,7 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
@@ -1514,6 +1544,7 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeadlineExtensionsInput = {
@@ -1568,6 +1599,7 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
@@ -1607,6 +1639,7 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEarningsInput = {
@@ -1645,6 +1678,7 @@ export type UserCreateWithoutEarningsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEarningsInput = {
@@ -1684,6 +1718,7 @@ export type UserUncheckedCreateWithoutEarningsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEarningsInput = {
@@ -1738,6 +1773,7 @@ export type UserUpdateWithoutEarningsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEarningsInput = {
@@ -1777,6 +1813,7 @@ export type UserUncheckedUpdateWithoutEarningsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWalletTransactionsInput = {
@@ -1815,6 +1852,7 @@ export type UserCreateWithoutWalletTransactionsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1854,6 +1892,7 @@ export type UserUncheckedCreateWithoutWalletTransactionsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1908,6 +1947,7 @@ export type UserUpdateWithoutWalletTransactionsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1947,6 +1987,7 @@ export type UserUncheckedUpdateWithoutWalletTransactionsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDisputesAsBuyerInput = {
@@ -1985,6 +2026,7 @@ export type UserCreateWithoutDisputesAsBuyerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputesAsBuyerInput = {
@@ -2024,6 +2066,7 @@ export type UserUncheckedCreateWithoutDisputesAsBuyerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputesAsBuyerInput = {
@@ -2067,6 +2110,7 @@ export type UserCreateWithoutDisputesCreatedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputesCreatedInput = {
@@ -2106,6 +2150,7 @@ export type UserUncheckedCreateWithoutDisputesCreatedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputesCreatedInput = {
@@ -2149,6 +2194,7 @@ export type UserCreateWithoutDisputesResolvedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputesResolvedInput = {
@@ -2188,6 +2234,7 @@ export type UserUncheckedCreateWithoutDisputesResolvedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputesResolvedInput = {
@@ -2231,6 +2278,7 @@ export type UserCreateWithoutDisputesAsSellerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputesAsSellerInput = {
@@ -2270,6 +2318,7 @@ export type UserUncheckedCreateWithoutDisputesAsSellerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputesAsSellerInput = {
@@ -2324,6 +2373,7 @@ export type UserUpdateWithoutDisputesAsBuyerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesAsBuyerInput = {
@@ -2363,6 +2413,7 @@ export type UserUncheckedUpdateWithoutDisputesAsBuyerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDisputesCreatedInput = {
@@ -2412,6 +2463,7 @@ export type UserUpdateWithoutDisputesCreatedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesCreatedInput = {
@@ -2451,6 +2503,7 @@ export type UserUncheckedUpdateWithoutDisputesCreatedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDisputesResolvedInput = {
@@ -2500,6 +2553,7 @@ export type UserUpdateWithoutDisputesResolvedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesResolvedInput = {
@@ -2539,6 +2593,7 @@ export type UserUncheckedUpdateWithoutDisputesResolvedInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDisputesAsSellerInput = {
@@ -2588,6 +2643,7 @@ export type UserUpdateWithoutDisputesAsSellerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputesAsSellerInput = {
@@ -2627,6 +2683,7 @@ export type UserUncheckedUpdateWithoutDisputesAsSellerInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatsInput = {
@@ -2665,6 +2722,7 @@ export type UserCreateWithoutChatsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatsInput = {
@@ -2704,6 +2762,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatsInput = {
@@ -2758,6 +2817,7 @@ export type UserUpdateWithoutChatsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatsInput = {
@@ -2797,6 +2857,7 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -2835,6 +2896,7 @@ export type UserCreateWithoutMessagesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -2874,6 +2936,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -2928,6 +2991,7 @@ export type UserUpdateWithoutMessagesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -2967,6 +3031,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
@@ -3005,6 +3070,7 @@ export type UserCreateWithoutProfileInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -3044,6 +3110,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -3098,6 +3165,7 @@ export type UserUpdateWithoutProfileInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -3137,6 +3205,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingInput = {
@@ -3175,6 +3244,7 @@ export type UserCreateWithoutSettingInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingInput = {
@@ -3214,6 +3284,7 @@ export type UserUncheckedCreateWithoutSettingInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingInput = {
@@ -3268,6 +3339,7 @@ export type UserUpdateWithoutSettingInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingInput = {
@@ -3307,6 +3379,7 @@ export type UserUncheckedUpdateWithoutSettingInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationInput = {
@@ -3345,6 +3418,7 @@ export type UserCreateWithoutNotificationInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationInput = {
@@ -3384,6 +3458,7 @@ export type UserUncheckedCreateWithoutNotificationInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationInput = {
@@ -3438,6 +3513,7 @@ export type UserUpdateWithoutNotificationInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationInput = {
@@ -3477,6 +3553,7 @@ export type UserUncheckedUpdateWithoutNotificationInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBankAccountDetailsInput = {
@@ -3515,6 +3592,7 @@ export type UserCreateWithoutBankAccountDetailsInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
   userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBankAccountDetailsInput = {
@@ -3554,6 +3632,7 @@ export type UserUncheckedCreateWithoutBankAccountDetailsInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
   userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBankAccountDetailsInput = {
@@ -3608,6 +3687,7 @@ export type UserUpdateWithoutBankAccountDetailsInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
   userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBankAccountDetailsInput = {
@@ -3647,6 +3727,181 @@ export type UserUncheckedUpdateWithoutBankAccountDetailsInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
   userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWithdrawalsInput = {
+  email: string
+  password: string
+  createdAt?: Date | string
+  verified?: boolean
+  verificationToken?: string | null
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  sureName: string
+  provider?: string | null
+  subject?: string | null
+  otp?: string | null
+  otpCreatedAt?: Date | string | null
+  otpPurpose?: $Enums.OtpPurpose | null
+  pendingPasswordHash?: string | null
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsCreateNestedManyWithoutUserInput
+  disputesAsBuyer?: Prisma.DisputeCreateNestedManyWithoutBuyerInput
+  disputesCreated?: Prisma.DisputeCreateNestedManyWithoutCreatorInput
+  disputesAsSeller?: Prisma.DisputeCreateNestedManyWithoutSellerInput
+  disputesResolved?: Prisma.DisputeCreateNestedManyWithoutResolverInput
+  earnings?: Prisma.EarningsCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notification?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  setting?: Prisma.SettingCreateNestedOneWithoutUserInput
+  transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutExtendedByInput
+  bankAccountDetails?: Prisma.BankAccountDetailCreateNestedManyWithoutUserInput
+  userKYC?: Prisma.UserKYCCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWithdrawalsInput = {
+  id?: number
+  email: string
+  password: string
+  createdAt?: Date | string
+  verified?: boolean
+  verificationToken?: string | null
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  sureName: string
+  provider?: string | null
+  subject?: string | null
+  otp?: string | null
+  otpCreatedAt?: Date | string | null
+  otpPurpose?: $Enums.OtpPurpose | null
+  pendingPasswordHash?: string | null
+  totalEarnings?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUncheckedCreateNestedManyWithoutUserInput
+  disputesAsBuyer?: Prisma.DisputeUncheckedCreateNestedManyWithoutBuyerInput
+  disputesCreated?: Prisma.DisputeUncheckedCreateNestedManyWithoutCreatorInput
+  disputesAsSeller?: Prisma.DisputeUncheckedCreateNestedManyWithoutSellerInput
+  disputesResolved?: Prisma.DisputeUncheckedCreateNestedManyWithoutResolverInput
+  earnings?: Prisma.EarningsUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notification?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  setting?: Prisma.SettingUncheckedCreateNestedOneWithoutUserInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutUserInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutExtendedByInput
+  bankAccountDetails?: Prisma.BankAccountDetailUncheckedCreateNestedManyWithoutUserInput
+  userKYC?: Prisma.UserKYCUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWithdrawalsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsInput, Prisma.UserUncheckedCreateWithoutWithdrawalsInput>
+}
+
+export type UserUpsertWithoutWithdrawalsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWithdrawalsInput, Prisma.UserUncheckedUpdateWithoutWithdrawalsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsInput, Prisma.UserUncheckedCreateWithoutWithdrawalsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWithdrawalsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWithdrawalsInput, Prisma.UserUncheckedUpdateWithoutWithdrawalsInput>
+}
+
+export type UserUpdateWithoutWithdrawalsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  sureName?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  otpPurpose?: Prisma.NullableEnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose | null
+  pendingPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUpdateManyWithoutUserNestedInput
+  disputesAsBuyer?: Prisma.DisputeUpdateManyWithoutBuyerNestedInput
+  disputesCreated?: Prisma.DisputeUpdateManyWithoutCreatorNestedInput
+  disputesAsSeller?: Prisma.DisputeUpdateManyWithoutSellerNestedInput
+  disputesResolved?: Prisma.DisputeUpdateManyWithoutResolverNestedInput
+  earnings?: Prisma.EarningsUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notification?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  setting?: Prisma.SettingUpdateOneWithoutUserNestedInput
+  transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutExtendedByNestedInput
+  bankAccountDetails?: Prisma.BankAccountDetailUpdateManyWithoutUserNestedInput
+  userKYC?: Prisma.UserKYCUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWithdrawalsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  sureName?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  otpPurpose?: Prisma.NullableEnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose | null
+  pendingPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsNGN?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  walletBalanceUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalEarningsUSD?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  chats?: Prisma.ChatrParticipantsUncheckedUpdateManyWithoutUserNestedInput
+  disputesAsBuyer?: Prisma.DisputeUncheckedUpdateManyWithoutBuyerNestedInput
+  disputesCreated?: Prisma.DisputeUncheckedUpdateManyWithoutCreatorNestedInput
+  disputesAsSeller?: Prisma.DisputeUncheckedUpdateManyWithoutSellerNestedInput
+  disputesResolved?: Prisma.DisputeUncheckedUpdateManyWithoutResolverNestedInput
+  earnings?: Prisma.EarningsUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notification?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  setting?: Prisma.SettingUncheckedUpdateOneWithoutUserNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutUserNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutExtendedByNestedInput
+  bankAccountDetails?: Prisma.BankAccountDetailUncheckedUpdateManyWithoutUserNestedInput
+  userKYC?: Prisma.UserKYCUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -3667,6 +3922,7 @@ export type UserCountOutputType = {
   walletTransactions: number
   deadlineExtensions: number
   bankAccountDetails: number
+  withdrawals: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3682,6 +3938,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   walletTransactions?: boolean | UserCountOutputTypeCountWalletTransactionsArgs
   deadlineExtensions?: boolean | UserCountOutputTypeCountDeadlineExtensionsArgs
   bankAccountDetails?: boolean | UserCountOutputTypeCountBankAccountDetailsArgs
+  withdrawals?: boolean | UserCountOutputTypeCountWithdrawalsArgs
 }
 
 /**
@@ -3778,6 +4035,13 @@ export type UserCountOutputTypeCountBankAccountDetailsArgs<ExtArgs extends runti
   where?: Prisma.BankAccountDetailWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWithdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WithdrawalWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3817,6 +4081,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
   bankAccountDetails?: boolean | Prisma.User$bankAccountDetailsArgs<ExtArgs>
   userKYC?: boolean | Prisma.User$userKYCArgs<ExtArgs>
+  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3912,6 +4177,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
   bankAccountDetails?: boolean | Prisma.User$bankAccountDetailsArgs<ExtArgs>
   userKYC?: boolean | Prisma.User$userKYCArgs<ExtArgs>
+  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3935,6 +4201,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
     bankAccountDetails: Prisma.$BankAccountDetailPayload<ExtArgs>[]
     userKYC: Prisma.$UserKYCPayload<ExtArgs> | null
+    withdrawals: Prisma.$WithdrawalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -4368,6 +4635,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   deadlineExtensions<T extends Prisma.User$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bankAccountDetails<T extends Prisma.User$bankAccountDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bankAccountDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankAccountDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userKYC<T extends Prisma.User$userKYCArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userKYCArgs<ExtArgs>>): Prisma.Prisma__UserKYCClient<runtime.Types.Result.GetResult<Prisma.$UserKYCPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  withdrawals<T extends Prisma.User$withdrawalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$withdrawalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5154,6 +5422,30 @@ export type User$userKYCArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.UserKYCInclude<ExtArgs> | null
   where?: Prisma.UserKYCWhereInput
+}
+
+/**
+ * User.withdrawals
+ */
+export type User$withdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Withdrawal
+   */
+  select?: Prisma.WithdrawalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Withdrawal
+   */
+  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalWhereInput
+  orderBy?: Prisma.WithdrawalOrderByWithRelationInput | Prisma.WithdrawalOrderByWithRelationInput[]
+  cursor?: Prisma.WithdrawalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WithdrawalScalarFieldEnum | Prisma.WithdrawalScalarFieldEnum[]
 }
 
 /**

@@ -102,6 +102,24 @@ export const PaymentWebhookController = async (
   }
 
   const webhookPayload = req.body;
+  const event = String(webhookPayload?.event || "").toLowerCase();
+  const reference = String(webhookPayload?.data?.reference || "");
+
+  // Transfer webhooks share the same Flutterwave endpoint/secret.
+  if (event.includes("transfer") || reference.startsWith("wd_")) {
+    try {
+      const { handleTransferWebhookService } = await import(
+        "../../services/withdrawal/withdrawal-flow.service.js"
+      );
+      const result = await handleTransferWebhookService(webhookPayload);
+      res.status(200).json({ success: true, ...result });
+    } catch (error) {
+      console.error("Transfer webhook via payment endpoint failed:", error);
+      res.status(500).json({ message: "Transfer webhook failed" });
+    }
+    return;
+  }
+
   const baseUrl = "https://api.flutterwave.com/v3/";
 
   try {

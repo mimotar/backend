@@ -23,6 +23,7 @@ import getWelcomeEmail from "./welcomeEmail.js";
 import getVerifyEmailTemplate from "./verifyEmail.js";
 import getPasswordResetOtpEmail from "./passwordResetOtp.js";
 import getChangePasswordOtpEmail from "./changePasswordOtp.js";
+import getWithdrawalOtpEmail from "./withdrawalOtp.js";
 import {
     getTransactionCompletedEmail,
     getTransactionDisputedEmail,
@@ -50,6 +51,8 @@ export function getEmailTemplate(type: EmailType, params: Record<string, any>) {
             return getPasswordResetOtpEmail(params.otp);
         case EmailType.CHANGE_PASSWORD_OTP:
             return getChangePasswordOtpEmail(params.otp);
+        case EmailType.WITHDRAWAL_OTP:
+            return getWithdrawalOtpEmail(params.otp, params.amount, params.currency);
         default:
             throw new Error("Invalid email type");
     }

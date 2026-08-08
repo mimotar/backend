@@ -23,6 +23,7 @@ import {
   requestChangesController,
   reviseTransactionController,
   resubmitTransactionController,
+  listUserProjectsController,
 } from "../controllers/ticket.controller.js";
 
 import { milestoneImageUpload, upload } from "../config/cloudinary.js";
@@ -121,6 +122,13 @@ ticketRouter.get(
   authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   getAUserTransactionsController as RequestHandler
+);
+
+ticketRouter.get(
+  "/projects",
+  authenticateTokenMiddleware,
+  createRateLimiterMiddleware(10 * 60 * 1000, 10),
+  listUserProjectsController as RequestHandler
 );
 
 ticketRouter.get(

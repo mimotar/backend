@@ -148,6 +148,7 @@ model User {
   deadlineExtensions  DeadlineExtension[]
   bankAccountDetails  BankAccountDetail[]
   userKYC             UserKYC?
+  withdrawals         Withdrawal[]
 }
 
 model UserKYC {
@@ -341,8 +342,44 @@ model BankAccountDetail {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   user          User     @relation(fields: [userId], references: [id])
+  withdrawals   Withdrawal[]
 
   @@unique([bankCode, accountNumber, userId])
+}
+
+model Withdrawal {
+  id                  Int              @id @default(autoincrement())
+  userId              Int
+  amount              Decimal          @db.Decimal(19, 2)
+  currency            CurrencyEnum
+  status              WithdrawalStatus @default(OTP_PENDING)
+  reference           String           @unique
+  bankAccountId       Int?
+  accountBank         String?
+  accountNumber       String?
+  accountName         String?
+  providerTransferId  String?
+  failureReason       String?
+  otp                 String?
+  otpCreatedAt        DateTime?
+  processedAt         DateTime?
+  completedAt         DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  user                User             @relation(fields: [userId], references: [id])
+  bankAccount         BankAccountDetail? @relation(fields: [bankAccountId], references: [id])
+
+  @@index([userId, status, createdAt])
+  @@index([reference])
+}
+
+enum WithdrawalStatus {
+  OTP_PENDING
+  PROCESSING
+  PENDING_MANUAL
+  COMPLETED
+  FAILED
+  CANCELLED
 }
 
 enum EscrowFeePayer {
@@ -360,6 +397,7 @@ enum OtpPurpose {
   EMAIL_VERIFICATION
   PASSWORD_RESET
   CHANGE_PASSWORD
+  WITHDRAWAL
 }
 
 enum TransactionType {

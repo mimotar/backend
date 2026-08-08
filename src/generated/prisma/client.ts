@@ -131,3 +131,8 @@ export type Contact = Prisma.ContactModel
  * 
  */
 export type BankAccountDetail = Prisma.BankAccountDetailModel
+/**
+ * Model Withdrawal
+ * 
+ */
+export type Withdrawal = Prisma.WithdrawalModel

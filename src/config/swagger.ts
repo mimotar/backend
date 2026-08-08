@@ -1106,6 +1106,140 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/ticket/projects": {
+      get: {
+        summary: "List my projects (paginated)",
+        description:
+          "Returns paginated projects where the authenticated user is creator or receiver. Supports text search, status filter (including COMPLETED and all other StatusEnum values), and amount filters. Each item includes full transaction detail plus myRole, counterparty, dueAt, and milestoneSummary.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 1, maximum: 50, default: 10 },
+          },
+          {
+            name: "q",
+            in: "query",
+            required: false,
+            schema: { type: "string" },
+            description: "Case-insensitive search on title or description",
+          },
+          {
+            name: "status",
+            in: "query",
+            required: false,
+            schema: { type: "string" },
+            description:
+              "Comma-separated StatusEnum values. Allowed: CREATED, APPROVED, ONGOING, PENDING_CLOSURE, DISPUTE, REJECTED, CANCELED, EXPIRED, CHANGES_REQUESTED, COMPLETED. Omit for all statuses.",
+            example: "COMPLETED,ONGOING,DISPUTE",
+          },
+          {
+            name: "amount",
+            in: "query",
+            required: false,
+            schema: { type: "integer" },
+            description: "Exact transaction amount match",
+          },
+          {
+            name: "minAmount",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 0 },
+            description: "Inclusive minimum amount",
+          },
+          {
+            name: "maxAmount",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 1 },
+            description: "Inclusive maximum amount",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Paginated project list",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        items: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              id: { type: "integer" },
+                              title: { type: "string" },
+                              status: { type: "string" },
+                              amount: { type: "integer" },
+                              transaction_description: { type: "string" },
+                              myRole: { type: "string", enum: ["CLIENT", "FREELANCER"] },
+                              counterparty: {
+                                type: "object",
+                                properties: {
+                                  name: { type: "string" },
+                                  email: { type: "string" },
+                                  role: { type: "string", enum: ["CLIENT", "FREELANCER"] },
+                                },
+                              },
+                              dueAt: { type: "string", format: "date-time" },
+                              milestoneSummary: {
+                                type: "object",
+                                nullable: true,
+                                properties: {
+                                  total: { type: "integer" },
+                                  activeIndex: { type: "integer", nullable: true },
+                                  completedCount: { type: "integer" },
+                                  active: {
+                                    type: "object",
+                                    nullable: true,
+                                    properties: {
+                                      id: { type: "integer" },
+                                      sequence: { type: "integer" },
+                                      name: { type: "string" },
+                                      status: { type: "string" },
+                                      amount: { type: "integer" },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        pagination: {
+                          type: "object",
+                          properties: {
+                            page: { type: "integer" },
+                            limit: { type: "integer" },
+                            total: { type: "integer" },
+                            totalPages: { type: "integer" },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid query parameters" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
     "/api/ticket/approve/{id}": {
       put: {
         summary: "Approve transaction",
@@ -2274,6 +2408,166 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "401": { description: "Unauthorized" },
           "502": { description: "Prembly rejected the request or returned an upstream error. The response includes provider status and response data when available." },
         },
+      },
+    },
+    // ----- Withdrawals -----
+    "/api/withdrawal/banks": {
+      get: {
+        summary: "List Nigerian banks (Flutterwave)",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "Bank list" }, "401": { description: "Unauthorized" } },
+      },
+    },
+    "/api/withdrawal/bank": {
+      get: {
+        summary: "Get my saved bank account",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "Bank account or null" }, "401": { description: "Unauthorized" } },
+      },
+      put: {
+        summary: "Resolve and save bank account",
+        description:
+          "Requires email verification + Prembly KYC. Resolves account via Flutterwave and soft-matches account name to KYC legal name before saving.",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["bankCode", "accountNumber"],
+                properties: {
+                  bankCode: { type: "string", example: "044" },
+                  accountNumber: { type: "string", example: "0123456789" },
+                  bankName: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Bank saved" },
+          "403": { description: "Email or KYC not verified" },
+          "409": { description: "Name mismatch" },
+        },
+      },
+    },
+    "/api/withdrawal/request": {
+      post: {
+        summary: "Request withdrawal (sends OTP)",
+        description:
+          "NGN min 5000 (auto Flutterwave after OTP). USD min 50 (queued PENDING_MANUAL for admin after OTP). Debit happens only after OTP confirm.",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["amount", "currency"],
+                properties: {
+                  amount: { type: "number", example: 5000 },
+                  currency: { type: "string", enum: ["NGN", "USD"] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "OTP sent; returns withdrawalId" },
+          "403": { description: "Email/KYC gate failed" },
+          "409": { description: "Insufficient balance / bank required / in progress" },
+        },
+      },
+    },
+    "/api/withdrawal/{id}/confirm": {
+      post: {
+        summary: "Confirm withdrawal with OTP",
+        description:
+          "Debits wallet immediately. NGN initiates Flutterwave transfer (refund on hard failure). USD moves to PENDING_MANUAL for admin payout.",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp"],
+                properties: { otp: { type: "string", pattern: "^\\d{6}$" } },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Withdrawal processing / queued / completed" },
+          "400": { description: "Invalid or expired OTP" },
+        },
+      },
+    },
+    "/api/withdrawal": {
+      get: {
+        summary: "List my withdrawals",
+        tags: ["Withdrawals"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "Withdrawal history" } },
+      },
+    },
+    "/api/withdrawal/webhook/transfer": {
+      post: {
+        summary: "Flutterwave transfer webhook",
+        description: "Protected by verif-hash. Completes or fails PROCESSING NGN withdrawals; refunds wallet on failure.",
+        tags: ["Withdrawals"],
+        responses: { "200": { description: "Processed" }, "401": { description: "Invalid signature" } },
+      },
+    },
+    "/api/withdrawal/admin/pending-manual": {
+      get: {
+        summary: "Admin: list PENDING_MANUAL (USD) withdrawals",
+        tags: ["Withdrawals"],
+        parameters: [
+          { name: "x-admin-api-key", in: "header", required: true, schema: { type: "string" } },
+        ],
+        responses: { "200": { description: "Pending manual list" }, "401": { description: "Unauthorized" } },
+      },
+    },
+    "/api/withdrawal/admin/{id}/complete": {
+      post: {
+        summary: "Admin: mark manual USD withdrawal completed",
+        tags: ["Withdrawals"],
+        parameters: [
+          { name: "x-admin-api-key", in: "header", required: true, schema: { type: "string" } },
+          { name: "id", in: "path", required: true, schema: { type: "integer" } },
+        ],
+        responses: { "200": { description: "Completed" } },
+      },
+    },
+    "/api/withdrawal/admin/{id}/fail": {
+      post: {
+        summary: "Admin: fail manual USD withdrawal and refund wallet",
+        tags: ["Withdrawals"],
+        parameters: [
+          { name: "x-admin-api-key", in: "header", required: true, schema: { type: "string" } },
+          { name: "id", in: "path", required: true, schema: { type: "integer" } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["reason"],
+                properties: { reason: { type: "string" } },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "Failed and refunded" } },
       },
     },
     // ----- Dashboard -----

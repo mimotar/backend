@@ -208,3 +208,49 @@ export const ReviseTransactionSchema = z
   });
 
 export type ReviseTransactionType = z.infer<typeof ReviseTransactionSchema>;
+
+export const ProjectsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+  q: z.string().trim().min(1).optional(),
+  status: z
+    .string()
+    .optional()
+    .transform((value, ctx) => {
+      if (!value || !value.trim()) return undefined;
+      const parts = value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const parsed: z.infer<typeof StatusEnum>[] = [];
+      for (const part of parts) {
+        const result = StatusEnum.safeParse(part);
+        if (!result.success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Invalid status: ${part}`,
+          });
+          return z.NEVER;
+        }
+        parsed.push(result.data);
+      }
+      return parsed;
+    }),
+  amount: z.coerce.number().int().positive().optional(),
+  minAmount: z.coerce.number().int().nonnegative().optional(),
+  maxAmount: z.coerce.number().int().positive().optional(),
+}).superRefine((data, ctx) => {
+  if (
+    data.minAmount !== undefined &&
+    data.maxAmount !== undefined &&
+    data.minAmount > data.maxAmount
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["minAmount"],
+      message: "minAmount cannot be greater than maxAmount",
+    });
+  }
+});
+
+export type ProjectsQueryType = z.infer<typeof ProjectsQuerySchema>;
