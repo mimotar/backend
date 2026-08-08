@@ -2280,11 +2280,19 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/dashboard": {
       get: {
         summary: "Get dashboard summary",
-        description: "Returns escrow balance, total transactions, active disputes, categorised transaction counts, and transaction amounts over a specified timeframe.",
+        description:
+          "Returns wallet balances (available withdrawable and locked escrow by currency), actions required, active contracts, recent activity, plus legacy summary counts and amount-per-period.",
         tags: ["Dashboard"],
         security: [{ bearerAuth: [] }],
         parameters: [
-          { name: "months", in: "query", required: false, schema: { type: "integer" }, description: "Timeframe in months (e.g. 1, 2, 6, 12). If omitted, returns all-time data." }
+          {
+            name: "months",
+            in: "query",
+            required: false,
+            schema: { type: "integer" },
+            description:
+              "Timeframe in months for historical counts/earnings (e.g. 1, 2, 6, 12). If omitted, returns all-time data for those aggregates.",
+          },
         ],
         responses: {
           "200": {
@@ -2299,7 +2307,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
                     data: {
                       type: "object",
                       properties: {
-                        escrowBalance: { type: "number" },
+                        escrowBalance: {
+                          type: "number",
+                          description: "Alias of balance.lockedEscrow.NGN (legacy)",
+                        },
                         totalTransactions: { type: "integer" },
                         openDisputes: { type: "integer" },
                         transactionCount: {
@@ -2307,24 +2318,134 @@ Welcome to the **Mimotar API** documentation. This API supports:
                           properties: {
                             ongoing: { type: "integer" },
                             cancelled: { type: "integer" },
-                            completed: { type: "integer" }
-                          }
+                            completed: { type: "integer" },
+                          },
                         },
                         amountPerPeriod: {
                           type: "object",
                           additionalProperties: { type: "number" },
-                          description: "Transaction amount aggregated by YYYY-MM"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+                          description: "Earnings amount aggregated by YYYY-MM",
+                        },
+                        balance: {
+                          type: "object",
+                          properties: {
+                            availableWithdrawable: {
+                              type: "object",
+                              properties: {
+                                NGN: { type: "number" },
+                                USD: { type: "number" },
+                              },
+                            },
+                            lockedEscrow: {
+                              type: "object",
+                              properties: {
+                                NGN: { type: "number" },
+                                USD: { type: "number" },
+                              },
+                              description:
+                                "Principal still held in funded ONGOING/PENDING_CLOSURE/DISPUTE contracts",
+                            },
+                          },
+                        },
+                        actionsRequired: {
+                          type: "object",
+                          properties: {
+                            count: { type: "integer" },
+                            items: {
+                              type: "array",
+                              maxItems: 20,
+                              items: {
+                                type: "object",
+                                properties: {
+                                  type: {
+                                    type: "string",
+                                    enum: [
+                                      "APPROVE_OR_REJECT",
+                                      "REVISE_AND_RESUBMIT",
+                                      "PAY_ESCROW",
+                                      "ACCEPT_OR_REJECT_CLOSURE",
+                                      "APPROVE_OR_REJECT_CANCEL",
+                                      "RESPOND_TO_DISPUTE",
+                                    ],
+                                  },
+                                  transactionId: { type: "integer" },
+                                  title: { type: "string" },
+                                  amount: { type: "number" },
+                                  currency: { type: "string" },
+                                  status: { type: "string" },
+                                  from: {
+                                    type: "object",
+                                    properties: {
+                                      name: { type: "string" },
+                                      email: { type: "string" },
+                                    },
+                                  },
+                                  createdAt: { type: "string", format: "date-time" },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        activeContracts: {
+                          type: "array",
+                          maxItems: 20,
+                          items: {
+                            type: "object",
+                            properties: {
+                              id: { type: "integer" },
+                              title: { type: "string" },
+                              amount: { type: "number" },
+                              currency: { type: "string" },
+                              status: { type: "string" },
+                              deadline: { type: "string", format: "date-time" },
+                              counterparty: {
+                                type: "object",
+                                properties: {
+                                  name: { type: "string" },
+                                  email: { type: "string" },
+                                },
+                              },
+                              paymentSentToEscrowAt: {
+                                type: "string",
+                                format: "date-time",
+                                nullable: true,
+                              },
+                              activeMilestone: {
+                                type: "object",
+                                nullable: true,
+                                properties: {
+                                  id: { type: "integer" },
+                                  name: { type: "string" },
+                                  amount: { type: "number" },
+                                  status: { type: "string" },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        recentActivity: {
+                          type: "array",
+                          maxItems: 15,
+                          items: {
+                            type: "object",
+                            properties: {
+                              id: { type: "integer" },
+                              title: { type: "string" },
+                              description: { type: "string", nullable: true },
+                              time: { type: "string", format: "date-time" },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-          "401": { description: "Unauthorized" }
-        }
-      }
+          "401": { description: "Unauthorized" },
+        },
+      },
     },
   },
 };
