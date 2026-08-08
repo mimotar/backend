@@ -65,7 +65,8 @@ export const StatusEnum = {
   REJECTED: 'REJECTED',
   CANCELED: 'CANCELED',
   EXPIRED: 'EXPIRED',
-  PENDING_CLOSURE: 'PENDING_CLOSURE'
+  PENDING_CLOSURE: 'PENDING_CLOSURE',
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED'
 } as const
 
 export type StatusEnum = (typeof StatusEnum)[keyof typeof StatusEnum]

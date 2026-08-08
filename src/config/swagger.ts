@@ -1198,11 +1198,93 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
     },
+    "/api/ticket/{id}/request-changes": {
+      post: {
+        summary: "Receiver requests changes before approval",
+        description:
+          "While the transaction is CREATED, the receiver can request the creator to revise commercial terms instead of rejecting. Requires a comment. Moves status to CHANGES_REQUESTED.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["comment"],
+                properties: {
+                  comment: { type: "string", minLength: 1, maxLength: 500 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Changes requested; creator notified" },
+          "403": { description: "Only the receiver can request changes" },
+          "409": { description: "Transaction is not in CREATED status" },
+        },
+      },
+    },
+    "/api/ticket/{id}/revise": {
+      patch: {
+        summary: "Creator revises commercial terms after a change request",
+        description:
+          "Allowed only while status is CHANGES_REQUESTED. Updates title, amount, description, terms, deadlines, fees, files, and milestones. Does not resubmit for approval.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  amount: { type: "integer" },
+                  transaction_description: { type: "string" },
+                  terms: { type: "string", nullable: true },
+                  additional_agreement: { type: "string", nullable: true },
+                  deadline: { type: "string", format: "date-time" },
+                  inspection_duration: { type: "integer" },
+                  pay_escrow_fee: { type: "string", enum: ["CLIENT", "FREELANCER", "BOTH"] },
+                  pay_shipping_cost: { type: "string", enum: ["CLIENT", "FREELANCER", "BOTH"], nullable: true },
+                  files: { type: "array", items: { type: "object" } },
+                  milestones: { type: "array", items: { type: "object" } },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Transaction revised" },
+          "403": { description: "Only the creator can revise" },
+          "409": { description: "Transaction is not CHANGES_REQUESTED" },
+        },
+      },
+    },
+    "/api/ticket/{id}/resubmit": {
+      post: {
+        summary: "Creator resubmits revised transaction for approval",
+        description:
+          "Moves CHANGES_REQUESTED back to CREATED, increments revision_count, and notifies the receiver to approve again. Keeps the last change_request_comment for display.",
+        tags: ["Transactions (Tickets)"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "200": { description: "Resubmitted; receiver notified" },
+          "403": { description: "Only the creator can resubmit" },
+          "409": { description: "Transaction is not CHANGES_REQUESTED" },
+        },
+      },
+    },
     "/api/ticket/{id}/cancel-request": {
       post: {
         summary: "Request or apply transaction cancel",
         description:
-          "For CREATED/APPROVED (unpaid), cancels immediately. For ONGOING/PENDING_CLOSURE/DISPUTE, creates a mutual cancel request that the counterparty must approve. On funded cancel approval, escrow is refunded to the buyer wallet and payment is marked REFUNDED.",
+          "For CREATED/APPROVED/CHANGES_REQUESTED (unpaid), cancels immediately. For ONGOING/PENDING_CLOSURE/DISPUTE, creates a mutual cancel request that the counterparty must approve. On funded cancel approval, escrow minus the 3% platform fee is refunded to the buyer wallet and payment is marked REFUNDED.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1232,7 +1314,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Transaction canceled; escrow refunded when applicable" },
+          "200": { description: "Transaction canceled; escrow refunded less 3% platform fee when applicable" },
           "403": { description: "Requester cannot approve their own cancel" },
           "409": { description: "No pending cancel request" },
         },

@@ -77,10 +77,13 @@ async function getEditableMilestone(
     );
   }
 
-  if (milestone.transaction.status !== "CREATED") {
+  if (
+    milestone.transaction.status !== "CREATED" &&
+    milestone.transaction.status !== "CHANGES_REQUESTED"
+  ) {
     throw new GlobalError(
       "TRANSACTION_NOT_EDITABLE",
-      "Milestone images can only be changed while the transaction is CREATED",
+      "Milestone images can only be changed while the transaction is CREATED or CHANGES_REQUESTED",
       409,
       true
     );

@@ -52,6 +52,10 @@ model Transaction {
   cancel_requested_at       DateTime?
   cancel_reason             String?             @db.VarChar(500)
   cancel_approved_at        DateTime?
+  change_request_comment    String?             @db.VarChar(500)
+  change_requested_at       DateTime?
+  change_requested_by_email String?
+  revision_count            Int                 @default(0)
   deadlineExtensions        DeadlineExtension[]
   dispute                   Dispute[]
   earnings                  Earnings[]
@@ -383,6 +387,7 @@ enum StatusEnum {
   CANCELED
   EXPIRED
   PENDING_CLOSURE
+  CHANGES_REQUESTED
 }
 
 enum PaymentMethod {

@@ -20,6 +20,7 @@ export const StatusEnum = z.enum([
   "CANCELED",
   "EXPIRED",
   "PENDING_CLOSURE",
+  "CHANGES_REQUESTED",
 ]);
 
 const FutureDeadlineSchema = z.coerce.date().refine(
@@ -148,3 +149,62 @@ export const RejectTransactionSchema = z.object({
 });
 
 export type RejectTransactionType = z.infer<typeof RejectTransactionSchema>;
+
+export const RequestChangesSchema = z.object({
+  comment: z
+    .string()
+    .trim()
+    .min(1, "Comment is required")
+    .max(500, "Comment must be under 500 characters"),
+});
+
+export type RequestChangesType = z.infer<typeof RequestChangesSchema>;
+
+const FileAttachmentSchema = z.object({
+  fileName: z.string(),
+  fileType: z.enum(["image", "pdf", "doc", "other"]),
+  fileUrl: z.string().url(),
+  fileId: z.string().optional(),
+});
+
+export const ReviseTransactionSchema = z
+  .object({
+    title: z.string().min(1).max(200).optional(),
+    amount: z.coerce.number().int().positive().optional(),
+    transaction_description: z.string().max(200).optional(),
+    terms: z.string().nullable().optional(),
+    additional_agreement: z.string().max(200).nullable().optional(),
+    deadline: FutureDeadlineSchema.optional(),
+    inspection_duration: z.coerce.number().int().positive().optional(),
+    pay_escrow_fee: EscrowFeePayerEnum.optional(),
+    pay_shipping_cost: EscrowFeePayerEnum.nullable().optional(),
+    files: z.array(FileAttachmentSchema).max(2).optional(),
+    milestones: z.preprocess(
+      (val) => {
+        if (typeof val === "string") {
+          try {
+            return JSON.parse(val);
+          } catch {
+            return val;
+          }
+        }
+        return val;
+      },
+      z.array(MilestoneSchema).optional()
+    ),
+  })
+  .superRefine((data, ctx) => {
+    if (data.milestones && data.deadline) {
+      data.milestones.forEach((milestone, index) => {
+        if (milestone.deadline > data.deadline!) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["milestones", index, "deadline"],
+            message: "Milestone deadline cannot be later than the transaction deadline",
+          });
+        }
+      });
+    }
+  });
+
+export type ReviseTransactionType = z.infer<typeof ReviseTransactionSchema>;

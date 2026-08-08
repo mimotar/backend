@@ -599,3 +599,100 @@ export const rejectCancelTransactionController = async (
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+import {
+  requestChangesService,
+  reviseTransactionService,
+  resubmitTransactionService,
+} from "../services/transaction-change-request.service.js";
+
+export const requestChangesController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const updated = await requestChangesService(
+      Number(req.params.id),
+      user.email,
+      req.body.comment
+    );
+
+    return res.status(200).json({
+      message: "Changes requested successfully",
+      data: updated,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("requestChangesController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const reviseTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const updated = await reviseTransactionService(
+      Number(req.params.id),
+      userId,
+      user.email,
+      req.body
+    );
+
+    return res.status(200).json({
+      message: "Transaction revised successfully",
+      data: updated,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("reviseTransactionController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const resubmitTransactionController = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = (req.user as { id: number })?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
+
+    const updated = await resubmitTransactionService(
+      Number(req.params.id),
+      userId,
+      user.email
+    );
+
+    return res.status(200).json({
+      message: "Transaction resubmitted for approval",
+      data: updated,
+    });
+  } catch (error: any) {
+    if (error instanceof GlobalError) {
+      return res.status(error.statusCode).json({ message: error.message, name: error.name });
+    }
+    console.error("resubmitTransactionController error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

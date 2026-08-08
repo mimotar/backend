@@ -1,10 +1,14 @@
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import prisma from "../utils/prisma.js";
 import { getTransactionParticipants } from "../utils/payment/getTransactionParticipants.js";
+import {
+  calculateEscrowPayment,
+  EscrowFeePayer,
+} from "../utils/payment/calculateAmountToPay.js";
 import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
 import { transactionClosureQueue } from "../config/bullmq.js";
 
-const UNILATERAL_CANCEL_STATUSES = ["CREATED", "APPROVED"] as const;
+const UNILATERAL_CANCEL_STATUSES = ["CREATED", "APPROVED", "CHANGES_REQUESTED"] as const;
 const MUTUAL_CANCEL_STATUSES = ["ONGOING", "PENDING_CLOSURE", "DISPUTE"] as const;
 
 async function assertParticipant(transactionId: number, userId: number, userEmail: string) {
@@ -58,7 +62,7 @@ async function refundBuyerToWallet(
       amount: refundAmount,
       type: "INFLOW",
       currency: transaction.currency as any,
-      description: `Refund for canceled transaction #${transaction.id}`,
+      description: `Refund (less 3% platform fee) for canceled transaction #${transaction.id}`,
     },
   });
 
@@ -97,7 +101,15 @@ async function finalizeCancel(
     }
 
     if (transaction.payment?.status === "COMPLETED") {
-      await refundBuyerToWallet(tx, transaction, transaction.payment.amount);
+      const { totalCommission } = calculateEscrowPayment(
+        transaction.amount,
+        transaction.pay_escrow_fee as EscrowFeePayer
+      );
+      const refundAmount = Math.max(
+        0,
+        transaction.payment.amount - totalCommission
+      );
+      await refundBuyerToWallet(tx, transaction, refundAmount);
       await tx.payment.update({
         where: { id: transaction.payment.id },
         data: { status: "REFUNDED" },
@@ -281,7 +293,7 @@ export async function approveCancelTransactionService(
     systemDispatchNotificationByEmail(
       participants.buyer.email,
       "Transaction Canceled",
-      `Transaction #${transactionId} was canceled by mutual agreement. Escrow has been refunded to the buyer where applicable.`
+      `Transaction #${transactionId} was canceled by mutual agreement. Escrow (less the 3% platform fee) has been refunded to the buyer where applicable.`
     ),
     systemDispatchNotificationByEmail(
       participants.seller.email,

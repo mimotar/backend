@@ -2,7 +2,7 @@ import { RequestHandler, Router } from "express";
 
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
-import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema } from "../zod/TicketSchema.js";
+import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema, RequestChangesSchema, ReviseTransactionSchema } from "../zod/TicketSchema.js";
 import {
   approveTransactionController,
   createTransactionController,
@@ -20,6 +20,9 @@ import {
   requestCancelTransactionController,
   approveCancelTransactionController,
   rejectCancelTransactionController,
+  requestChangesController,
+  reviseTransactionController,
+  resubmitTransactionController,
 } from "../controllers/ticket.controller.js";
 
 import { milestoneImageUpload, upload } from "../config/cloudinary.js";
@@ -45,6 +48,26 @@ ticketRouter.put(
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   validateSchema(RejectTransactionSchema),
   rejectTransactionController as RequestHandler
+);
+
+ticketRouter.post(
+  "/:id/request-changes",
+  authenticateTokenMiddleware,
+  validateSchema(RequestChangesSchema),
+  requestChangesController as RequestHandler
+);
+
+ticketRouter.patch(
+  "/:id/revise",
+  authenticateTokenMiddleware,
+  validateSchema(ReviseTransactionSchema),
+  reviseTransactionController as RequestHandler
+);
+
+ticketRouter.post(
+  "/:id/resubmit",
+  authenticateTokenMiddleware,
+  resubmitTransactionController as RequestHandler
 );
 
 ticketRouter.put("/:id/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);

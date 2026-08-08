@@ -201,7 +201,7 @@ export const getTransactionByIdService = async (id: number) => {
 
 /**
  * Expires invite/payment windows only:
- * - CREATED past expiresAt → EXPIRED
+ * - CREATED or CHANGES_REQUESTED past expiresAt → EXPIRED
  * - APPROVED past expiresAt with no completed payment → EXPIRED
  * Does not touch funded or terminal statuses.
  */
@@ -219,7 +219,11 @@ export const checkAndExpireAllTransactionService = async (id: number) => {
     transaction.status === "APPROVED" &&
     (!transaction.payment || transaction.payment.status !== "COMPLETED");
 
-  if (transaction.status === "CREATED" || unpaidApproved) {
+  const awaitingAcceptance =
+    transaction.status === "CREATED" ||
+    transaction.status === "CHANGES_REQUESTED";
+
+  if (awaitingAcceptance || unpaidApproved) {
     return prisma.transaction.update({
       where: { id },
       data: { status: "EXPIRED" },
@@ -397,6 +401,10 @@ export const getAUserTransactionService = async (userEmail: string) => {
       inspection_completed_at: true,
       transaction_completed_at: true,
       deadline: true,
+      change_request_comment: true,
+      change_requested_at: true,
+      change_requested_by_email: true,
+      revision_count: true,
       deadlineExtensions: {
         where: { milestoneId: null },
         orderBy: { createdAt: "desc" },

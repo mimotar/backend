@@ -1836,7 +1836,11 @@ export const TransactionScalarFieldEnum = {
   cancel_requested_by_email: 'cancel_requested_by_email',
   cancel_requested_at: 'cancel_requested_at',
   cancel_reason: 'cancel_reason',
-  cancel_approved_at: 'cancel_approved_at'
+  cancel_approved_at: 'cancel_approved_at',
+  change_request_comment: 'change_request_comment',
+  change_requested_at: 'change_requested_at',
+  change_requested_by_email: 'change_requested_by_email',
+  revision_count: 'revision_count'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
