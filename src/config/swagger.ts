@@ -32,6 +32,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
     `.trim(),
   },
   servers: [
+    {
+      url: "https://mim-backend.onrender.com",
+      description: "Production (Render)",
+    },
     { url: `http://localhost:${PORT}`, description: "Development server" },
   ],
   components: {

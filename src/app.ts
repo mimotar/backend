@@ -21,7 +21,9 @@ const app = express();
 const allowedOrigins: string[] = [
   "http://localhost:3000",
   "http://localhost:5173",
+  "http://localhost:10000",
   "https://mimotar.com",
+  "https://mim-backend.onrender.com",
 ];
 
 // CORS configuration with TypeScript types
