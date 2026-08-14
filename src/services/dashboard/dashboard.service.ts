@@ -1,4 +1,5 @@
 import prisma from "../../utils/prisma.js";
+import type { Role } from "../../generated/prisma/enums.js";
 
 const FUNDED_ACTIVE_STATUSES = ["ONGOING", "PENDING_CLOSURE", "DISPUTE"] as const;
 const ACTION_PRIORITY: Record<string, number> = {
@@ -23,6 +24,9 @@ type ActionItem = {
   status: string;
   from: Counterparty;
   createdAt: string;
+  fundStatus: "FUNDED" | "UNFUNDED";
+  deliveredAndReleasedStatus: "NOT_DELIVERED" | "DELIVERED" | "RELEASED";
+  roleStatus: Role;
 };
 
 function toNumber(value: { toNumber?: () => number } | number | null | undefined): number {
@@ -48,7 +52,7 @@ function getCounterparty(
 }
 
 function isBuyer(
-  transaction: { creator_role: string; creator_email: string; reciever_email: string },
+  transaction: { creator_role: Role; creator_email: string; reciever_email: string },
   userEmail: string
 ): boolean {
   const email = userEmail.toLowerCase();
@@ -56,6 +60,31 @@ function isBuyer(
     return transaction.creator_email.toLowerCase() === email;
   }
   return transaction.reciever_email.toLowerCase() === email;
+}
+
+function getUserRole(
+  transaction: {
+    creator_email: string;
+    creator_role: Role;
+    reciever_email: string;
+    reciever_role: Role;
+  },
+  userEmail: string
+): Role {
+  const isCreator = transaction.creator_email.toLowerCase() === userEmail.toLowerCase();
+  return isCreator ? transaction.creator_role : transaction.reciever_role;
+}
+
+function getFundStatus(payment: { status: string } | null | undefined): "FUNDED" | "UNFUNDED" {
+  return payment?.status === "COMPLETED" ? "FUNDED" : "UNFUNDED";
+}
+
+function getDeliveredAndReleasedStatus(
+  status: string
+): "NOT_DELIVERED" | "DELIVERED" | "RELEASED" {
+  if (status === "COMPLETED") return "RELEASED";
+  if (status === "PENDING_CLOSURE") return "DELIVERED";
+  return "NOT_DELIVERED";
 }
 
 function computeLockedAmount(transaction: {
@@ -90,9 +119,10 @@ function buildActionsForUser(
     created_at: Date;
     creator_email: string;
     creator_fullname: string;
-    creator_role: string;
+    creator_role: Role;
     reciever_email: string;
     receiver_fullname: string;
+    reciever_role: Role;
     cancel_requested_by_email: string | null;
     payment: { status: string } | null;
   }>,
@@ -108,9 +138,11 @@ function buildActionsForUser(
       created_at: Date;
       creator_email: string;
       creator_fullname: string;
-      creator_role: string;
+      creator_role: Role;
       reciever_email: string;
       receiver_fullname: string;
+      reciever_role: Role;
+      payment: { status: string } | null;
     };
   }>
 ): ActionItem[] {
@@ -128,6 +160,9 @@ function buildActionsForUser(
       status: txn.status,
       from: getCounterparty(txn, userEmail),
       createdAt: txn.created_at.toISOString(),
+      fundStatus: getFundStatus(txn.payment),
+      deliveredAndReleasedStatus: getDeliveredAndReleasedStatus(txn.status),
+      roleStatus: getUserRole(txn, userEmail),
     });
   }
 
@@ -143,6 +178,9 @@ function buildActionsForUser(
       status: txn.status,
       from: getCounterparty(txn, userEmail),
       createdAt: txn.created_at.toISOString(),
+      fundStatus: getFundStatus(txn.payment),
+      deliveredAndReleasedStatus: getDeliveredAndReleasedStatus(txn.status),
+      roleStatus: getUserRole(txn, userEmail),
     };
 
     if (
@@ -272,10 +310,14 @@ export async function DashboardService(id: number, months?: number) {
         deadline: true,
         payment_sent_to_escrow_at: true,
         transactionType: true,
+        pay_escrow_fee: true,
         creator_email: true,
         creator_fullname: true,
+        creator_role: true,
         reciever_email: true,
         receiver_fullname: true,
+        reciever_role: true,
+        payment: { select: { status: true } },
         milestones: {
           select: { id: true, name: true, amount: true, status: true, sequence: true },
           orderBy: { sequence: "asc" },
@@ -314,6 +356,7 @@ export async function DashboardService(id: number, months?: number) {
         creator_role: true,
         reciever_email: true,
         receiver_fullname: true,
+        reciever_role: true,
         cancel_requested_by_email: true,
         payment: { select: { status: true } },
       },
@@ -340,6 +383,8 @@ export async function DashboardService(id: number, months?: number) {
             creator_role: true,
             reciever_email: true,
             receiver_fullname: true,
+            reciever_role: true,
+            payment: { select: { status: true } },
           },
         },
       },
@@ -420,6 +465,9 @@ export async function DashboardService(id: number, months?: number) {
       deadline: txn.deadline.toISOString(),
       counterparty: getCounterparty(txn, email),
       paymentSentToEscrowAt: txn.payment_sent_to_escrow_at?.toISOString() ?? null,
+      fundedStatus: getFundStatus(txn.payment),
+      feePayer: txn.pay_escrow_fee,
+      role: getUserRole(txn, email),
       activeMilestone: activeMilestone
         ? {
             id: activeMilestone.id,

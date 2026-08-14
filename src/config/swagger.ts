@@ -2679,6 +2679,22 @@ Welcome to the **Mimotar API** documentation. This API supports:
                                     },
                                   },
                                   createdAt: { type: "string", format: "date-time" },
+                                  fundStatus: {
+                                    type: "string",
+                                    enum: ["FUNDED", "UNFUNDED"],
+                                    description:
+                                      "Whether escrow payment has been completed for this deal",
+                                  },
+                                  deliveredAndReleasedStatus: {
+                                    type: "string",
+                                    enum: ["NOT_DELIVERED", "DELIVERED", "RELEASED"],
+                                    description:
+                                      "NOT_DELIVERED until closure is requested; DELIVERED when PENDING_CLOSURE; RELEASED when COMPLETED",
+                                  },
+                                  roleStatus: {
+                                    allOf: [{ $ref: "#/components/schemas/RoleEnum" }],
+                                    description: "Authenticated user's role on this deal",
+                                  },
                                 },
                               },
                             },
@@ -2707,6 +2723,20 @@ Welcome to the **Mimotar API** documentation. This API supports:
                                 type: "string",
                                 format: "date-time",
                                 nullable: true,
+                              },
+                              fundedStatus: {
+                                type: "string",
+                                enum: ["FUNDED", "UNFUNDED"],
+                                description:
+                                  "Whether escrow payment has been completed for this contract",
+                              },
+                              feePayer: {
+                                allOf: [{ $ref: "#/components/schemas/EscrowFeePayerEnum" }],
+                                description: "Who pays the escrow fee (pay_escrow_fee)",
+                              },
+                              role: {
+                                allOf: [{ $ref: "#/components/schemas/RoleEnum" }],
+                                description: "Authenticated user's role on this contract",
                               },
                               activeMilestone: {
                                 type: "object",
