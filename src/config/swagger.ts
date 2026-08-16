@@ -24,6 +24,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 - **Settings** – User preferences (currency, notifications, 2FA)
 - **Password reset** – Request and confirm password reset via email
 - **Contacts** – Submit and manage contact form entries
+- **Wallet** – Available and locked balances by currency (NGN / USD)
 - **Helpers** – Token verification (validate JWT without using Authorization header)
 
 **Base path:** All endpoints are prefixed with \`/api\` (e.g. \`/api/user\`, \`/api/ticket\`).
@@ -164,6 +165,29 @@ Welcome to the **Mimotar API** documentation. This API supports:
       CurrencyEnum: {
         type: "string",
         enum: ["NGN", "USD"],
+      },
+      CurrencyAmounts: {
+        type: "object",
+        required: ["NGN", "USD"],
+        properties: {
+          NGN: { type: "number", description: "Amount in Nigerian Naira" },
+          USD: { type: "number", description: "Amount in US Dollars" },
+        },
+      },
+      WalletBalances: {
+        type: "object",
+        required: ["available", "locked"],
+        properties: {
+          available: {
+            allOf: [{ $ref: "#/components/schemas/CurrencyAmounts" }],
+            description: "Withdrawable wallet balances by currency",
+          },
+          locked: {
+            allOf: [{ $ref: "#/components/schemas/CurrencyAmounts" }],
+            description:
+              "Escrow principal still held in funded ONGOING / PENDING_CLOSURE / DISPUTE contracts",
+          },
+        },
       },
       RoleEnum: { type: "string", enum: ["CLIENT", "FREELANCER"] },
       EscrowFeePayerEnum: { type: "string", enum: ["CLIENT", "FREELANCER", "BOTH"] },
@@ -2574,6 +2598,43 @@ Welcome to the **Mimotar API** documentation. This API supports:
         responses: { "200": { description: "Failed and refunded" } },
       },
     },
+    // ----- Wallet -----
+    "/api/wallet/balances": {
+      get: {
+        summary: "Get wallet balances",
+        description:
+          "Returns the authenticated user's available withdrawable balances and locked escrow amounts for NGN and USD.",
+        tags: ["Wallet"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Wallet balances retrieved successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    success: { type: "boolean", example: true },
+                    data: { $ref: "#/components/schemas/WalletBalances" },
+                  },
+                },
+                example: {
+                  message: "Wallet balances retrieved successfully",
+                  success: true,
+                  data: {
+                    available: { NGN: 15000, USD: 120.5 },
+                    locked: { NGN: 50000, USD: 0 },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+          "404": { description: "User not found" },
+        },
+      },
+    },
     // ----- Dashboard -----
     "/api/dashboard": {
       get: {
@@ -2628,18 +2689,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
                           type: "object",
                           properties: {
                             availableWithdrawable: {
-                              type: "object",
-                              properties: {
-                                NGN: { type: "number" },
-                                USD: { type: "number" },
-                              },
+                              $ref: "#/components/schemas/CurrencyAmounts",
                             },
                             lockedEscrow: {
-                              type: "object",
-                              properties: {
-                                NGN: { type: "number" },
-                                USD: { type: "number" },
-                              },
+                              allOf: [{ $ref: "#/components/schemas/CurrencyAmounts" }],
                               description:
                                 "Principal still held in funded ONGOING/PENDING_CLOSURE/DISPUTE contracts",
                             },

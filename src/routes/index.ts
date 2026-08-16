@@ -19,6 +19,7 @@ import dashboardRouter from "./dashboard.route.js";
 import notificationRouter from "./notification.route.js";
 import kycRouter from "./withdrawal/kyc.route.js";
 import withdrawalRouter from "./withdrawal/withdrawal.route.js";
+import walletRouter from "./wallet.route.js";
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -56,5 +57,6 @@ router.use("/dashboard", dashboardRouter);
 router.use("/notification", notificationRouter);
 router.use("/kyc", kycRouter);
 router.use("/withdrawal", withdrawalRouter);
+router.use("/wallet", walletRouter);
 
 export default router;
