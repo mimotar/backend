@@ -182,12 +182,12 @@ export async function listUserProjectsService(
         transaction.milestones
       ),
       history: {
-        transaction_created_at: transaction.created_at,
-        agreement_accepted_at,
-        payment_sent_to_escrow_at,
-        inspection_started_at,
-        inspection_completed_at,
-        transaction_completed_at,
+        transaction_created_at: transaction.created_at.toISOString(),
+        agreement_accepted_at: agreement_accepted_at?.toISOString() ?? null,
+        payment_sent_to_escrow_at: payment_sent_to_escrow_at?.toISOString() ?? null,
+        inspection_started_at: inspection_started_at?.toISOString() ?? null,
+        inspection_completed_at: inspection_completed_at?.toISOString() ?? null,
+        transaction_completed_at: transaction_completed_at?.toISOString() ?? null,
       },
     };
   });

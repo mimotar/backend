@@ -159,6 +159,9 @@ export const getTransactionByIdService = async (id: number) => {
       id,
     },
     include: {
+      payment: true,
+      dispute: true,
+      earnings: true,
       milestones: {
         include: {
           images: {
@@ -179,17 +182,26 @@ export const getTransactionByIdService = async (id: number) => {
   if (!transaction) {
     throw new Error("Transaction not found");
   }
-  const {otp,otp_created_at, ...rest} = transaction;
+  const {
+    otp,
+    otp_created_at,
+    agreement_accepted_at,
+    payment_sent_to_escrow_at,
+    inspection_started_at,
+    inspection_completed_at,
+    transaction_completed_at,
+    ...rest
+  } = transaction;
 
   return {
     ...rest,
     history: {
       transaction_created_at: transaction.created_at,
-      agreement_accepted_at: transaction.agreement_accepted_at,
-      payment_sent_to_escrow_at: transaction.payment_sent_to_escrow_at,
-      inspection_started_at: transaction.inspection_started_at,
-      inspection_completed_at: transaction.inspection_completed_at,
-      transaction_completed_at: transaction.transaction_completed_at,
+      agreement_accepted_at,
+      payment_sent_to_escrow_at,
+      inspection_started_at,
+      inspection_completed_at,
+      transaction_completed_at,
     },
   };
   } catch (error) {
