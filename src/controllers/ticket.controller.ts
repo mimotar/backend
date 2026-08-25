@@ -287,12 +287,35 @@ export const getTransactionByIdCotroller = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
-  const { id } = req.params;
-  const transaction = await getTransactionByIdService(Number(id))
-  res.status(200).json({
-    message: "Transaction retrieved successfully",
-    data: transaction,
-  });
+  try {
+    const { id } = req.params;
+    const userId = (req.user as { id?: number; userId?: number } | undefined)?.id
+      ?? (req.user as { id?: number; userId?: number } | undefined)?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { email: true },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    const transaction = await getTransactionByIdService(Number(id), user.email);
+    return res.status(200).json({
+      message: "Transaction retrieved successfully",
+      data: transaction,
+    });
+  } catch (error) {
+    console.error("Error in getTransactionByIdCotroller:", error);
+    return res.status(404).json({
+      message: error instanceof Error ? error.message : "Transaction not found",
+      success: false,
+    });
+  }
 }
 
 export const extendTransactionDeadlineController = async (

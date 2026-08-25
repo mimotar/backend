@@ -18,7 +18,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 
 - **Authentication** – Register and login with email (OTP) or OAuth (Google, Facebook)
 - **Users** – User registration, OTP verification, and profile
-- **Transactions (Tickets)** – Create, approve, reject, and manage ordinary or milestone-based escrow transactions
+- **Transactions (Tickets)** – Create, approve, reject, and manage ordinary or milestone-based escrow transactions. Lifecycle statuses are documented as \`StatusEnum\` (\`CREATED\` → \`APPROVED\` → \`ONGOING\`).
 - **Disputes** – Create, cancel, inspect, and resolve transaction-level or milestone-level disputes
 - **Payments** – Initialize payments and handle webhooks
 - **Settings** – User preferences (currency, notifications, 2FA)
@@ -117,9 +117,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
           amount: { type: "integer" },
           deadline: { type: "string", format: "date-time" },
           status: {
-            type: "string",
+            allOf: [{ $ref: "#/components/schemas/StatusEnum" }],
             readOnly: true,
-            enum: ["CREATED", "ONGOING", "PENDING_CLOSURE", "DISPUTE", "COMPLETED"],
           },
           activatedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
           completedAt: { type: "string", format: "date-time", nullable: true, readOnly: true },
@@ -158,6 +157,24 @@ Welcome to the **Mimotar API** documentation. This API supports:
         },
       },
       // Transaction (Ticket)
+      StatusEnum: {
+        type: "string",
+        enum: [
+          "CREATED",
+          "APPROVED",
+          "ONGOING",
+          "COMPLETED",
+          "DISPUTE",
+          "REJECTED",
+          "CANCELED",
+          "EXPIRED",
+          "PENDING_CLOSURE",
+          "CHANGES_REQUESTED",
+        ],
+        description:
+          "Ticket/transaction and milestone lifecycle status. Funnel: CREATED → APPROVED (counterparty accepted terms; unpaid) → ONGOING (escrow funded after verified payment). A ticket does not move from CREATED to ONGOING directly. CREATED: waiting for the counterparty to accept, reject, or request edits. APPROVED: terms accepted; buyer can pay. ONGOING: funds locked; work or inspection is active. CHANGES_REQUESTED: counterparty asked the creator to revise terms. REJECTED: counterparty declined. EXPIRED: invite or unpaid window passed. PENDING_CLOSURE: closure requested. COMPLETED: funds released. DISPUTE: a dispute is open. CANCELED: deal canceled.",
+        example: "CREATED",
+      },
       TransactionTypeEnum: {
         type: "string",
         enum: ["PHYSICAL_PRODUCT", "ONLINE_PRODUCT", "SERVICE", "RENTAL", "MILESTONE_BASED_PROJECT"],
@@ -246,10 +263,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
       },
-      TransactionHistory: {
+      TransactionLogs: {
         type: "object",
-        description: "History of key events in the transaction lifecycle",
-        required: ["transaction_created_at"],
+        description:
+          "Lifecycle timestamps plus the authenticated user's role and the counterparty's role",
+        required: [
+          "transaction_created_at",
+          "role",
+          "counterpartyRole",
+        ],
         properties: {
           transaction_created_at: { type: "string", format: "date-time", example: "2026-03-01T10:00:00.000Z" },
           agreement_accepted_at: { type: "string", format: "date-time", nullable: true, example: "2026-03-01T12:00:00.000Z" },
@@ -257,6 +279,18 @@ Welcome to the **Mimotar API** documentation. This API supports:
           inspection_started_at: { type: "string", format: "date-time", nullable: true, example: null },
           inspection_completed_at: { type: "string", format: "date-time", nullable: true, example: null },
           transaction_completed_at: { type: "string", format: "date-time", nullable: true, example: null },
+          role: {
+            type: "string",
+            enum: ["CLIENT", "FREELANCER"],
+            description: "Authenticated user's role on this deal",
+            example: "CLIENT",
+          },
+          counterpartyRole: {
+            type: "string",
+            enum: ["CLIENT", "FREELANCER"],
+            description: "Counterparty's role on this deal",
+            example: "FREELANCER",
+          },
         },
       },
       TransactionFile: {
@@ -307,27 +341,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
       TransactionResponse: {
         type: "object",
         description:
-          "Full transaction payload returned by single-get and list endpoints. Lifecycle timestamps live under history.",
-        required: ["id", "status", "amount", "currency", "history", "deadline"],
+          "Full transaction payload returned by single-get and list endpoints. Lifecycle timestamps and roles live under logs.",
+        required: ["id", "status", "amount", "currency", "logs", "deadline"],
         properties: {
           id: { type: "integer", example: 101 },
           title: { type: "string", example: "Website redesign" },
           amount: { type: "integer", example: 50000 },
           currency: { type: "string", enum: ["NGN", "USD"], example: "NGN" },
           status: {
-            type: "string",
-            enum: [
-              "CREATED",
-              "APPROVED",
-              "ONGOING",
-              "COMPLETED",
-              "DISPUTE",
-              "REJECTED",
-              "CANCELED",
-              "EXPIRED",
-              "PENDING_CLOSURE",
-              "CHANGES_REQUESTED",
-            ],
+            allOf: [{ $ref: "#/components/schemas/StatusEnum" }],
             example: "ONGOING",
           },
           transaction_description: { type: "string", example: "Full landing page redesign" },
@@ -395,7 +417,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
             type: "array",
             items: { $ref: "#/components/schemas/Milestone" },
           },
-          history: { $ref: "#/components/schemas/TransactionHistory" },
+          logs: { $ref: "#/components/schemas/TransactionLogs" },
         },
         example: {
           id: 101,
@@ -460,20 +482,22 @@ Welcome to the **Mimotar API** documentation. This API supports:
           earnings: [],
           deadlineExtensions: [],
           milestones: [],
-          history: {
+          logs: {
             transaction_created_at: "2026-03-01T10:00:00.000Z",
             agreement_accepted_at: "2026-03-01T12:00:00.000Z",
             payment_sent_to_escrow_at: "2026-03-01T14:00:00.000Z",
             inspection_started_at: null,
             inspection_completed_at: null,
             transaction_completed_at: null,
+            role: "CLIENT",
+            counterpartyRole: "FREELANCER",
           },
         },
       },
       ProjectListItem: {
         type: "object",
         description:
-          "Paginated project list item: full transaction fields, UI helpers, and lifecycle history.",
+          "Paginated project list item: full transaction fields, UI helpers, and lifecycle logs.",
         required: [
           "id",
           "status",
@@ -483,7 +507,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           "myRole",
           "counterparty",
           "dueAt",
-          "history",
+          "logs",
         ],
         properties: {
           id: { type: "integer", example: 101 },
@@ -491,19 +515,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           amount: { type: "integer", example: 50000 },
           currency: { type: "string", enum: ["NGN", "USD"], example: "NGN" },
           status: {
-            type: "string",
-            enum: [
-              "CREATED",
-              "APPROVED",
-              "ONGOING",
-              "COMPLETED",
-              "DISPUTE",
-              "REJECTED",
-              "CANCELED",
-              "EXPIRED",
-              "PENDING_CLOSURE",
-              "CHANGES_REQUESTED",
-            ],
+            allOf: [{ $ref: "#/components/schemas/StatusEnum" }],
             example: "ONGOING",
           },
           transaction_description: { type: "string", example: "Full landing page redesign" },
@@ -586,54 +598,13 @@ Welcome to the **Mimotar API** documentation. This API supports:
                   id: { type: "integer", example: 55 },
                   sequence: { type: "integer", example: 1 },
                   name: { type: "string", example: "Discovery" },
-                  status: { type: "string", example: "ONGOING" },
+                  status: { $ref: "#/components/schemas/StatusEnum" },
                   amount: { type: "integer", example: 15000 },
                 },
               },
             },
           },
-          history: {
-            type: "object",
-            description: "Lifecycle timestamps for this project/transaction",
-            required: ["transaction_created_at"],
-            properties: {
-              transaction_created_at: {
-                type: "string",
-                format: "date-time",
-                example: "2026-03-01T10:00:00.000Z",
-              },
-              agreement_accepted_at: {
-                type: "string",
-                format: "date-time",
-                nullable: true,
-                example: "2026-03-01T12:00:00.000Z",
-              },
-              payment_sent_to_escrow_at: {
-                type: "string",
-                format: "date-time",
-                nullable: true,
-                example: "2026-03-01T14:00:00.000Z",
-              },
-              inspection_started_at: {
-                type: "string",
-                format: "date-time",
-                nullable: true,
-                example: null,
-              },
-              inspection_completed_at: {
-                type: "string",
-                format: "date-time",
-                nullable: true,
-                example: null,
-              },
-              transaction_completed_at: {
-                type: "string",
-                format: "date-time",
-                nullable: true,
-                example: null,
-              },
-            },
-          },
+          logs: { $ref: "#/components/schemas/TransactionLogs" },
         },
         example: {
           id: 101,
@@ -686,13 +657,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
           earnings: [],
           milestones: [],
           deadlineExtensions: [],
-          history: {
+          logs: {
             transaction_created_at: "2026-03-01T10:00:00.000Z",
             agreement_accepted_at: "2026-03-01T12:00:00.000Z",
             payment_sent_to_escrow_at: "2026-03-01T14:00:00.000Z",
             inspection_started_at: null,
             inspection_completed_at: null,
             transaction_completed_at: null,
+            role: "CLIENT",
+            counterpartyRole: "FREELANCER",
           },
         },
       },
@@ -1507,7 +1480,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket": {
       post: {
         summary: "Create transaction",
-        description: "Create a new escrow transaction. Supply only creator_role; the receiver is assigned the opposite role automatically (CLIENT ↔ FREELANCER). Every transaction requires deadline, its expected completion date. A MILESTONE_BASED_PROJECT additionally requires at least one milestone, each with a deadline on or before the transaction deadline. expiresAt controls approval-link expiry, not completion.",
+        description: "Create a new escrow transaction in CREATED status (waiting for counterparty acceptance). Supply only creator_role; the receiver is assigned the opposite role automatically (CLIENT ↔ FREELANCER). Every transaction requires deadline, its expected completion date. A MILESTONE_BASED_PROJECT additionally requires at least one milestone, each with a deadline on or before the transaction deadline. expiresAt controls approval-link expiry, not completion.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -1554,7 +1527,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "201": { description: "Transaction created with ordered project milestones when applicable" },
+          "201": { description: "Transaction created in CREATED status, with ordered project milestones when applicable" },
           "400": { description: "Validation error" },
           "401": { description: "Unauthorized" },
         },
@@ -1564,7 +1537,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       get: {
         summary: "Get my transactions",
         description:
-          "Returns all transactions for the authenticated user. Each item includes a history object with lifecycle timestamps. Rate limited.",
+          "Returns all transactions for the authenticated user. Each item includes a logs object with lifecycle timestamps and roles. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         responses: {
@@ -1624,13 +1597,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
                       earnings: [],
                       deadlineExtensions: [],
                       milestones: [],
-                      history: {
+                      logs: {
                         transaction_created_at: "2026-03-01T10:00:00.000Z",
                         agreement_accepted_at: "2026-03-01T12:00:00.000Z",
                         payment_sent_to_escrow_at: "2026-03-01T14:00:00.000Z",
                         inspection_started_at: null,
                         inspection_completed_at: null,
                         transaction_completed_at: null,
+                        role: "CLIENT",
+                        counterpartyRole: "FREELANCER",
                       },
                     },
                   ],
@@ -1646,7 +1621,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       get: {
         summary: "List my projects (paginated)",
         description:
-          "Returns paginated projects where the authenticated user is creator or receiver. Supports text search, status filter (including COMPLETED and all other StatusEnum values), and amount filters. Each item includes full transaction detail plus myRole, counterparty, dueAt, milestoneSummary, and history.",
+          "Returns paginated projects where the authenticated user is creator or receiver. Supports text search, status filter (including COMPLETED and all other StatusEnum values), and amount filters. Each item includes full transaction detail plus myRole, counterparty, dueAt, milestoneSummary, and logs.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [
@@ -1675,7 +1650,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
             required: false,
             schema: { type: "string" },
             description:
-              "Comma-separated StatusEnum values. Allowed: CREATED, APPROVED, ONGOING, PENDING_CLOSURE, DISPUTE, REJECTED, CANCELED, EXPIRED, CHANGES_REQUESTED, COMPLETED. Omit for all statuses.",
+              "Comma-separated StatusEnum values (see the StatusEnum schema). Allowed: CREATED, APPROVED, ONGOING, PENDING_CLOSURE, DISPUTE, REJECTED, CANCELED, EXPIRED, CHANGES_REQUESTED, COMPLETED. Omit for all statuses.",
             example: "COMPLETED,ONGOING,DISPUTE",
           },
           {
@@ -1784,13 +1759,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
                         earnings: [],
                         milestones: [],
                         deadlineExtensions: [],
-                        history: {
+                        logs: {
                           transaction_created_at: "2026-03-01T10:00:00.000Z",
                           agreement_accepted_at: "2026-03-01T12:00:00.000Z",
                           payment_sent_to_escrow_at: "2026-03-01T14:00:00.000Z",
                           inspection_started_at: null,
                           inspection_completed_at: null,
                           transaction_completed_at: null,
+                          role: "CLIENT",
+                          counterpartyRole: "FREELANCER",
                         },
                       },
                     ],
@@ -1813,21 +1790,24 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/approve/{id}": {
       put: {
         summary: "Approve transaction",
-        description: "Approve a transaction by ID. Only the counterparty can approve. Rate limited.",
+        description:
+          "Counterparty accepts the terms. Allowed only while status is CREATED. Moves status to APPROVED (unpaid; buyer can then pay escrow). Does not move to ONGOING — that happens after verified payment. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Transaction approved" },
+          "200": { description: "Transaction status is now APPROVED" },
           "401": { description: "Unauthorized" },
           "404": { description: "Transaction not found" },
+          "409": { description: "Transaction is not in CREATED status" },
         },
       },
     },
     "/api/ticket/reject/{id}": {
       put: {
         summary: "Reject transaction",
-        description: "Reject a transaction by ID. Rate limited.",
+        description:
+          "Counterparty rejects the terms. Allowed only while status is CREATED. Moves status to REJECTED. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1847,10 +1827,11 @@ Welcome to the **Mimotar API** documentation. This API supports:
           },
         },
         responses: {
-          "200": { description: "Transaction rejected" },
+          "200": { description: "Transaction status is now REJECTED" },
           "400": { description: "Validation error or invalid OTP" },
           "401": { description: "Unauthorized" },
           "404": { description: "Transaction not found" },
+          "409": { description: "Transaction is not in CREATED status" },
         },
       },
     },
@@ -2219,7 +2200,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       get: {
         summary: "Get transaction by ID",
         description:
-          "Returns a single transaction by ID. Includes a history object with lifecycle timestamps. Rate limited.",
+          "Returns a single transaction by ID. Includes a logs object with lifecycle timestamps and roles. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -2281,13 +2262,15 @@ Welcome to the **Mimotar API** documentation. This API supports:
                     cancel_approved_at: null,
                     deadlineExtensions: [],
                     milestones: [],
-                    history: {
+                    logs: {
                       transaction_created_at: "2026-03-01T10:00:00.000Z",
                       agreement_accepted_at: "2026-03-01T12:00:00.000Z",
                       payment_sent_to_escrow_at: "2026-03-01T14:00:00.000Z",
                       inspection_started_at: null,
                       inspection_completed_at: null,
                       transaction_completed_at: null,
+                      role: "CLIENT",
+                      counterpartyRole: "FREELANCER",
                     },
                   },
                 },
@@ -2452,7 +2435,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/payment/initialize/{id}": {
       post: {
         summary: "Initialize payment",
-        description: "Starts the payment flow for an approved transaction. Returns a payment link (e.g. Flutterwave). Transaction must be in APPROVED status.",
+        description:
+          "Starts the payment flow for an APPROVED transaction. Returns a payment link (e.g. Flutterwave). Status becomes ONGOING only after the payment webhook confirms funding — not at initialize.",
         tags: ["Payment"],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" }],
         responses: {
@@ -2466,7 +2450,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/payment/webhook": {
       post: {
         summary: "Payment webhook",
-        description: "Called by the payment provider (e.g. Flutterwave) to notify payment status. Do not call manually.",
+        description:
+          "Called by the payment provider (e.g. Flutterwave) to notify payment status. Do not call manually. On verified funding of an APPROVED transaction, status becomes ONGOING.",
         tags: ["Payment"],
         requestBody: { content: { "application/json": { schema: { type: "object" } } } },
         responses: { "200": { description: "Webhook processed" } },
@@ -3304,7 +3289,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                                   title: { type: "string" },
                                   amount: { type: "number" },
                                   currency: { type: "string" },
-                                  status: { type: "string" },
+                                  status: { $ref: "#/components/schemas/StatusEnum" },
                                   from: {
                                     type: "object",
                                     properties: {
@@ -3344,7 +3329,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                               title: { type: "string" },
                               amount: { type: "number" },
                               currency: { type: "string" },
-                              status: { type: "string" },
+                              status: { $ref: "#/components/schemas/StatusEnum" },
                               deadline: { type: "string", format: "date-time" },
                               counterparty: {
                                 type: "object",
@@ -3379,7 +3364,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
                                   id: { type: "integer" },
                                   name: { type: "string" },
                                   amount: { type: "number" },
-                                  status: { type: "string" },
+                                  status: { $ref: "#/components/schemas/StatusEnum" },
                                 },
                               },
                             },

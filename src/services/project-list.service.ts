@@ -1,6 +1,7 @@
 import { Prisma } from "../generated/prisma/client.js";
 import prisma from "../utils/prisma.js";
 import { ProjectsQueryType } from "../zod/TicketSchema.js";
+import { buildTransactionLogs } from "../utils/transaction-logs.js";
 
 const ACTIVE_MILESTONE_STATUSES = ["ONGOING", "PENDING_CLOSURE", "DISPUTE"] as const;
 
@@ -181,14 +182,7 @@ export async function listUserProjectsService(
         transaction.transactionType,
         transaction.milestones
       ),
-      history: {
-        transaction_created_at: transaction.created_at.toISOString(),
-        agreement_accepted_at: agreement_accepted_at?.toISOString() ?? null,
-        payment_sent_to_escrow_at: payment_sent_to_escrow_at?.toISOString() ?? null,
-        inspection_started_at: inspection_started_at?.toISOString() ?? null,
-        inspection_completed_at: inspection_completed_at?.toISOString() ?? null,
-        transaction_completed_at: transaction_completed_at?.toISOString() ?? null,
-      },
+      logs: buildTransactionLogs(transaction, userEmail),
     };
   });
 

@@ -133,7 +133,7 @@ ticketRouter.get(
 
 ticketRouter.get(
   "/:id",
-  // authenticateTokenMiddleware,
+  authenticateTokenMiddleware,
   createRateLimiterMiddleware(10 * 60 * 1000, 10),
   getTransactionByIdCotroller as RequestHandler
 );

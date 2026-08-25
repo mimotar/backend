@@ -17,6 +17,7 @@ import { EmailType } from "../emails/templates/emailTypes.brevo.js";
 import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
 import { settleEscrowScope } from "./escrow-settlement.service.js";
 import { getTransactionParticipants } from "../utils/payment/getTransactionParticipants.js";
+import { buildTransactionLogs } from "../utils/transaction-logs.js";
 
 
 // export const createTransactionService = async (data: TransactionType) => {
@@ -152,7 +153,7 @@ export const createTransactionService = async (data: TransactionType) => {
     },
   });
 };
-export const getTransactionByIdService = async (id: number) => {
+export const getTransactionByIdService = async (id: number, userEmail?: string) => {
   try {
     const transaction = await prisma.transaction.findUnique({
     where: {
@@ -193,16 +194,13 @@ export const getTransactionByIdService = async (id: number) => {
     ...rest
   } = transaction;
 
+  const email =
+    userEmail ??
+    transaction.creator_email;
+
   return {
     ...rest,
-    history: {
-      transaction_created_at: transaction.created_at,
-      agreement_accepted_at,
-      payment_sent_to_escrow_at,
-      inspection_started_at,
-      inspection_completed_at,
-      transaction_completed_at,
-    },
+    logs: buildTransactionLogs(transaction, email),
   };
   } catch (error) {
     console.error("Error fetching transaction by ID:", error);
@@ -449,14 +447,7 @@ export const getAUserTransactionService = async (userEmail: string) => {
 
     return {
       ...rest,
-      history: {
-        transaction_created_at: transaction.created_at,
-        agreement_accepted_at,
-        payment_sent_to_escrow_at,
-        inspection_started_at,
-        inspection_completed_at,
-        transaction_completed_at,
-      },
+      logs: buildTransactionLogs(transaction, userEmail),
     };
   });
 };
