@@ -3,17 +3,11 @@ import { initializeFlutterwavePaymentService } from "../../services/payment/init
 import { Request, Response } from "express";
 import { env } from "../../config/env.js";
 import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
-import axios from "axios";
-import { sendEmailWithTemplate } from "../../services/emailService.js";
-import { getTransactionParticipants } from "../../utils/payment/getTransactionParticipants.js";
 import { deleteTransactionService } from "../../services/transaction-deletion.service.js";
-import { mapFlutterwavePaymentTypeToEnum } from "./normalizepaymentType.js";
-import { PaymentStatus } from "../../generated/prisma/client.js";
 import {
-  calculateEscrowPayment,
-  EscrowFeePayer,
-} from "../../utils/payment/calculateAmountToPay.js";
-import { activateTransactionAfterPayment } from "../../services/payment/activate-after-payment.service.js";
+  confirmEscrowPayment,
+  confirmEscrowPaymentForTransaction,
+} from "../../services/payment/confirm-escrow-payment.service.js";
 
 export const initiatePaymentController = async (
   req: Request,
@@ -120,145 +114,24 @@ export const PaymentWebhookController = async (
     return;
   }
 
-  const baseUrl = "https://api.flutterwave.com/v3/";
-
   try {
-    const flwTransactionId = webhookPayload?.id ?? webhookPayload?.data?.id;
-    if (!flwTransactionId) {
-      res.status(400).json({ message: "Missing Flutterwave transaction id" });
-      return;
-    }
+    const result = await confirmEscrowPayment({
+      flwTransactionId: webhookPayload?.id ?? webhookPayload?.data?.id,
+      txRef: webhookPayload?.data?.tx_ref,
+      webhookPayload,
+    });
 
-    const verification = await axios.get(
-      `${baseUrl}/transactions/${flwTransactionId}/verify`,
-      {
-        headers: {
-          Authorization: `Bearer ${env.FLW_API_SECRET_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (verification.data?.status !== "success") {
-      res.status(400).json({ message: "Flutterwave verification failed" });
-      return;
-    }
-
-    const data = verification.data?.data;
-    if (!data || data.status !== "successful") {
+    if (result.outcome === "not_successful") {
       res.status(200).json({
         success: false,
-        message: "Payment not successful; transaction left unchanged",
+        message: result.message,
       });
       return;
     }
-
-    const transactionId = Number(
-      data.meta?.transaction_id ?? webhookPayload?.meta?.transaction_id
-    );
-    if (!Number.isInteger(transactionId) || transactionId <= 0) {
-      res.status(400).json({ message: "Invalid transaction id in payment meta" });
-      return;
-    }
-
-    const transaction = await prisma.transaction.findUnique({
-      where: { id: transactionId },
-      include: { payment: true },
-    });
-
-    if (!transaction) {
-      res.status(404).json({ message: "Transaction not found" });
-      return;
-    }
-
-    // Idempotent: already funded
-    if (transaction.status === "ONGOING" && transaction.payment) {
-      res.status(200).json({
-        success: true,
-        message: "Payment already processed",
-      });
-      return;
-    }
-
-    if (transaction.status !== "APPROVED") {
-      res.status(409).json({
-        message: `Cannot fund a transaction in status ${transaction.status}`,
-      });
-      return;
-    }
-
-    const { buyerTotalPayment } = calculateEscrowPayment(
-      transaction.amount,
-      transaction.pay_escrow_fee as EscrowFeePayer
-    );
-    const paidAmount = Number(data.amount);
-    if (Number.isFinite(paidAmount) && Math.abs(paidAmount - buyerTotalPayment) > 0.01) {
-      res.status(409).json({
-        message: "Paid amount does not match expected escrow total",
-      });
-      return;
-    }
-
-    if (
-      data.currency &&
-      transaction.currency &&
-      String(data.currency).toUpperCase() !== String(transaction.currency).toUpperCase()
-    ) {
-      res.status(409).json({
-        message: "Paid currency does not match transaction currency",
-      });
-      return;
-    }
-
-    const existingByRef = data.tx_ref
-      ? await prisma.payment.findUnique({
-          where: { transaction_reference: data.tx_ref },
-        })
-      : null;
-    if (existingByRef) {
-      res.status(200).json({
-        success: true,
-        message: "Payment reference already recorded",
-      });
-      return;
-    }
-
-    const participants = await getTransactionParticipants(transactionId);
-
-    await prisma.$transaction(async (tx) => {
-      await tx.payment.create({
-        data: {
-          status: PaymentStatus.COMPLETED,
-          payment_method: mapFlutterwavePaymentTypeToEnum(data?.payment_type),
-          transaction_reference: data.tx_ref,
-          amount: Math.round(paidAmount || buyerTotalPayment),
-          transaction_id: transactionId,
-          title:
-            data?.meta?.description ||
-            transaction.transaction_description ||
-            "Payment for transaction",
-        },
-      });
-
-      await activateTransactionAfterPayment(transactionId, tx);
-    });
-
-    await sendEmailWithTemplate(
-      participants.seller.email,
-      {
-        buyer: participants.buyer.fullname,
-        buyer_email: participants.buyer.email,
-        seller: participants.seller.fullname,
-        description: data?.meta?.description || transaction.transaction_description,
-        amount: paidAmount || buyerTotalPayment,
-        transaction_id: transactionId,
-      },
-      9
-    );
 
     res.status(200).json({
       success: true,
-      message: "Webhook processed successfully",
+      message: result.message,
     });
   } catch (error) {
     console.error("Payment webhook error:", error);
@@ -268,4 +141,136 @@ export const PaymentWebhookController = async (
     }
     res.status(500).json({ message: "Could not process webhook" });
   }
+};
+
+type AuthUser = {
+  id?: number;
+  userId?: number;
+  email?: string;
+};
+
+function parsePositiveInt(value: string | string[] | undefined): number | null {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n <= 0) return null;
+  return n;
+}
+
+function isTransactionParticipant(
+  transaction: {
+    user_id: number | null;
+    creator_email: string;
+    reciever_email: string;
+  },
+  user: AuthUser | undefined
+): boolean {
+  const userId = user?.id ?? user?.userId;
+  const email = user?.email?.toLowerCase();
+
+  if (userId && transaction.user_id === userId) {
+    return true;
+  }
+
+  if (!email) {
+    return false;
+  }
+
+  return (
+    transaction.creator_email.toLowerCase() === email ||
+    transaction.reciever_email.toLowerCase() === email
+  );
+}
+
+function paymentConfirmBody(req: Request) {
+  return {
+    tx_ref: req.body?.tx_ref as string | undefined,
+    transaction_id: req.body?.transaction_id as string | number | undefined,
+  };
+}
+
+async function handleConfirmForTransaction(req: Request, res: Response) {
+  const transactionId = parsePositiveInt(req.params.id);
+  if (!transactionId) {
+    res.status(400).json({ message: "Transaction ID must be a positive integer" });
+    return;
+  }
+
+  try {
+    const result = await confirmEscrowPaymentForTransaction(
+      transactionId,
+      paymentConfirmBody(req)
+    );
+
+    if (result.outcome === "not_successful") {
+      res.status(409).json({
+        success: false,
+        message: result.message,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      transactionId: result.transactionId,
+    });
+  } catch (error) {
+    console.error("Payment confirm error:", error);
+    if (error instanceof GlobalError) {
+      res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+        name: error.name,
+      });
+      return;
+    }
+    res.status(500).json({ message: "Could not confirm payment" });
+  }
+}
+
+/**
+ * Called by the frontend /payment/success page after Flutterwave redirect.
+ * Body may include `tx_ref` and/or Flutterwave `transaction_id` from the query string.
+ * If omitted, the PENDING payment's stored tx_ref is used.
+ */
+export const verifyPaymentController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const transactionId = parsePositiveInt(req.params.id);
+  if (!transactionId) {
+    res.status(400).json({ message: "Transaction ID must be a positive integer" });
+    return;
+  }
+
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: transactionId },
+    select: {
+      user_id: true,
+      creator_email: true,
+      reciever_email: true,
+    },
+  });
+
+  if (!transaction) {
+    res.status(404).json({ message: "Transaction not found", success: false });
+    return;
+  }
+
+  if (!isTransactionParticipant(transaction, req.user as AuthUser | undefined)) {
+    res.status(403).json({ message: "Forbidden", success: false });
+    return;
+  }
+
+  await handleConfirmForTransaction(req, res);
+};
+
+/**
+ * Ops recovery for a Flutterwave-successful charge that never reached ONGOING.
+ */
+export const reconcilePaymentController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  await handleConfirmForTransaction(req, res);
 };
