@@ -109,4 +109,19 @@ describe("initializeFlutterwavePaymentService", () => {
     });
     expect(mockedAxios.post).not.toHaveBeenCalled();
   });
+
+  it("maps a Flutterwave 401 to a descriptive configuration error", async () => {
+    mockedAxios.post.mockRejectedValue({
+      isAxiosError: true,
+      response: { status: 401, data: { message: "Invalid authorization key" } },
+    });
+
+    await expect(
+      initializeFlutterwavePaymentService({ transaction_id: 7 })
+    ).rejects.toMatchObject({
+      name: "PAYMENT_INITIALIZATION_FAILED",
+      statusCode: 502,
+      message: expect.stringContaining("FLW_API_SECRET"),
+    });
+  });
 });

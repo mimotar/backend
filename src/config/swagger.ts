@@ -33,11 +33,11 @@ Welcome to the **Mimotar API** documentation. This API supports:
     `.trim(),
   },
   servers: [
+    { url: `http://localhost:${PORT}`, description: "Development server" },
     {
       url: "https://mim-backend.onrender.com",
       description: "Production (Render)",
     },
-    { url: `http://localhost:${PORT}`, description: "Development server" },
   ],
   components: {
     securitySchemes: {
@@ -1480,11 +1480,53 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket": {
       post: {
         summary: "Create transaction",
-        description: "Create a new escrow transaction in CREATED status (waiting for counterparty acceptance). Supply only creator_role; the receiver is assigned the opposite role automatically (CLIENT ↔ FREELANCER). Every transaction requires deadline, its expected completion date. A MILESTONE_BASED_PROJECT additionally requires at least one milestone, each with a deadline on or before the transaction deadline. expiresAt controls approval-link expiry, not completion.",
+        description: "Create a new escrow transaction in CREATED status (waiting for counterparty acceptance). Supply only creator_role; the receiver is assigned the opposite role automatically (CLIENT ↔ FREELANCER). Every transaction requires deadline, its expected completion date. Leave milestones empty unless transactionType is MILESTONE_BASED_PROJECT (then send a JSON array). expiresAt controls approval-link expiry, not completion.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         requestBody: {
           content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                description: "Use this in Swagger to create a ticket without files. Omit the milestones field unless transactionType is MILESTONE_BASED_PROJECT.",
+                required: [
+                  "title", "currency", "amount", "transaction_description", "pay_escrow_fee",
+                  "creator_fullname", "creator_email", "creator_no", "creator_role",
+                  "receiver_fullname", "reciever_email", "receiver_no", "transactionType",
+                  "inspection_duration", "expiresAt", "deadline",
+                ],
+                properties: {
+                  title: { type: "string" },
+                  currency: { $ref: "#/components/schemas/CurrencyEnum" },
+                  amount: { type: "integer" },
+                  transaction_description: { type: "string" },
+                  pay_escrow_fee: { $ref: "#/components/schemas/EscrowFeePayerEnum" },
+                  additional_agreement: { type: "string", nullable: true },
+                  creator_fullname: { type: "string" },
+                  creator_email: { type: "string", format: "email" },
+                  creator_no: { type: "string" },
+                  creator_address: { type: "string", nullable: true },
+                  creator_role: {
+                    allOf: [{ $ref: "#/components/schemas/RoleEnum" }],
+                    description: "The creator's role. The receiver role is assigned automatically as the opposite role.",
+                  },
+                  receiver_fullname: { type: "string" },
+                  reciever_email: { type: "string", format: "email" },
+                  receiver_no: { type: "string" },
+                  receiver_address: { type: "string", nullable: true },
+                  terms: { type: "string", nullable: true },
+                  transactionType: { $ref: "#/components/schemas/TransactionTypeEnum" },
+                  deadline: { type: "string", format: "date-time", description: "Required expected completion date for every transaction" },
+                  inspection_duration: { type: "integer" },
+                  expiresAt: { type: "integer" },
+                  milestones: {
+                    type: "array",
+                    items: { $ref: "#/components/schemas/Milestone" },
+                    description: "Omit this field unless transactionType is MILESTONE_BASED_PROJECT. Do not add an empty item.",
+                  },
+                },
+              },
+            },
             "multipart/form-data": {
               schema: {
                 type: "object",
@@ -1520,7 +1562,11 @@ Welcome to the **Mimotar API** documentation. This API supports:
                   inspection_duration: { type: "integer" },
                   expiresAt: { type: "integer" },
                   files: { type: "array", items: { type: "string", format: "binary" }, maxItems: 2 },
-                  milestones: { type: "array", items: { $ref: "#/components/schemas/Milestone" } },
+                  milestones: {
+                    type: "string",
+                    description:
+                      "Leave blank for SERVICE, PRODUCT, and RENTAL. Only fill when transactionType is MILESTONE_BASED_PROJECT. Paste a JSON array, e.g. [{\"name\":\"Design\",\"amount\":400,\"deadline\":\"2026-10-01T00:00:00.000Z\"}]",
+                  },
                 },
               },
             },
@@ -1791,12 +1837,31 @@ Welcome to the **Mimotar API** documentation. This API supports:
       put: {
         summary: "Approve transaction",
         description:
-          "Counterparty accepts the terms. Allowed only while status is CREATED. Moves status to APPROVED (unpaid; buyer can then pay escrow). Does not move to ONGOING — that happens after verified payment. Rate limited.",
+          "Counterparty accepts the terms. First call POST /api/ticket/{id}/request-token; the 6-digit OTP is emailed to the receiver. Then send that OTP here within 15 minutes. Allowed only while status is CREATED. Moves status to APPROVED (unpaid; buyer can then pay escrow). Does not move to ONGOING — that happens after verified payment. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp"],
+                properties: {
+                  otp: {
+                    type: "string",
+                    description: "6-digit code from POST /api/ticket/{id}/request-token (emailed to the receiver). Valid for 15 minutes.",
+                    example: "123456",
+                  },
+                },
+              },
+            },
+          },
+        },
         responses: {
           "200": { description: "Transaction status is now APPROVED" },
+          "400": { description: "Missing, invalid, or expired OTP" },
           "401": { description: "Unauthorized" },
           "404": { description: "Transaction not found" },
           "409": { description: "Transaction is not in CREATED status" },
@@ -2185,12 +2250,12 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/request-token": {
       post: {
         summary: "Request validation token",
-        description: "Request a token (e.g. OTP) to validate or complete the transaction. Rate limited.",
+        description: "Emails a 6-digit OTP to the receiver so they can approve or reject the transaction. The OTP is valid for 15 minutes. Then call PUT /api/ticket/approve/{id} or PUT /api/ticket/reject/{id} with `{ \"otp\": \"...\" }`. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
-          "200": { description: "Token sent (e.g. via email)" },
+          "200": { description: "OTP emailed to the receiver. The code is not returned in the response. Valid 15 minutes." },
           "401": { description: "Unauthorized" },
           "404": { description: "Transaction not found" },
         },
@@ -2441,9 +2506,10 @@ Welcome to the **Mimotar API** documentation. This API supports:
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" }],
         responses: {
           "200": { description: "Payment link and details returned" },
-          "400": { description: "Transaction not approved or invalid state" },
+          "400": { description: "Transaction not approved, expired, or already paid" },
           "404": { description: "Transaction not found" },
-          "500": { description: "Payment provider error" },
+          "502": { description: "Flutterwave rejected the request (invalid secret key, or provider error). Message explains what to fix." },
+          "503": { description: "Flutterwave is not configured (missing FLW_API_SECRET)" },
         },
       },
     },

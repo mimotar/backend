@@ -30,9 +30,12 @@ export const env = {
   API_KEY: process.env.API_KEY,
   API_SECRET: process.env.API_SECRET,
 
-  FLW_API_SECRET_KEY: process.env.FLW_API_SECRET,
+  FLW_API_SECRET_KEY:
+    process.env.FLW_API_SECRET?.trim() ||
+    process.env.FLW_SECRET_KEY?.trim() ||
+    process.env.FLW_SECRET?.trim(),
   FLW_ENCRYPTION_KEY: process.env.FLW_ENCRYPTION_KEY,
-  FLW_BASE_URL: process.env.FLW_BASE_URL,
+  FLW_BASE_URL: process.env.FLW_BASE_URL || "https://api.flutterwave.com/v3",
   FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
   FLW_WEBHOOK_URL: process.env.FLW_WEBHOOK_URL,
   FLW_WEBHOOK_SECRET: process.env.FLW_WEBHOOK_SECRET,

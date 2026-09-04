@@ -22,6 +22,7 @@ export const GlobalErrorMiddleware = (
       });
       return;
     } else {
+      console.error("Non-operational error:", err);
       res.status(500).json({
         name: err.name,
         message: "Something went wrong",
@@ -29,6 +30,7 @@ export const GlobalErrorMiddleware = (
       return;
     }
   } else {
+    console.error("Unhandled error:", err);
     res.status(500).json({
       name: "error",
       message: "Internal Server Error",

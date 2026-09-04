@@ -391,7 +391,7 @@ export const requestTokenToValidateTransactionController = async (req: Request, 
       throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
     }
     res.status(200).json({
-      message: "Token requested successfully",
+      message: "OTP sent to the receiver's email",
       data: requestToken,
     });
   } catch (error){

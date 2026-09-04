@@ -28,6 +28,24 @@ const FutureDeadlineSchema = z.coerce.date().refine(
   "Deadline must be in the future"
 );
 
+/** Swagger/multipart often sends "" or "[]" when milestones are unused. Treat those as omitted. */
+function parseOptionalMilestones(val: unknown) {
+  if (val == null) return undefined;
+  if (Array.isArray(val)) return val.length === 0 ? undefined : val;
+  if (typeof val === "string") {
+    const trimmed = val.trim();
+    if (!trimmed || trimmed === "[]") return undefined;
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed) && parsed.length === 0) return undefined;
+      return parsed;
+    } catch {
+      return val;
+    }
+  }
+  return val;
+}
+
 export const MilestoneSchema = z.object({
   name: z.string().min(1, "Milestone name is required"),
   amount: z.coerce.number().int().positive("Milestone amount must be positive"),
@@ -78,19 +96,7 @@ export const TransactionSchema = z.object({
     )
     .max(2)
     .optional(),
-  milestones: z.preprocess(
-    (val) => {
-      if (typeof val === "string") {
-        try {
-          return JSON.parse(val);
-        } catch {
-          return val;
-        }
-      }
-      return val;
-    },
-    z.array(MilestoneSchema).optional()
-  ),
+  milestones: z.preprocess(parseOptionalMilestones, z.array(MilestoneSchema).optional()),
 }).superRefine((transaction, ctx) => {
   if (transaction.transactionType !== "MILESTONE_BASED_PROJECT") {
     if (transaction.milestones?.length) {
@@ -143,6 +149,12 @@ export const DeadlineExtensionSchema = z.object({
 
 export type DeadlineExtensionType = z.infer<typeof DeadlineExtensionSchema>;
 
+export const ApproveTransactionSchema = z.object({
+  otp: z.string().min(1, "OTP is required"),
+});
+
+export type ApproveTransactionType = z.infer<typeof ApproveTransactionSchema>;
+
 export const RejectTransactionSchema = z.object({
   otp: z.string().min(1, "OTP is required"),
   rejection_reason: z.string().min(1, "Rejection reason is required").max(500, "Rejection reason must be under 500 characters"),
@@ -179,19 +191,7 @@ export const ReviseTransactionSchema = z
     pay_escrow_fee: EscrowFeePayerEnum.optional(),
     pay_shipping_cost: EscrowFeePayerEnum.nullable().optional(),
     files: z.array(FileAttachmentSchema).max(2).optional(),
-    milestones: z.preprocess(
-      (val) => {
-        if (typeof val === "string") {
-          try {
-            return JSON.parse(val);
-          } catch {
-            return val;
-          }
-        }
-        return val;
-      },
-      z.array(MilestoneSchema).optional()
-    ),
+    milestones: z.preprocess(parseOptionalMilestones, z.array(MilestoneSchema).optional()),
   })
   .superRefine((data, ctx) => {
     if (data.milestones && data.deadline) {

@@ -34,19 +34,42 @@ interface FlutterwaveResponse {
   };
 }
 
-const FLW_CONFIG = {
-  baseUrl: env.FLW_BASE_URL,
-  headers: {
-    Authorization: `Bearer ${env.FLW_API_SECRET_KEY}`,
+function flutterwaveBaseUrl() {
+  return (env.FLW_BASE_URL || "https://api.flutterwave.com/v3").replace(
+    /\/$/,
+    ""
+  );
+}
+
+function flutterwaveSecretKey() {
+  return (env.FLW_API_SECRET_KEY || "").trim().replace(/^["']|["']$/g, "");
+}
+
+function flutterwaveAuthHeaders() {
+  const secret = flutterwaveSecretKey();
+  if (!secret) {
+    throw new PaymentInitializationError(
+      "Flutterwave secret key is missing. Set FLW_API_SECRET in .env to the Secret Key from the Flutterwave dashboard (FLWSECK_TEST_... or FLWSECK_LIVE_...), not the public key.",
+      503
+    );
+  }
+  if (secret.startsWith("FLWPUBK_")) {
+    throw new PaymentInitializationError(
+      "FLW_API_SECRET is a public key. Use the Secret Key (FLWSECK_...) from the Flutterwave dashboard.",
+      503
+    );
+  }
+  return {
+    Authorization: `Bearer ${secret}`,
     "Content-Type": "application/json",
-  },
-};
+  };
+}
 
 export class PaymentInitializationError extends GlobalError {
-  details?: any;
+  details?: unknown;
 
-  constructor(message: string, details?: any) {
-    super(message, "PAYMENT_INITIALIZATION_FAILED", 400, false);
+  constructor(message: string, statusCode = 502, details?: unknown) {
+    super("PAYMENT_INITIALIZATION_FAILED", message, statusCode, true);
     this.details = details;
   }
 }
@@ -109,6 +132,7 @@ export const initializeFlutterwavePaymentService = async (
   payload: FlutterwaveInitPayload
 ): Promise<FlutterwaveResponse> => {
   try {
+    const headers = flutterwaveAuthHeaders();
     const { transaction_id } = payload;
 
     const transaction = await validateTransaction(transaction_id);
@@ -154,9 +178,9 @@ export const initializeFlutterwavePaymentService = async (
     };
 
     const response = await axios.post<FlutterwaveResponse>(
-      `${FLW_CONFIG.baseUrl}/payments`,
+      `${flutterwaveBaseUrl()}/payments`,
       requestPayload,
-      { headers: FLW_CONFIG.headers }
+      { headers }
     );
 
     if (
@@ -164,10 +188,11 @@ export const initializeFlutterwavePaymentService = async (
       response.data.status !== "success" ||
       !response.data.data?.link
     ) {
-      throw new PaymentInitializationError("Failed to initialize payment", {
-        status: response.status,
-        response: response.data,
-      });
+      throw new PaymentInitializationError(
+        response.data?.message || "Flutterwave did not return a payment link",
+        502,
+        { status: response.status, response: response.data }
+      );
     }
 
     await upsertPendingPayment({
@@ -183,14 +208,26 @@ export const initializeFlutterwavePaymentService = async (
       throw error;
     }
 
-    const errorMessage = axios.isAxiosError(error)
-      ? error.response?.data?.message || error.message
-      : error instanceof Error
-      ? error.message
-      : "Unknown payment initialization error";
+    const axiosResponse = axios.isAxiosError?.(error)
+      ? error.response
+      : (error as { response?: { status?: number; data?: { message?: string } } })
+          ?.response;
+    const providerMessage = axiosResponse?.data?.message;
 
-    throw new PaymentInitializationError(errorMessage, {
-      originalError: error,
+    if (axiosResponse?.status === 401) {
+      throw new PaymentInitializationError(
+        "Flutterwave rejected the API secret (Invalid authorization key). Set FLW_API_SECRET in .env to the current Secret Key from the Flutterwave dashboard (FLWSECK_...), not the public key.",
+        502,
+        { status: 401 }
+      );
+    }
+
+    const errorMessage =
+      providerMessage ||
+      (error instanceof Error ? error.message : "Unknown payment initialization error");
+
+    throw new PaymentInitializationError(errorMessage, 502, {
+      status: axiosResponse?.status,
     });
   }
 };

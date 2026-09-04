@@ -82,6 +82,19 @@ describe("project and milestone deadlines", () => {
     }
   });
 
+  it("treats blank swagger milestone fields as omitted for non-milestone tickets", () => {
+    const payload = {
+      ...baseTransaction,
+      transactionType: "SERVICE",
+      deadline: futureDate(30),
+    };
+
+    for (const milestones of ["", "[]", []]) {
+      const result = TransactionSchema.safeParse({ ...payload, milestones });
+      expect(result.success).toBe(true);
+    }
+  });
+
   it("accepts omitted nullable transaction fields", () => {
     const {
       additional_agreement,
