@@ -2436,7 +2436,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       post: {
         summary: "Initialize payment",
         description:
-          "Starts the payment flow for an APPROVED transaction. Returns a payment link (e.g. Flutterwave). Status becomes ONGOING only after the payment webhook confirms funding — not at initialize.",
+          "Starts the payment flow for an APPROVED transaction. Returns a payment link (e.g. Flutterwave) and stores a PENDING payment with the Flutterwave tx_ref. Status becomes ONGOING only after webhook, POST /api/payment/verify/{id}, or admin reconcile confirms funding — not at initialize.",
         tags: ["Payment"],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" }],
         responses: {
@@ -2451,10 +2451,72 @@ Welcome to the **Mimotar API** documentation. This API supports:
       post: {
         summary: "Payment webhook",
         description:
-          "Called by the payment provider (e.g. Flutterwave) to notify payment status. Do not call manually. On verified funding of an APPROVED transaction, status becomes ONGOING.",
+          "Called by Flutterwave to notify payment status. Do not call manually. On verified funding of an APPROVED or EXPIRED (already charged) transaction, status becomes ONGOING. If the webhook is missed, the frontend should call POST /api/payment/verify/{id} from /payment/success.",
         tags: ["Payment"],
         requestBody: { content: { "application/json": { schema: { type: "object" } } } },
         responses: { "200": { description: "Webhook processed" } },
+      },
+    },
+    "/api/payment/verify/{id}": {
+      post: {
+        summary: "Verify payment after checkout redirect",
+        description:
+          "Fallback when the Flutterwave webhook is delayed or missed. Call from the frontend /payment/success page. Uses the stored PENDING tx_ref, or optional body `tx_ref` / Flutterwave `transaction_id` from the redirect query string. On verified success, status becomes ONGOING. Must be a participant on the transaction.",
+        tags: ["Payment"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Mimotar transaction ID" }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  tx_ref: { type: "string", description: "Flutterwave tx_ref from the redirect URL" },
+                  transaction_id: { description: "Flutterwave charge id from the redirect URL", oneOf: [{ type: "string" }, { type: "integer" }] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Payment confirmed; transaction is ONGOING (or was already processed)" },
+          "400": { description: "Missing tx_ref / Flutterwave id, or Flutterwave verification failed" },
+          "401": { description: "Unauthorized" },
+          "403": { description: "Caller is not a participant on this transaction" },
+          "404": { description: "Transaction not found" },
+          "409": { description: "Payment not successful, amount/currency mismatch, or invalid status" },
+        },
+      },
+    },
+    "/api/payment/reconcile/{id}": {
+      post: {
+        summary: "Admin reconcile a paid-but-not-ONGOING transaction",
+        description:
+          "Ops recovery for a Flutterwave-successful charge that never activated the deal. Protected by x-admin-api-key. Same confirm path as webhook and verify.",
+        tags: ["Payment"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Mimotar transaction ID" },
+          { name: "x-admin-api-key", in: "header", required: true, schema: { type: "string" } },
+        ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  tx_ref: { type: "string" },
+                  transaction_id: { oneOf: [{ type: "string" }, { type: "integer" }] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Payment confirmed; transaction is ONGOING" },
+          "401": { description: "Missing or invalid admin API key" },
+          "404": { description: "Transaction not found" },
+          "409": { description: "Cannot fund this transaction" },
+        },
       },
     },
 

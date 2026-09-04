@@ -2,10 +2,10 @@ import axios from "axios";
 import { env } from "../../config/env.js";
 import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
 import { prisma } from "../../config/db.js";
-import { CurrencyEnum } from "../../types/payment/index.js";
 import { generateTransactionReference } from "../../utils/payment/generateTransactionReference.js";
 import { calculateEscrowPayment, EscrowFeePayer } from "../../utils/payment/calculateAmountToPay.js";
 import { checkAndExpireAllTransactionService } from "../ticket.service.js";
+import { PaymentStatus } from "../../generated/prisma/enums.js";
 
 
 interface FlutterwaveCustomer {
@@ -65,6 +65,7 @@ const validateTransaction = async (transactionId: number) => {
 
   const transaction = await prisma.transaction.findUnique({
     where: { id: transactionId },
+    include: { payment: true },
   });
 
   if (!transaction) {
@@ -80,7 +81,10 @@ const validateTransaction = async (transactionId: number) => {
     );
   }
 
-  if (transaction.status === "ONGOING") {
+  if (
+    transaction.status === "ONGOING" ||
+    transaction.payment?.status === PaymentStatus.COMPLETED
+  ) {
     throw new GlobalError(
       "This payment has already been made",
       "ALREADY_PAID",
@@ -166,18 +170,12 @@ export const initializeFlutterwavePaymentService = async (
       });
     }
 
-    
-    // await prisma.$transaction([
-    //   prisma.payment.create({
-    //     data: {
-    //       amount: totalAmountToPay,
-    //       transaction_reference,
-    //       title: description,
-    //       transaction_id,
-    //     },
-    //   }),
-      
-    // ]);
+    await upsertPendingPayment({
+      transaction_id,
+      transaction_reference,
+      amount: Math.round(buyerTotalPayment),
+      title: description,
+    });
 
     return response.data;
   } catch (error) {
@@ -196,3 +194,45 @@ export const initializeFlutterwavePaymentService = async (
     });
   }
 };
+
+async function upsertPendingPayment(data: {
+  transaction_id: number;
+  transaction_reference: string;
+  amount: number;
+  title: string;
+}) {
+  const existing = await prisma.payment.findUnique({
+    where: { transaction_id: data.transaction_id },
+  });
+
+  if (existing?.status === PaymentStatus.COMPLETED) {
+    throw new GlobalError(
+      "This payment has already been made",
+      "ALREADY_PAID",
+      400,
+      false
+    );
+  }
+
+  if (existing) {
+    return prisma.payment.update({
+      where: { transaction_id: data.transaction_id },
+      data: {
+        transaction_reference: data.transaction_reference,
+        amount: data.amount,
+        title: data.title,
+        status: PaymentStatus.PENDING,
+      },
+    });
+  }
+
+  return prisma.payment.create({
+    data: {
+      transaction_id: data.transaction_id,
+      transaction_reference: data.transaction_reference,
+      amount: data.amount,
+      title: data.title,
+      status: PaymentStatus.PENDING,
+    },
+  });
+}

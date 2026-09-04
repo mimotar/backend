@@ -4,7 +4,7 @@ import { GlobalError } from "../../middlewares/error/GlobalErrorHandler.js";
 type TransactionClient = Prisma.TransactionClient;
 
 /**
- * Sole path that moves an APPROVED transaction to ONGOING after verified payment.
+ * Moves an APPROVED or EXPIRED transaction to ONGOING after verified payment.
  * Also activates the first milestone for milestone-based projects.
  * Must be called inside a Prisma interactive transaction after payment is recorded.
  */
@@ -25,7 +25,8 @@ export async function activateTransactionAfterPayment(
     return transaction;
   }
 
-  if (transaction.status !== "APPROVED") {
+  // EXPIRED is allowed when Flutterwave already took the money after checkout was opened.
+  if (transaction.status !== "APPROVED" && transaction.status !== "EXPIRED") {
     throw new GlobalError(
       `Cannot activate payment for a transaction in status ${transaction.status}`,
       "INVALID_TRANSACTION_STATE",
