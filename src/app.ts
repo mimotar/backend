@@ -13,12 +13,14 @@ dotenv.config();
 
 import { connectDB } from "./config/db.js";
 import { setupSwagger } from "./config/swagger.js";
+import { env } from "./config/env.js";
 import "./config/bullmq.js";
 
 const app = express();
 
-// Allowed origins
+// Allowed origins (include the API host so Swagger at /docs can Try it out)
 const allowedOrigins: string[] = [
+  `http://localhost:${env.PORT || "3000"}`,
   "http://localhost:3000",
   "http://localhost:5173",
   "http://localhost:10000",
@@ -41,7 +43,7 @@ const corsOptions: cors.CorsOptions = {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, false);
     }
   },
   credentials: true,

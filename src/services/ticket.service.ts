@@ -343,7 +343,8 @@ export const requestTokenToValidateTransactionService = async (id: number) => {
     throw new Error("Failed to update transaction");
   }
   await sendEmailWithTemplate(transaction.reciever_email, {otp, firstName: transaction.receiver_fullname},8)
-  return updatedTransaction;
+  const { otp: _otp, otp_created_at: _otpCreatedAt, ...safeTransaction } = updatedTransaction;
+  return safeTransaction;
 }
 
 export const validateTransactionOtpService = async (id: number, otp: string) => {
@@ -353,10 +354,29 @@ export const validateTransactionOtpService = async (id: number, otp: string) => 
     throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
   }
 
+  if (!otp) {
+    throw new GlobalError(
+      "OTP is required. Request one via POST /api/ticket/:id/request-token",
+      "OtpRequiredError",
+      400,
+      true
+    );
+  }
+
   const now = new Date();
   const otpCreated = transaction.otp_created_at;
+  const OTP_EXPIRY_MS = 15 * 60 * 1000;
 
-  if (!otpCreated || now.getTime() - otpCreated.getTime() > 60 * 1000) {
+  if (!otpCreated || !transaction.otp) {
+    throw new GlobalError(
+      "No active OTP. Request one via POST /api/ticket/:id/request-token",
+      "OtpNotRequestedError",
+      400,
+      true
+    );
+  }
+
+  if (now.getTime() - otpCreated.getTime() > OTP_EXPIRY_MS) {
     throw new GlobalError("OTP expired", "OtpExpiredError", 400, true);
   }
 

@@ -47,7 +47,18 @@ export const initiatePaymentController = async (
     }
   } catch (error) {
     console.error("Error initiating payment:", error);
-    res.status(500).json({ message: "Internal server error" });
+    if (error instanceof GlobalError) {
+      res.status(error.statusCode).json({
+        success: false,
+        name: error.name,
+        message: error.message,
+      });
+      return;
+    }
+    res.status(500).json({
+      success: false,
+      message: "Could not initialize payment",
+    });
     return;
   }
 };
