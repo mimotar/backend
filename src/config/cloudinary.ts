@@ -72,6 +72,65 @@ export const milestoneImageUpload = multer({
   },
 });
 
+const DELIVERY_ALLOWED_MIME_TYPES = new Set([
+  "application/zip",
+  "application/x-zip-compressed",
+  "application/x-zip",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
+
+export type DeliveryFileType = "image" | "pdf" | "doc" | "other";
+
+export type DeliveryFile = {
+  fileName: string;
+  fileType: DeliveryFileType;
+  fileUrl: string;
+  fileId: string;
+};
+
+export function mapDeliveryFileType(mimetype: string): DeliveryFileType {
+  if (mimetype.startsWith("image/")) return "image";
+  if (mimetype === "application/pdf") return "pdf";
+  if (
+    mimetype === "application/msword" ||
+    mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    return "doc";
+  }
+  return "other";
+}
+
+export function isAllowedDeliveryMime(mimetype: string): boolean {
+  return (
+    mimetype.startsWith("image/") || DELIVERY_ALLOWED_MIME_TYPES.has(mimetype)
+  );
+}
+
+export const deliveryUpload = multer({
+  storage,
+  limits: {
+    files: 1,
+    fileSize: 25 * 1024 * 1024,
+  },
+  fileFilter: (_req, file, callback) => {
+    if (!isAllowedDeliveryMime(file.mimetype)) {
+      callback(
+        new GlobalError(
+          "INVALID_DELIVERY_FILE_TYPE",
+          "Delivery file must be a zip, PDF, Word document, or image",
+          400,
+          true
+        )
+      );
+      return;
+    }
+    callback(null, true);
+  },
+});
+
 
 
 // Deleting files with their ids

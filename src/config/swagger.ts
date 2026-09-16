@@ -12,7 +12,7 @@ const openApiSpec = {
   openapi: "3.0.0",
   info: {
     title: "Mimotar API",
-    version: "1.0.0",
+    version: "1.1.0",
     description: `
 Welcome to the **Mimotar API** documentation. This API supports:
 
@@ -30,14 +30,16 @@ Welcome to the **Mimotar API** documentation. This API supports:
 **Base path:** All endpoints are prefixed with \`/api\` (e.g. \`/api/user\`, \`/api/ticket\`).
 
 **Authentication:** Many endpoints require a JWT in the \`Authorization\` header: \`Bearer <token>\`.
+
+**Resolve / delivery:** \`PUT /api/ticket/{id}/resolve\` and \`PUT /api/ticket/{id}/milestones/{milestoneId}/resolve\` now require \`multipart/form-data\` with a \`note\` and a \`file\`. Delivery is stored on \`delivery_note\`, \`delivery_file\`, and \`delivery_submitted_at\` (transaction or milestone) and does not overwrite agreement \`files\`.
     `.trim(),
   },
   servers: [
+    { url: `http://localhost:${PORT}`, description: "Development server" },
     {
       url: "https://mim-backend.onrender.com",
       description: "Production (Render)",
     },
-    { url: `http://localhost:${PORT}`, description: "Development server" },
   ],
   components: {
     securitySchemes: {
@@ -138,6 +140,25 @@ Welcome to the **Mimotar API** documentation. This API supports:
                 fileUrl: { type: "string", format: "uri" },
               },
             },
+          },
+          delivery_note: {
+            type: "string",
+            nullable: true,
+            maxLength: 2000,
+            readOnly: true,
+            description: "Freelancer note submitted with the milestone delivery",
+          },
+          delivery_file: {
+            allOf: [{ $ref: "#/components/schemas/DeliveryFile" }],
+            nullable: true,
+            readOnly: true,
+            description: "Delivery attachment for this milestone. Separate from agreement files.",
+          },
+          delivery_submitted_at: {
+            type: "string",
+            format: "date-time",
+            nullable: true,
+            readOnly: true,
           },
           images: {
             type: "array",
@@ -301,6 +322,33 @@ Welcome to the **Mimotar API** documentation. This API supports:
           fileUrl: { type: "string", format: "uri", example: "https://res.cloudinary.com/demo/brief.pdf" },
         },
       },
+      DeliveryFile: {
+        type: "object",
+        properties: {
+          fileName: { type: "string", example: "website-delivery.zip" },
+          fileType: { type: "string", enum: ["image", "pdf", "doc", "other"], example: "other" },
+          fileUrl: { type: "string", format: "uri", example: "https://res.cloudinary.com/demo/website-delivery.zip" },
+          fileId: { type: "string", example: "transactions/deliveries/abc123" },
+        },
+      },
+      ResolveDeliveryBody: {
+        type: "object",
+        required: ["note", "file"],
+        properties: {
+          note: {
+            type: "string",
+            minLength: 1,
+            maxLength: 2000,
+            description: "Delivery note for the buyer",
+            example: "Landing page source, assets, and a short handoff guide.",
+          },
+          file: {
+            type: "string",
+            format: "binary",
+            description: "One zip, PDF, Word document, or image. Max 25MB. Field name must be `file`.",
+          },
+        },
+      },
       PaymentResponse: {
         type: "object",
         nullable: true,
@@ -389,6 +437,23 @@ Welcome to the **Mimotar API** documentation. This API supports:
             type: "array",
             nullable: true,
             items: { $ref: "#/components/schemas/TransactionFile" },
+            description: "Agreement attachments from create time. Not overwritten by freelancer delivery.",
+          },
+          delivery_note: {
+            type: "string",
+            nullable: true,
+            maxLength: 2000,
+            description: "Freelancer note submitted when requesting closure",
+          },
+          delivery_file: {
+            allOf: [{ $ref: "#/components/schemas/DeliveryFile" }],
+            nullable: true,
+            description: "Freelancer delivery file. Stored separately from agreement files.",
+          },
+          delivery_submitted_at: {
+            type: "string",
+            format: "date-time",
+            nullable: true,
           },
           deadline: { type: "string", format: "date-time", example: "2026-04-01T00:00:00.000Z" },
           created_at: { type: "string", format: "date-time", example: "2026-03-01T10:00:00.000Z" },
@@ -457,6 +522,9 @@ Welcome to the **Mimotar API** documentation. This API supports:
               fileUrl: "https://res.cloudinary.com/demo/brief.pdf",
             },
           ],
+          delivery_note: null,
+          delivery_file: null,
+          delivery_submitted_at: null,
           deadline: "2026-04-01T00:00:00.000Z",
           created_at: "2026-03-01T10:00:00.000Z",
           change_request_comment: null,
@@ -550,6 +618,12 @@ Welcome to the **Mimotar API** documentation. This API supports:
             nullable: true,
             items: { $ref: "#/components/schemas/TransactionFile" },
           },
+          delivery_note: { type: "string", nullable: true, maxLength: 2000 },
+          delivery_file: {
+            allOf: [{ $ref: "#/components/schemas/DeliveryFile" }],
+            nullable: true,
+          },
+          delivery_submitted_at: { type: "string", format: "date-time", nullable: true },
           deadline: { type: "string", format: "date-time", example: "2026-04-01T00:00:00.000Z" },
           created_at: { type: "string", format: "date-time" },
           change_request_comment: { type: "string", nullable: true },
@@ -1838,13 +1912,22 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/resolve": {
       put: {
         summary: "Request closure of a non-milestone transaction",
-        description: "Moves an ordinary transaction to PENDING_CLOSURE and schedules auto-closure after 48 hours. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
+        description:
+          "Freelancer submits a delivery note and file, then the transaction moves to PENDING_CLOSURE and auto-closes after 48 hours. Send `multipart/form-data` with `note` and `file`. Agreement `files` are not overwritten. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "multipart/form-data": {
+              schema: { $ref: "#/components/schemas/ResolveDeliveryBody" },
+            },
+          },
+        },
         responses: {
-          "200": { description: "Transaction resolution requested" },
-          "400": { description: "Transaction is not ongoing" },
+          "200": { description: "Transaction resolution requested; delivery stored on the transaction" },
+          "400": { description: "Missing note/file, invalid file type, or transaction is not ongoing" },
           "401": { description: "Unauthorized" },
           "403": { description: "User is not a transaction participant" },
           "404": { description: "Transaction not found" },
@@ -2127,16 +2210,25 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/milestones/{milestoneId}/resolve": {
       put: {
         summary: "Request closure of a milestone",
-        description: "Moves the active milestone and parent transaction to PENDING_CLOSURE and schedules auto-closure after 48 hours. Only an ONGOING or DISPUTE-marked milestone belonging to the transaction can enter closure.",
+        description:
+          "Freelancer submits a delivery note and file for the active milestone. The milestone and parent transaction move to PENDING_CLOSURE and auto-close after 48 hours. Delivery is stored on the milestone, not on the parent agreement files.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" },
           { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Active milestone ID" },
         ],
+        requestBody: {
+          required: true,
+          content: {
+            "multipart/form-data": {
+              schema: { $ref: "#/components/schemas/ResolveDeliveryBody" },
+            },
+          },
+        },
         responses: {
-          "200": { description: "Milestone closure requested" },
-          "400": { description: "Milestone is missing, does not belong to the transaction, or is not active" },
+          "200": { description: "Milestone closure requested; delivery stored on the milestone" },
+          "400": { description: "Missing note/file, invalid file type, or milestone is not active" },
           "401": { description: "Unauthorized" },
           "403": { description: "User is not a transaction participant" },
           "404": { description: "Transaction not found" },
@@ -2250,6 +2342,9 @@ Welcome to the **Mimotar API** documentation. This API supports:
                     user_id: 7,
                     payment_id: 12,
                     files: [],
+                    delivery_note: null,
+                    delivery_file: null,
+                    delivery_submitted_at: null,
                     deadline: "2026-04-01T00:00:00.000Z",
                     created_at: "2026-03-01T10:00:00.000Z",
                     change_request_comment: null,
@@ -3464,17 +3559,31 @@ Welcome to the **Mimotar API** documentation. This API supports:
  * Call this after all routes are registered (e.g. in app.ts).
  */
 export function setupSwagger(app: Express): void {
+  app.get("/docs.json", (_req, res) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.json(openApiSpec);
+  });
+
+  app.use("/docs", (_req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    next();
+  });
+
   app.use(
     "/docs",
     swaggerUi.serve,
-    swaggerUi.setup(openApiSpec, {
+    swaggerUi.setup(undefined, {
       explorer: true,
+      customSiteTitle: "Mimotar API",
+      swaggerUrl: "/docs.json",
       swaggerOptions: {
+        url: "/docs.json",
         docExpansion: "list",
         defaultModelsExpandDepth: 4,
         defaultModelExpandDepth: 4,
         displayRequestDuration: true,
         tryItOutEnabled: true,
+        persistAuthorization: true,
       },
     })
   );

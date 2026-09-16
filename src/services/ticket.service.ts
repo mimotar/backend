@@ -502,11 +502,31 @@ export const closeATransactionService = async (
   return result.transaction;
 };
 
+export type ResolveDeliveryPayload = {
+  note: string;
+  file: {
+    fileName: string;
+    fileType: "image" | "pdf" | "doc" | "other";
+    fileUrl: string;
+    fileId: string;
+  };
+};
+
 export const resolveTransactionService = async (
   transactionId: number,
   initiatorEmail: string,
-  milestoneId?: number
+  milestoneId?: number,
+  delivery?: ResolveDeliveryPayload
 ) => {
+  if (!delivery?.note?.trim() || !delivery.file) {
+    throw new GlobalError(
+      "DELIVERY_REQUIRED",
+      "A delivery note and file are required to resolve this transaction",
+      400,
+      true
+    );
+  }
+
   const transaction = await prisma.transaction.findUnique({
     where: { id: transactionId },
     include: { milestones: true },
@@ -521,6 +541,13 @@ export const resolveTransactionService = async (
     throw new GlobalError("User is not a participant in this transaction", "FORBIDDEN", 403, true);
   }
 
+  const submittedAt = new Date();
+  const deliveryData = {
+    delivery_note: delivery.note.trim(),
+    delivery_file: delivery.file,
+    delivery_submitted_at: submittedAt,
+  };
+
   if (transaction.transactionType === "MILESTONE_BASED_PROJECT") {
     if (!milestoneId) {
       throw new GlobalError("milestoneId is required for milestone projects", "MILESTONE_REQUIRED", 400, true);
@@ -531,7 +558,10 @@ export const resolveTransactionService = async (
     }
     await prisma.milestone.update({
       where: { id: milestoneId },
-      data: { status: "PENDING_CLOSURE" },
+      data: {
+        status: "PENDING_CLOSURE",
+        ...deliveryData,
+      },
     });
   } else if (milestoneId) {
     throw new GlobalError("This transaction does not use milestones", "INVALID_MILESTONE", 400, true);
@@ -547,8 +577,12 @@ export const resolveTransactionService = async (
     where: { id: transactionId },
     data: {
       status: "PENDING_CLOSURE",
-      inspection_completed_at: new Date(),
+      inspection_completed_at: submittedAt,
+      ...(transaction.transactionType === "MILESTONE_BASED_PROJECT"
+        ? {}
+        : deliveryData),
     },
+    include: { milestones: true },
   });
 
   // Give the counterparty 48 hours to accept or reject closure.

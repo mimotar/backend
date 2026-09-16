@@ -148,6 +148,16 @@ export const RejectTransactionSchema = z.object({
   rejection_reason: z.string().min(1, "Rejection reason is required").max(500, "Rejection reason must be under 500 characters"),
 });
 
+export const ResolveDeliverySchema = z.object({
+  note: z
+    .string()
+    .trim()
+    .min(1, "Delivery note is required")
+    .max(2000, "Delivery note must be under 2000 characters"),
+});
+
+export type ResolveDeliveryType = z.infer<typeof ResolveDeliverySchema>;
+
 export type RejectTransactionType = z.infer<typeof RejectTransactionSchema>;
 
 export const RequestChangesSchema = z.object({

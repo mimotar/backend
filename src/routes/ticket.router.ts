@@ -2,7 +2,7 @@ import { RequestHandler, Router } from "express";
 
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
-import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema, RequestChangesSchema, ReviseTransactionSchema } from "../zod/TicketSchema.js";
+import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema, RequestChangesSchema, ReviseTransactionSchema, ResolveDeliverySchema } from "../zod/TicketSchema.js";
 import {
   approveTransactionController,
   createTransactionController,
@@ -26,7 +26,7 @@ import {
   listUserProjectsController,
 } from "../controllers/ticket.controller.js";
 
-import { milestoneImageUpload, upload } from "../config/cloudinary.js";
+import { deliveryUpload, milestoneImageUpload, upload } from "../config/cloudinary.js";
 import { authenticateTokenMiddleware } from "../middlewares/authenticateTokenMiddleware.js";
 import { deleteTransactionController } from "../controllers/payment/initiatePaymentController.js";
 
@@ -71,10 +71,22 @@ ticketRouter.post(
   resubmitTransactionController as RequestHandler
 );
 
-ticketRouter.put("/:id/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
+ticketRouter.put(
+  "/:id/resolve",
+  authenticateTokenMiddleware,
+  deliveryUpload.single("file"),
+  validateSchema(ResolveDeliverySchema),
+  resolveTransactionController as RequestHandler
+);
 ticketRouter.put("/:id/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
-ticketRouter.put("/:id/milestones/:milestoneId/resolve", authenticateTokenMiddleware, resolveTransactionController as RequestHandler);
+ticketRouter.put(
+  "/:id/milestones/:milestoneId/resolve",
+  authenticateTokenMiddleware,
+  deliveryUpload.single("file"),
+  validateSchema(ResolveDeliverySchema),
+  resolveTransactionController as RequestHandler
+);
 ticketRouter.put("/:id/milestones/:milestoneId/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
 ticketRouter.put("/:id/milestones/:milestoneId/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
 

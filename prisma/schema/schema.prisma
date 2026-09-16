@@ -38,6 +38,9 @@ model Transaction {
   approveStatus             Boolean             @default(false)
   rejection_reason          String?
   files                     Json?               @db.Json
+  delivery_note             String?             @db.VarChar(2000)
+  delivery_file             Json?               @db.Json
+  delivery_submitted_at     DateTime?
   otp                       String?
   otp_created_at            DateTime?
   payment_id                Int?
@@ -72,6 +75,9 @@ model Milestone {
   amount             Int
   deadline           DateTime
   files              Json?               @db.Json
+  delivery_note      String?             @db.VarChar(2000)
+  delivery_file      Json?               @db.Json
+  delivery_submitted_at DateTime?
   status             StatusEnum          @default(CREATED)
   activatedAt        DateTime?
   completedAt        DateTime?

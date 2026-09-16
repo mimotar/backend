@@ -5,7 +5,10 @@ import { createToken } from "../utils/createToken.js";
 import { GlobalError } from "../middlewares/error/GlobalErrorHandler.js";
 import { JwtPayload } from "jsonwebtoken";
 import prisma from "../utils/prisma.js";
-import { uploadToCloudinary } from "../config/cloudinary.js";
+import {
+  mapDeliveryFileType,
+  uploadToCloudinary,
+} from "../config/cloudinary.js";
 import {
   approveTransactionService,
   checkAndExpireAllTransactionService,
@@ -484,13 +487,41 @@ export const resolveTransactionController = async (req: Request, res: Response):
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
 
+    const note =
+      typeof req.body?.note === "string" ? req.body.note.trim() : "";
+    if (!note || note.length > 2000) {
+      return res.status(400).json({
+        message: "Delivery note is required (1–2000 characters)",
+      });
+    }
+
+    const deliveryFile = req.file;
+    if (!deliveryFile) {
+      return res.status(400).json({ message: "Delivery file is required" });
+    }
+
+    const uploadResult = await uploadToCloudinary(
+      deliveryFile,
+      "transactions/deliveries",
+      "auto"
+    );
+
     const milestoneId = req.params.milestoneId
       ? Number(req.params.milestoneId)
       : undefined;
     const updatedTransaction = await resolveTransactionService(
       id,
       user.email,
-      milestoneId
+      milestoneId,
+      {
+        note,
+        file: {
+          fileName: deliveryFile.originalname,
+          fileType: mapDeliveryFileType(deliveryFile.mimetype),
+          fileUrl: uploadResult.url,
+          fileId: uploadResult.public_id,
+        },
+      }
     );
 
     res.status(200).json({
