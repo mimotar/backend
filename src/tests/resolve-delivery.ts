@@ -155,6 +155,8 @@ describe("resolveTransactionService delivery persistence", () => {
     const updateData = (prisma.transaction.update as jest.Mock).mock.calls[0][0]
       .data;
     expect(updateData).not.toHaveProperty("files");
+    expect(updateData.delivery_rejection_reason).toBeNull();
+    expect(updateData.delivery_rejected_at).toBeNull();
     expect(result.status).toBe("PENDING_CLOSURE");
     expect(result.files).toEqual(agreementFiles);
     expect(result.delivery_note).toBe(delivery.note);
@@ -216,6 +218,35 @@ describe("resolveTransactionService delivery persistence", () => {
     expect(parentUpdate).not.toHaveProperty("files");
     expect(parentUpdate).not.toHaveProperty("delivery_note");
     expect(parentUpdate).not.toHaveProperty("delivery_file");
+  });
+
+  it("rejects a milestoneId on a non-milestone transaction", async () => {
+    (prisma.transaction.findUnique as jest.Mock).mockResolvedValue(
+      baseTransaction
+    );
+
+    await expect(
+      resolveTransactionService(7, "seller@example.com", 21, delivery)
+    ).rejects.toMatchObject({
+      name: "INVALID_MILESTONE",
+      statusCode: 400,
+    });
+    expect(prisma.transaction.update).not.toHaveBeenCalled();
+  });
+
+  it("does not allow submitting delivery while the transaction is in DISPUTE", async () => {
+    (prisma.transaction.findUnique as jest.Mock).mockResolvedValue({
+      ...baseTransaction,
+      status: "DISPUTE",
+    });
+
+    await expect(
+      resolveTransactionService(7, "seller@example.com", undefined, delivery)
+    ).rejects.toMatchObject({
+      name: "InvalidStatusError",
+      statusCode: 400,
+    });
+    expect(prisma.transaction.update).not.toHaveBeenCalled();
   });
 
   it("rejects resolve without a delivery note or file", async () => {

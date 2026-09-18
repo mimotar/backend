@@ -26,6 +26,8 @@ import getChangePasswordOtpEmail from "./changePasswordOtp.js";
 import getWithdrawalOtpEmail from "./withdrawalOtp.js";
 import {
     getTransactionCompletedEmail,
+    getTransactionDeliveryRejectedBuyerEmail,
+    getTransactionDeliveryRejectedFreelancerEmail,
     getTransactionDisputedEmail,
     getTransactionPendingClosureCounterpartyEmail,
     getTransactionPendingClosureInitiatorEmail
@@ -47,6 +49,18 @@ export function getEmailTemplate(type: EmailType, params: Record<string, any>) {
             return getTransactionCompletedEmail(params.name, params.transactionId, params.autoCompleted);
         case EmailType.TRANSACTION_DISPUTED:
             return getTransactionDisputedEmail(params.name, params.transactionId);
+        case EmailType.TRANSACTION_DELIVERY_REJECTED_FREELANCER:
+            return getTransactionDeliveryRejectedFreelancerEmail(
+                params.name,
+                params.transactionId,
+                params.reason
+            );
+        case EmailType.TRANSACTION_DELIVERY_REJECTED_BUYER:
+            return getTransactionDeliveryRejectedBuyerEmail(
+                params.name,
+                params.transactionId,
+                params.reason
+            );
         case EmailType.PASSWORD_RESET_OTP:
             return getPasswordResetOtpEmail(params.otp);
         case EmailType.CHANGE_PASSWORD_OTP:

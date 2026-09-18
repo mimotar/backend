@@ -41,6 +41,8 @@ model Transaction {
   delivery_note             String?             @db.VarChar(2000)
   delivery_file             Json?               @db.Json
   delivery_submitted_at     DateTime?
+  delivery_rejection_reason String?             @db.VarChar(2000)
+  delivery_rejected_at      DateTime?
   otp                       String?
   otp_created_at            DateTime?
   payment_id                Int?
@@ -78,6 +80,8 @@ model Milestone {
   delivery_note      String?             @db.VarChar(2000)
   delivery_file      Json?               @db.Json
   delivery_submitted_at DateTime?
+  delivery_rejection_reason String?      @db.VarChar(2000)
+  delivery_rejected_at DateTime?
   status             StatusEnum          @default(CREATED)
   activatedAt        DateTime?
   completedAt        DateTime?

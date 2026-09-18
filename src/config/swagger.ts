@@ -12,7 +12,7 @@ const openApiSpec = {
   openapi: "3.0.0",
   info: {
     title: "Mimotar API",
-    version: "1.1.0",
+    version: "1.2.0",
     description: `
 Welcome to the **Mimotar API** documentation. This API supports:
 
@@ -31,7 +31,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 
 **Authentication:** Many endpoints require a JWT in the \`Authorization\` header: \`Bearer <token>\`.
 
-**Resolve / delivery:** \`PUT /api/ticket/{id}/resolve\` and \`PUT /api/ticket/{id}/milestones/{milestoneId}/resolve\` now require \`multipart/form-data\` with a \`note\` and a \`file\`. Delivery is stored on \`delivery_note\`, \`delivery_file\`, and \`delivery_submitted_at\` (transaction or milestone) and does not overwrite agreement \`files\`.
+**Resolve / delivery:** \`PUT /api/ticket/{id}/resolve\` and \`PUT /api/ticket/{id}/milestones/{milestoneId}/resolve\` require \`multipart/form-data\` with a \`note\` and a \`file\`. The buyer accepts with \`PUT .../accept-resolution\` or sends work back with \`PUT .../reject-resolution\` and a \`reason\` (status returns to \`ONGOING\`; this is not a dispute). Open \`POST /api/dispute\` only when the parties cannot agree.
     `.trim(),
   },
   servers: [
@@ -155,6 +155,19 @@ Welcome to the **Mimotar API** documentation. This API supports:
             description: "Delivery attachment for this milestone. Separate from agreement files.",
           },
           delivery_submitted_at: {
+            type: "string",
+            format: "date-time",
+            nullable: true,
+            readOnly: true,
+          },
+          delivery_rejection_reason: {
+            type: "string",
+            nullable: true,
+            maxLength: 2000,
+            readOnly: true,
+            description: "Buyer's reason for sending this milestone delivery back. Cleared on the next submit.",
+          },
+          delivery_rejected_at: {
             type: "string",
             format: "date-time",
             nullable: true,
@@ -455,6 +468,17 @@ Welcome to the **Mimotar API** documentation. This API supports:
             format: "date-time",
             nullable: true,
           },
+          delivery_rejection_reason: {
+            type: "string",
+            nullable: true,
+            maxLength: 2000,
+            description: "Buyer's reason for sending delivery back for revision. Not a dispute. Cleared on the next submit.",
+          },
+          delivery_rejected_at: {
+            type: "string",
+            format: "date-time",
+            nullable: true,
+          },
           deadline: { type: "string", format: "date-time", example: "2026-04-01T00:00:00.000Z" },
           created_at: { type: "string", format: "date-time", example: "2026-03-01T10:00:00.000Z" },
           change_request_comment: { type: "string", nullable: true },
@@ -525,6 +549,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
           delivery_note: null,
           delivery_file: null,
           delivery_submitted_at: null,
+          delivery_rejection_reason: null,
+          delivery_rejected_at: null,
           deadline: "2026-04-01T00:00:00.000Z",
           created_at: "2026-03-01T10:00:00.000Z",
           change_request_comment: null,
@@ -624,6 +650,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
             nullable: true,
           },
           delivery_submitted_at: { type: "string", format: "date-time", nullable: true },
+          delivery_rejection_reason: { type: "string", nullable: true, maxLength: 2000 },
+          delivery_rejected_at: { type: "string", format: "date-time", nullable: true },
           deadline: { type: "string", format: "date-time", example: "2026-04-01T00:00:00.000Z" },
           created_at: { type: "string", format: "date-time" },
           change_request_comment: { type: "string", nullable: true },
@@ -1913,7 +1941,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       put: {
         summary: "Request closure of a non-milestone transaction",
         description:
-          "Freelancer submits a delivery note and file, then the transaction moves to PENDING_CLOSURE and auto-closes after 48 hours. Send `multipart/form-data` with `note` and `file`. Agreement `files` are not overwritten. Use the milestone-specific route for MILESTONE_BASED_PROJECT transactions.",
+          "For SERVICE, ONLINE_PRODUCT, PHYSICAL_PRODUCT, and RENTAL only. Freelancer submits `multipart/form-data` with `note` and `file`. Delivery is stored on the transaction (`delivery_note`, `delivery_file`, `delivery_submitted_at`). Agreement `files` are not overwritten. Status becomes PENDING_CLOSURE and auto-closes after 48 hours. Do not use a milestone URL or milestoneId. Use the milestone-specific route for MILESTONE_BASED_PROJECT.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1937,7 +1965,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
     "/api/ticket/{id}/accept-resolution": {
       put: {
         summary: "Accept closure of a non-milestone transaction",
-        description: "The buyer accepts the closure request. Escrow is released exactly once, the transaction becomes COMPLETED, and the 48-hour timer is removed.",
+        description: "Buyer-only, non-milestone tickets only. Accepts the delivery, releases the full escrow once, marks the transaction COMPLETED, and removes the 48-hour timer. Do not pass a milestoneId.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -1952,16 +1980,36 @@ Welcome to the **Mimotar API** documentation. This API supports:
     },
     "/api/ticket/{id}/reject-resolution": {
       put: {
-        summary: "Reject transaction resolution",
-        description: "Rejects the closure request and moves the transaction to DISPUTE status. Cancels the 48-hour auto-completion timer.",
+        summary: "Send delivery back for revision",
+        description:
+          "Buyer-only, for non-milestone tickets (SERVICE, ONLINE_PRODUCT, PHYSICAL_PRODUCT, RENTAL). Requires a reason. Stores `delivery_rejection_reason` on the transaction, keeps the last delivery file/note, moves status back to ONGOING, cancels the 48-hour auto-close, and emails the freelancer. This does not open a dispute. Do not use a milestone URL. Use POST /api/dispute when the parties cannot agree.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["reason"],
+                properties: {
+                  reason: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 2000,
+                    example: "The logo files are missing from the zip.",
+                  },
+                },
+              },
+            },
+          },
+        },
         responses: {
-          "200": { description: "Transaction closure rejected (Moved to dispute)" },
-          "400": { description: "Transaction is not pending closure" },
+          "200": { description: "Delivery sent back; freelancer can submit again" },
+          "400": { description: "Missing reason or transaction is not pending closure" },
           "401": { description: "Unauthorized" },
-          "403": { description: "User is not a transaction participant" },
+          "403": { description: "Only the buyer can send delivery back for revision" },
           "404": { description: "Transaction not found" },
         },
       },
@@ -2257,19 +2305,39 @@ Welcome to the **Mimotar API** documentation. This API supports:
     },
     "/api/ticket/{id}/milestones/{milestoneId}/reject-resolution": {
       put: {
-        summary: "Reject milestone closure",
-        description: "Moves the milestone and parent transaction to DISPUTE and removes the scheduled closure job. A participant must then open the detailed dispute using POST /api/dispute with the same transactionId and milestoneId.",
+        summary: "Send milestone delivery back for revision",
+        description:
+          "Buyer-only. Requires a reason. Moves the milestone and parent transaction back to ONGOING, stores the reason on the milestone, and cancels auto-close. Does not open a dispute. Use POST /api/dispute with the same milestoneId when the parties cannot agree.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "integer" }, description: "Transaction ID" },
           { name: "milestoneId", in: "path", required: true, schema: { type: "integer" }, description: "Pending milestone ID" },
         ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["reason"],
+                properties: {
+                  reason: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 2000,
+                    example: "Please include the source files for this milestone.",
+                  },
+                },
+              },
+            },
+          },
+        },
         responses: {
-          "200": { description: "Milestone closure rejected and scope moved to DISPUTE" },
-          "400": { description: "Transaction is not pending closure or milestone is invalid" },
+          "200": { description: "Milestone delivery sent back; freelancer can submit again" },
+          "400": { description: "Missing reason or milestone is not pending closure" },
           "401": { description: "Unauthorized" },
-          "403": { description: "User is not a transaction participant" },
+          "403": { description: "Only the buyer can send delivery back for revision" },
           "404": { description: "Transaction not found" },
         },
       },
@@ -2292,7 +2360,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       get: {
         summary: "Get transaction by ID",
         description:
-          "Returns a single transaction by ID. Includes a logs object with lifecycle timestamps and roles. Rate limited.",
+          "Returns a single transaction by ID. Includes a logs object with lifecycle timestamps and roles. For non-milestone tickets, delivery lives on the transaction (`delivery_note`, `delivery_file`, `delivery_submitted_at`, `delivery_rejection_reason`, `delivery_rejected_at`). For milestone projects those fields are on the milestone. Rate limited.",
         tags: ["Transactions (Tickets)"],
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
@@ -2345,6 +2413,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
                     delivery_note: null,
                     delivery_file: null,
                     delivery_submitted_at: null,
+                    delivery_rejection_reason: null,
+                    delivery_rejected_at: null,
                     deadline: "2026-04-01T00:00:00.000Z",
                     created_at: "2026-03-01T10:00:00.000Z",
                     change_request_comment: null,
@@ -2421,7 +2491,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       },
       post: {
         summary: "Create dispute",
-        description: "Create a dispute for a transaction or its active milestone. milestoneId is required for milestone projects. Upload up to 5 evidence files (multipart/form-data). Rate limited.",
+        description: "Create a dispute for a transaction or its active milestone when the parties cannot agree. This is the only way to enter DISPUTE status. milestoneId is required for milestone projects. Upload up to 5 evidence files (multipart/form-data). Rate limited. If the ticket is PENDING_CLOSURE, the 48-hour auto-close job is cancelled.",
         tags: ["Disputes"],
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -3441,6 +3511,8 @@ Welcome to the **Mimotar API** documentation. This API supports:
                                       "APPROVE_OR_REJECT_CANCEL",
                                       "RESPOND_TO_DISPUTE",
                                     ],
+                                    description:
+                                      "ACCEPT_OR_REJECT_CLOSURE: buyer can accept escrow release or send delivery back for revision. RESPOND_TO_DISPUTE: a formal dispute is already open.",
                                   },
                                   transactionId: { type: "integer" },
                                   title: { type: "string" },

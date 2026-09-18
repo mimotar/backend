@@ -5,6 +5,7 @@ import prisma from "../utils/prisma.js";
 import { DisputeType } from "../zod/Dispute.zod.js";
 import { settleEscrowScope } from "./escrow-settlement.service.js";
 import { systemDispatchNotificationByEmail } from "./notification/notification.service.js";
+import { transactionClosureQueue } from "../config/bullmq.js";
 
 const publicUserSelect = {
   id: true,
@@ -173,6 +174,12 @@ class DisputeService {
 
       return createdDispute;
     });
+
+    await transactionClosureQueue.remove(
+      milestoneId
+        ? `closure-${transactionId}-milestone-${milestoneId}`
+        : `closure-${transactionId}`
+    );
 
     const scope = milestoneId
       ? `milestone #${milestoneId} of transaction #${transactionId}`

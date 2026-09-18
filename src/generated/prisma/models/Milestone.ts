@@ -49,6 +49,8 @@ export type MilestoneMinAggregateOutputType = {
   deadline: Date | null
   delivery_note: string | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   status: $Enums.StatusEnum | null
   activatedAt: Date | null
   completedAt: Date | null
@@ -64,6 +66,8 @@ export type MilestoneMaxAggregateOutputType = {
   deadline: Date | null
   delivery_note: string | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   status: $Enums.StatusEnum | null
   activatedAt: Date | null
   completedAt: Date | null
@@ -81,6 +85,8 @@ export type MilestoneCountAggregateOutputType = {
   delivery_note: number
   delivery_file: number
   delivery_submitted_at: number
+  delivery_rejection_reason: number
+  delivery_rejected_at: number
   status: number
   activatedAt: number
   completedAt: number
@@ -112,6 +118,8 @@ export type MilestoneMinAggregateInputType = {
   deadline?: true
   delivery_note?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   status?: true
   activatedAt?: true
   completedAt?: true
@@ -127,6 +135,8 @@ export type MilestoneMaxAggregateInputType = {
   deadline?: true
   delivery_note?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   status?: true
   activatedAt?: true
   completedAt?: true
@@ -144,6 +154,8 @@ export type MilestoneCountAggregateInputType = {
   delivery_note?: true
   delivery_file?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   status?: true
   activatedAt?: true
   completedAt?: true
@@ -248,6 +260,8 @@ export type MilestoneGroupByOutputType = {
   delivery_note: string | null
   delivery_file: runtime.JsonValue | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   status: $Enums.StatusEnum
   activatedAt: Date | null
   completedAt: Date | null
@@ -288,6 +302,8 @@ export type MilestoneWhereInput = {
   delivery_note?: Prisma.StringNullableFilter<"Milestone"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Milestone">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Milestone"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
   activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
@@ -310,6 +326,8 @@ export type MilestoneOrderByWithRelationInput = {
   delivery_note?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_file?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -336,6 +354,8 @@ export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
   delivery_note?: Prisma.StringNullableFilter<"Milestone"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Milestone">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Milestone"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
   activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
@@ -358,6 +378,8 @@ export type MilestoneOrderByWithAggregationInput = {
   delivery_note?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_file?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -383,6 +405,8 @@ export type MilestoneScalarWhereWithAggregatesInput = {
   delivery_note?: Prisma.StringNullableWithAggregatesFilter<"Milestone"> | string | null
   delivery_file?: Prisma.JsonNullableWithAggregatesFilter<"Milestone">
   delivery_submitted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableWithAggregatesFilter<"Milestone"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
   status?: Prisma.EnumStatusEnumWithAggregatesFilter<"Milestone"> | $Enums.StatusEnum
   activatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
@@ -398,6 +422,8 @@ export type MilestoneCreateInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -420,6 +446,8 @@ export type MilestoneUncheckedCreateInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -439,6 +467,8 @@ export type MilestoneUpdateInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -461,6 +491,8 @@ export type MilestoneUncheckedUpdateInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -482,6 +514,8 @@ export type MilestoneCreateManyInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -497,6 +531,8 @@ export type MilestoneUpdateManyMutationInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -514,6 +550,8 @@ export type MilestoneUncheckedUpdateManyInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -546,6 +584,8 @@ export type MilestoneCountOrderByAggregateInput = {
   delivery_note?: Prisma.SortOrder
   delivery_file?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -568,6 +608,8 @@ export type MilestoneMaxOrderByAggregateInput = {
   deadline?: Prisma.SortOrder
   delivery_note?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -583,6 +625,8 @@ export type MilestoneMinOrderByAggregateInput = {
   deadline?: Prisma.SortOrder
   delivery_note?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -719,6 +763,8 @@ export type MilestoneCreateWithoutTransactionInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -739,6 +785,8 @@ export type MilestoneUncheckedCreateWithoutTransactionInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -789,6 +837,8 @@ export type MilestoneScalarWhereInput = {
   delivery_note?: Prisma.StringNullableFilter<"Milestone"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Milestone">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Milestone"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   status?: Prisma.EnumStatusEnumFilter<"Milestone"> | $Enums.StatusEnum
   activatedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Milestone"> | Date | string | null
@@ -804,6 +854,8 @@ export type MilestoneCreateWithoutImagesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -825,6 +877,8 @@ export type MilestoneUncheckedCreateWithoutImagesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -859,6 +913,8 @@ export type MilestoneUpdateWithoutImagesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -880,6 +936,8 @@ export type MilestoneUncheckedUpdateWithoutImagesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -898,6 +956,8 @@ export type MilestoneCreateWithoutDeadlineExtensionsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -919,6 +979,8 @@ export type MilestoneUncheckedCreateWithoutDeadlineExtensionsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -953,6 +1015,8 @@ export type MilestoneUpdateWithoutDeadlineExtensionsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -974,6 +1038,8 @@ export type MilestoneUncheckedUpdateWithoutDeadlineExtensionsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -992,6 +1058,8 @@ export type MilestoneCreateWithoutEarningsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -1013,6 +1081,8 @@ export type MilestoneUncheckedCreateWithoutEarningsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -1047,6 +1117,8 @@ export type MilestoneUpdateWithoutEarningsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1068,6 +1140,8 @@ export type MilestoneUncheckedUpdateWithoutEarningsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1086,6 +1160,8 @@ export type MilestoneCreateWithoutDisputesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -1107,6 +1183,8 @@ export type MilestoneUncheckedCreateWithoutDisputesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -1141,6 +1219,8 @@ export type MilestoneUpdateWithoutDisputesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1162,6 +1242,8 @@ export type MilestoneUncheckedUpdateWithoutDisputesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1181,6 +1263,8 @@ export type MilestoneCreateManyTransactionInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   status?: $Enums.StatusEnum
   activatedAt?: Date | string | null
   completedAt?: Date | string | null
@@ -1196,6 +1280,8 @@ export type MilestoneUpdateWithoutTransactionInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1216,6 +1302,8 @@ export type MilestoneUncheckedUpdateWithoutTransactionInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1236,6 +1324,8 @@ export type MilestoneUncheckedUpdateManyWithoutTransactionInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumStatusEnumFieldUpdateOperationsInput | $Enums.StatusEnum
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1302,6 +1392,8 @@ export type MilestoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   status?: boolean
   activatedAt?: boolean
   completedAt?: boolean
@@ -1325,6 +1417,8 @@ export type MilestoneSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   status?: boolean
   activatedAt?: boolean
   completedAt?: boolean
@@ -1343,6 +1437,8 @@ export type MilestoneSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   status?: boolean
   activatedAt?: boolean
   completedAt?: boolean
@@ -1361,13 +1457,15 @@ export type MilestoneSelectScalar = {
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   status?: boolean
   activatedAt?: boolean
   completedAt?: boolean
   releasedAt?: boolean
 }
 
-export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaction_id" | "sequence" | "name" | "amount" | "deadline" | "files" | "delivery_note" | "delivery_file" | "delivery_submitted_at" | "status" | "activatedAt" | "completedAt" | "releasedAt", ExtArgs["result"]["milestone"]>
+export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaction_id" | "sequence" | "name" | "amount" | "deadline" | "files" | "delivery_note" | "delivery_file" | "delivery_submitted_at" | "delivery_rejection_reason" | "delivery_rejected_at" | "status" | "activatedAt" | "completedAt" | "releasedAt", ExtArgs["result"]["milestone"]>
 export type MilestoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deadlineExtensions?: boolean | Prisma.Milestone$deadlineExtensionsArgs<ExtArgs>
   images?: boolean | Prisma.Milestone$imagesArgs<ExtArgs>
@@ -1403,6 +1501,8 @@ export type $MilestonePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     delivery_note: string | null
     delivery_file: runtime.JsonValue | null
     delivery_submitted_at: Date | null
+    delivery_rejection_reason: string | null
+    delivery_rejected_at: Date | null
     status: $Enums.StatusEnum
     activatedAt: Date | null
     completedAt: Date | null
@@ -1845,6 +1945,8 @@ export interface MilestoneFieldRefs {
   readonly delivery_note: Prisma.FieldRef<"Milestone", 'String'>
   readonly delivery_file: Prisma.FieldRef<"Milestone", 'Json'>
   readonly delivery_submitted_at: Prisma.FieldRef<"Milestone", 'DateTime'>
+  readonly delivery_rejection_reason: Prisma.FieldRef<"Milestone", 'String'>
+  readonly delivery_rejected_at: Prisma.FieldRef<"Milestone", 'DateTime'>
   readonly status: Prisma.FieldRef<"Milestone", 'StatusEnum'>
   readonly activatedAt: Prisma.FieldRef<"Milestone", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Milestone", 'DateTime'>

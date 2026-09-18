@@ -158,6 +158,16 @@ export const ResolveDeliverySchema = z.object({
 
 export type ResolveDeliveryType = z.infer<typeof ResolveDeliverySchema>;
 
+export const RejectDeliverySchema = z.object({
+  reason: z
+    .string()
+    .trim()
+    .min(1, "Rejection reason is required")
+    .max(2000, "Rejection reason must be under 2000 characters"),
+});
+
+export type RejectDeliveryType = z.infer<typeof RejectDeliverySchema>;
+
 export type RejectTransactionType = z.infer<typeof RejectTransactionSchema>;
 
 export const RequestChangesSchema = z.object({

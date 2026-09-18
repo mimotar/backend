@@ -575,11 +575,12 @@ export const rejectResolutionController = async (req: Request, res: Response): P
     const updatedTransaction = await rejectResolutionService(
       id,
       userId,
+      req.body.reason,
       milestoneId
     );
 
     res.status(200).json({
-      message: "Transaction closure rejected successfully (Moved to DISPUTE)",
+      message: "Delivery sent back for revision",
       data: updatedTransaction,
     });
   } catch (error: any) {

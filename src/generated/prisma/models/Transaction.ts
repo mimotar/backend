@@ -76,6 +76,8 @@ export type TransactionMinAggregateOutputType = {
   rejection_reason: string | null
   delivery_note: string | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   otp: string | null
   otp_created_at: Date | null
   payment_id: number | null
@@ -128,6 +130,8 @@ export type TransactionMaxAggregateOutputType = {
   rejection_reason: string | null
   delivery_note: string | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   otp: string | null
   otp_created_at: Date | null
   payment_id: number | null
@@ -182,6 +186,8 @@ export type TransactionCountAggregateOutputType = {
   delivery_note: number
   delivery_file: number
   delivery_submitted_at: number
+  delivery_rejection_reason: number
+  delivery_rejected_at: number
   otp: number
   otp_created_at: number
   payment_id: number
@@ -254,6 +260,8 @@ export type TransactionMinAggregateInputType = {
   rejection_reason?: true
   delivery_note?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   otp?: true
   otp_created_at?: true
   payment_id?: true
@@ -306,6 +314,8 @@ export type TransactionMaxAggregateInputType = {
   rejection_reason?: true
   delivery_note?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   otp?: true
   otp_created_at?: true
   payment_id?: true
@@ -360,6 +370,8 @@ export type TransactionCountAggregateInputType = {
   delivery_note?: true
   delivery_file?: true
   delivery_submitted_at?: true
+  delivery_rejection_reason?: true
+  delivery_rejected_at?: true
   otp?: true
   otp_created_at?: true
   payment_id?: true
@@ -501,6 +513,8 @@ export type TransactionGroupByOutputType = {
   delivery_note: string | null
   delivery_file: runtime.JsonValue | null
   delivery_submitted_at: Date | null
+  delivery_rejection_reason: string | null
+  delivery_rejected_at: Date | null
   otp: string | null
   otp_created_at: Date | null
   payment_id: number | null
@@ -578,6 +592,8 @@ export type TransactionWhereInput = {
   delivery_note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Transaction">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
@@ -638,6 +654,8 @@ export type TransactionOrderByWithRelationInput = {
   delivery_note?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_file?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otp_created_at?: Prisma.SortOrderInput | Prisma.SortOrder
   payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -701,6 +719,8 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   delivery_note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Transaction">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
@@ -761,6 +781,8 @@ export type TransactionOrderByWithAggregationInput = {
   delivery_note?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_file?: Prisma.SortOrderInput | Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otp_created_at?: Prisma.SortOrderInput | Prisma.SortOrder
   payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -823,6 +845,8 @@ export type TransactionScalarWhereWithAggregatesInput = {
   delivery_note?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   delivery_file?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
   delivery_submitted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   otp?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   payment_id?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
@@ -875,6 +899,8 @@ export type TransactionCreateInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -935,6 +961,8 @@ export type TransactionUncheckedCreateInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -992,6 +1020,8 @@ export type TransactionUpdateInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1052,6 +1082,8 @@ export type TransactionUncheckedUpdateInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1111,6 +1143,8 @@ export type TransactionCreateManyInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -1163,6 +1197,8 @@ export type TransactionUpdateManyMutationInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1217,6 +1253,8 @@ export type TransactionUncheckedUpdateManyInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1271,6 +1309,8 @@ export type TransactionCountOrderByAggregateInput = {
   delivery_note?: Prisma.SortOrder
   delivery_file?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
@@ -1332,6 +1372,8 @@ export type TransactionMaxOrderByAggregateInput = {
   rejection_reason?: Prisma.SortOrder
   delivery_note?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
@@ -1384,6 +1426,8 @@ export type TransactionMinOrderByAggregateInput = {
   rejection_reason?: Prisma.SortOrder
   delivery_note?: Prisma.SortOrder
   delivery_submitted_at?: Prisma.SortOrder
+  delivery_rejection_reason?: Prisma.SortOrder
+  delivery_rejected_at?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otp_created_at?: Prisma.SortOrder
   payment_id?: Prisma.SortOrder
@@ -1632,6 +1676,8 @@ export type TransactionCreateWithoutMilestonesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -1691,6 +1737,8 @@ export type TransactionUncheckedCreateWithoutMilestonesInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -1763,6 +1811,8 @@ export type TransactionUpdateWithoutMilestonesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1822,6 +1872,8 @@ export type TransactionUncheckedUpdateWithoutMilestonesInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1878,6 +1930,8 @@ export type TransactionCreateWithoutPaymentInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -1937,6 +1991,8 @@ export type TransactionUncheckedCreateWithoutPaymentInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2009,6 +2065,8 @@ export type TransactionUpdateWithoutPaymentInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2068,6 +2126,8 @@ export type TransactionUncheckedUpdateWithoutPaymentInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2124,6 +2184,8 @@ export type TransactionCreateWithoutUserInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2182,6 +2244,8 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2270,6 +2334,8 @@ export type TransactionScalarWhereInput = {
   delivery_note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   delivery_file?: Prisma.JsonNullableFilter<"Transaction">
   delivery_submitted_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  delivery_rejection_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  delivery_rejected_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   otp?: Prisma.StringNullableFilter<"Transaction"> | string | null
   otp_created_at?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   payment_id?: Prisma.IntNullableFilter<"Transaction"> | number | null
@@ -2322,6 +2388,8 @@ export type TransactionCreateWithoutDeadlineExtensionsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2381,6 +2449,8 @@ export type TransactionUncheckedCreateWithoutDeadlineExtensionsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2453,6 +2523,8 @@ export type TransactionUpdateWithoutDeadlineExtensionsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2512,6 +2584,8 @@ export type TransactionUncheckedUpdateWithoutDeadlineExtensionsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2568,6 +2642,8 @@ export type TransactionCreateWithoutEarningsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2627,6 +2703,8 @@ export type TransactionUncheckedCreateWithoutEarningsInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2699,6 +2777,8 @@ export type TransactionUpdateWithoutEarningsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2758,6 +2838,8 @@ export type TransactionUncheckedUpdateWithoutEarningsInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2814,6 +2896,8 @@ export type TransactionCreateWithoutDisputeInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2873,6 +2957,8 @@ export type TransactionUncheckedCreateWithoutDisputeInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -2945,6 +3031,8 @@ export type TransactionUpdateWithoutDisputeInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3004,6 +3092,8 @@ export type TransactionUncheckedUpdateWithoutDisputeInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3061,6 +3151,8 @@ export type TransactionCreateManyUserInput = {
   delivery_note?: string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Date | string | null
+  delivery_rejection_reason?: string | null
+  delivery_rejected_at?: Date | string | null
   otp?: string | null
   otp_created_at?: Date | string | null
   payment_id?: number | null
@@ -3113,6 +3205,8 @@ export type TransactionUpdateWithoutUserInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3171,6 +3265,8 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3229,6 +3325,8 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   delivery_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   delivery_file?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   delivery_submitted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  delivery_rejection_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delivery_rejected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otp_created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3341,6 +3439,8 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   otp?: boolean
   otp_created_at?: boolean
   payment_id?: boolean
@@ -3402,6 +3502,8 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   otp?: boolean
   otp_created_at?: boolean
   payment_id?: boolean
@@ -3457,6 +3559,8 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   otp?: boolean
   otp_created_at?: boolean
   payment_id?: boolean
@@ -3512,6 +3616,8 @@ export type TransactionSelectScalar = {
   delivery_note?: boolean
   delivery_file?: boolean
   delivery_submitted_at?: boolean
+  delivery_rejection_reason?: boolean
+  delivery_rejected_at?: boolean
   otp?: boolean
   otp_created_at?: boolean
   payment_id?: boolean
@@ -3532,7 +3638,7 @@ export type TransactionSelectScalar = {
   revision_count?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "delivery_note" | "delivery_file" | "delivery_submitted_at" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at" | "deadline" | "cancel_requested_by_email" | "cancel_requested_at" | "cancel_reason" | "cancel_approved_at" | "change_request_comment" | "change_requested_at" | "change_requested_by_email" | "revision_count", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "amount" | "user_id" | "additional_agreement" | "creator_fullname" | "creator_email" | "creator_no" | "creator_address" | "receiver_fullname" | "receiver_no" | "receiver_address" | "link_expires" | "txn_link" | "created_at" | "inspection_duration" | "reciever_role" | "terms" | "transactionType" | "transaction_description" | "pay_escrow_fee" | "pay_shipping_cost" | "creator_role" | "status" | "expiresAt" | "transactionToken" | "reciever_email" | "approveStatus" | "rejection_reason" | "files" | "delivery_note" | "delivery_file" | "delivery_submitted_at" | "delivery_rejection_reason" | "delivery_rejected_at" | "otp" | "otp_created_at" | "payment_id" | "currency" | "agreement_accepted_at" | "payment_sent_to_escrow_at" | "inspection_started_at" | "inspection_completed_at" | "transaction_completed_at" | "deadline" | "cancel_requested_by_email" | "cancel_requested_at" | "cancel_reason" | "cancel_approved_at" | "change_request_comment" | "change_requested_at" | "change_requested_by_email" | "revision_count", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deadlineExtensions?: boolean | Prisma.Transaction$deadlineExtensionsArgs<ExtArgs>
   dispute?: boolean | Prisma.Transaction$disputeArgs<ExtArgs>
@@ -3593,6 +3699,8 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     delivery_note: string | null
     delivery_file: runtime.JsonValue | null
     delivery_submitted_at: Date | null
+    delivery_rejection_reason: string | null
+    delivery_rejected_at: Date | null
     otp: string | null
     otp_created_at: Date | null
     payment_id: number | null
@@ -4073,6 +4181,8 @@ export interface TransactionFieldRefs {
   readonly delivery_note: Prisma.FieldRef<"Transaction", 'String'>
   readonly delivery_file: Prisma.FieldRef<"Transaction", 'Json'>
   readonly delivery_submitted_at: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly delivery_rejection_reason: Prisma.FieldRef<"Transaction", 'String'>
+  readonly delivery_rejected_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly otp: Prisma.FieldRef<"Transaction", 'String'>
   readonly otp_created_at: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly payment_id: Prisma.FieldRef<"Transaction", 'Int'>

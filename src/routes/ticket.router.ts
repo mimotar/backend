@@ -2,7 +2,7 @@ import { RequestHandler, Router } from "express";
 
 import createRateLimiterMiddleware from "../utils/loginLimiter.js";
 import { validateSchema } from "../middlewares/validations/allroute.validation.js";
-import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema, RequestChangesSchema, ReviseTransactionSchema, ResolveDeliverySchema } from "../zod/TicketSchema.js";
+import { TransactionSchema, RejectTransactionSchema, DeadlineExtensionSchema, RequestChangesSchema, ReviseTransactionSchema, ResolveDeliverySchema, RejectDeliverySchema } from "../zod/TicketSchema.js";
 import {
   approveTransactionController,
   createTransactionController,
@@ -79,7 +79,12 @@ ticketRouter.put(
   resolveTransactionController as RequestHandler
 );
 ticketRouter.put("/:id/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
-ticketRouter.put("/:id/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
+ticketRouter.put(
+  "/:id/reject-resolution",
+  authenticateTokenMiddleware,
+  validateSchema(RejectDeliverySchema),
+  rejectResolutionController as RequestHandler
+);
 ticketRouter.put(
   "/:id/milestones/:milestoneId/resolve",
   authenticateTokenMiddleware,
@@ -88,7 +93,12 @@ ticketRouter.put(
   resolveTransactionController as RequestHandler
 );
 ticketRouter.put("/:id/milestones/:milestoneId/accept-resolution", authenticateTokenMiddleware, acceptResolutionController as RequestHandler);
-ticketRouter.put("/:id/milestones/:milestoneId/reject-resolution", authenticateTokenMiddleware, rejectResolutionController as RequestHandler);
+ticketRouter.put(
+  "/:id/milestones/:milestoneId/reject-resolution",
+  authenticateTokenMiddleware,
+  validateSchema(RejectDeliverySchema),
+  rejectResolutionController as RequestHandler
+);
 
 ticketRouter.post("/:id/cancel-request", authenticateTokenMiddleware, requestCancelTransactionController as RequestHandler);
 ticketRouter.post("/:id/cancel-approve", authenticateTokenMiddleware, approveCancelTransactionController as RequestHandler);

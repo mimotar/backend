@@ -491,8 +491,8 @@ export const closeATransactionService = async (
 
   if (milestoneId) {
     throw new GlobalError(
-      "This transaction does not use milestones",
       "INVALID_MILESTONE",
+      "This transaction does not use milestones",
       400,
       true
     );
@@ -533,7 +533,14 @@ export const resolveTransactionService = async (
   });
   
   if (!transaction) throw new GlobalError("Transaction not found", "NotFoundError", 404, true);
-  if (transaction.status !== "ONGOING" && transaction.status !== "DISPUTE") throw new GlobalError("InvalidStatusError", "Transaction is neither ongoing nor dispute", 400, true);
+  if (transaction.status !== "ONGOING") {
+    throw new GlobalError(
+      "InvalidStatusError",
+      "Transaction must be ongoing to submit delivery",
+      400,
+      true
+    );
+  }
   if (
     transaction.creator_email !== initiatorEmail &&
     transaction.reciever_email !== initiatorEmail
@@ -546,6 +553,8 @@ export const resolveTransactionService = async (
     delivery_note: delivery.note.trim(),
     delivery_file: delivery.file,
     delivery_submitted_at: submittedAt,
+    delivery_rejection_reason: null,
+    delivery_rejected_at: null,
   };
 
   if (transaction.transactionType === "MILESTONE_BASED_PROJECT") {
@@ -553,7 +562,7 @@ export const resolveTransactionService = async (
       throw new GlobalError("milestoneId is required for milestone projects", "MILESTONE_REQUIRED", 400, true);
     }
     const milestone = transaction.milestones.find((item) => item.id === milestoneId);
-    if (!milestone || !["ONGOING", "DISPUTE"].includes(milestone.status)) {
+    if (!milestone || milestone.status !== "ONGOING") {
       throw new GlobalError("Only the active milestone can be resolved", "INVALID_MILESTONE", 400, true);
     }
     await prisma.milestone.update({
@@ -564,7 +573,7 @@ export const resolveTransactionService = async (
       },
     });
   } else if (milestoneId) {
-    throw new GlobalError("This transaction does not use milestones", "INVALID_MILESTONE", 400, true);
+    throw new GlobalError("INVALID_MILESTONE", "This transaction does not use milestones", 400, true);
   }
 
   // Identify who is who
@@ -624,7 +633,7 @@ export const acceptResolutionService = async (
     throw new GlobalError("milestoneId is required for milestone projects", "MILESTONE_REQUIRED", 400, true);
   }
   if (transaction.transactionType !== "MILESTONE_BASED_PROJECT" && milestoneId) {
-    throw new GlobalError("This transaction does not use milestones", "INVALID_MILESTONE", 400, true);
+    throw new GlobalError("INVALID_MILESTONE", "This transaction does not use milestones", 400, true);
   }
 
   const participants = await getTransactionParticipants(transactionId);
@@ -671,8 +680,19 @@ export const acceptResolutionService = async (
 export const rejectResolutionService = async (
   transactionId: number,
   userId: number,
+  reason: string,
   milestoneId?: number
 ) => {
+  const trimmedReason = reason.trim();
+  if (!trimmedReason || trimmedReason.length > 2000) {
+    throw new GlobalError(
+      "DELIVERY_REJECTION_REASON_REQUIRED",
+      "A rejection reason is required (1–2000 characters)",
+      400,
+      true
+    );
+  }
+
   const transaction = await prisma.transaction.findUnique({
     where: { id: transactionId },
   });
@@ -682,10 +702,25 @@ export const rejectResolutionService = async (
   if (transaction.transactionType === "MILESTONE_BASED_PROJECT" && !milestoneId) {
     throw new GlobalError("milestoneId is required for milestone projects", "MILESTONE_REQUIRED", 400, true);
   }
-  const participants = await getTransactionParticipants(transactionId);
-  if (![participants.buyer.userId, participants.seller.userId].includes(userId)) {
-    throw new GlobalError("User is not a participant in this transaction", "FORBIDDEN", 403, true);
+  if (transaction.transactionType !== "MILESTONE_BASED_PROJECT" && milestoneId) {
+    throw new GlobalError("INVALID_MILESTONE", "This transaction does not use milestones", 400, true);
   }
+
+  const participants = await getTransactionParticipants(transactionId);
+  if (participants.buyer.userId !== userId) {
+    throw new GlobalError(
+      "FORBIDDEN",
+      "Only the buyer can send delivery back for revision",
+      403,
+      true
+    );
+  }
+
+  const rejectedAt = new Date();
+  const rejectionData = {
+    delivery_rejection_reason: trimmedReason,
+    delivery_rejected_at: rejectedAt,
+  };
 
   const updatedTransaction = await prisma.$transaction(async (tx) => {
     if (milestoneId) {
@@ -693,30 +728,47 @@ export const rejectResolutionService = async (
       if (!milestone || milestone.transaction_id !== transactionId) {
         throw new GlobalError("Milestone does not belong to this transaction", "INVALID_MILESTONE", 400, true);
       }
+      if (milestone.status !== "PENDING_CLOSURE") {
+        throw new GlobalError(
+          "INVALID_MILESTONE",
+          "Only a pending milestone can be sent back for revision",
+          400,
+          true
+        );
+      }
       await tx.milestone.update({
         where: { id: milestoneId },
-        data: { status: "DISPUTE" },
+        data: {
+          status: "ONGOING",
+          ...rejectionData,
+        },
       });
     }
+
     return tx.transaction.update({
       where: { id: transactionId },
-      data: { status: "DISPUTE" },
+      data: {
+        status: "ONGOING",
+        inspection_completed_at: null,
+        ...(milestoneId ? {} : rejectionData),
+      },
+      include: { milestones: true },
     });
   });
 
-  // Remove scheduled job
   await transactionClosureQueue.remove(
     milestoneId ? `closure-${transactionId}-milestone-${milestoneId}` : `closure-${transactionId}`
   );
 
-  // Send emails
-  await sendEmail(transaction.creator_email, EmailType.TRANSACTION_DISPUTED, {
-    name: transaction.creator_fullname,
+  await sendEmail(participants.seller.email, EmailType.TRANSACTION_DELIVERY_REJECTED_FREELANCER, {
+    name: participants.seller.fullname,
     transactionId: transaction.transactionToken,
+    reason: trimmedReason,
   });
-  await sendEmail(transaction.reciever_email, EmailType.TRANSACTION_DISPUTED, {
-    name: transaction.receiver_fullname,
+  await sendEmail(participants.buyer.email, EmailType.TRANSACTION_DELIVERY_REJECTED_BUYER, {
+    name: participants.buyer.fullname,
     transactionId: transaction.transactionToken,
+    reason: trimmedReason,
   });
 
   return updatedTransaction;
