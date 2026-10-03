@@ -174,7 +174,33 @@ export async function reviseTransactionService(
     pay_shipping_cost,
     files,
     milestones,
-  } = data;
+    resubmit,
+  } = data as ReviseTransactionType & { resubmit?: boolean };
+
+  if (resubmit) {
+    if (
+      transaction.transactionType === "MILESTONE_BASED_PROJECT" &&
+      (milestones !== undefined
+        ? milestones.length === 0
+        : transaction.milestones.length === 0)
+    ) {
+      throw new GlobalError(
+        "At least one milestone is required before resubmitting",
+        "MILESTONE_REQUIRED",
+        400,
+        true
+      );
+    }
+  }
+
+  const resolvedAmount =
+    amount !== undefined
+      ? Number(amount)
+      : transaction.transactionType === "MILESTONE_BASED_PROJECT" &&
+        milestones !== undefined &&
+        milestones.length > 0
+      ? milestones.reduce((acc, m) => acc + Number(m.amount), 0)
+      : undefined;
 
   const updated = await prisma.$transaction(async (tx) => {
     if (milestones !== undefined) {
@@ -198,7 +224,7 @@ export async function reviseTransactionService(
       where: { id: transactionId },
       data: {
         ...(title !== undefined ? { title } : {}),
-        ...(amount !== undefined ? { amount } : {}),
+        ...(resolvedAmount !== undefined ? { amount: resolvedAmount } : {}),
         ...(transaction_description !== undefined
           ? { transaction_description }
           : {}),
@@ -209,6 +235,12 @@ export async function reviseTransactionService(
         ...(pay_escrow_fee !== undefined ? { pay_escrow_fee } : {}),
         ...(pay_shipping_cost !== undefined ? { pay_shipping_cost } : {}),
         ...(files !== undefined ? { files } : {}),
+        ...(resubmit
+          ? {
+              status: "CREATED" as const,
+              revision_count: { increment: 1 },
+            }
+          : {}),
       },
       include: {
         milestones: {
@@ -223,6 +255,14 @@ export async function reviseTransactionService(
       },
     });
   });
+
+  if (resubmit) {
+    await systemDispatchNotificationByEmail(
+      transaction.reciever_email,
+      "Transaction Resubmitted",
+      `The creator revised transaction "${updated.title || updated.transaction_description}" and submitted it for your approval again.`
+    );
+  }
 
   return updated;
 }

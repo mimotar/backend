@@ -61,6 +61,7 @@ ticketRouter.post(
 ticketRouter.patch(
   "/:id/revise",
   authenticateTokenMiddleware,
+  upload.array("files", 2),
   validateSchema(ReviseTransactionSchema),
   reviseTransactionController as RequestHandler
 );

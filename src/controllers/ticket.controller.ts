@@ -703,7 +703,8 @@ export const requestChangesController = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const userId = (req.user as { id: number })?.id;
+    const authUser = req.user as { id?: number; userId?: number } | undefined;
+    const userId = authUser?.id ?? authUser?.userId;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -733,21 +734,73 @@ export const reviseTransactionController = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const userId = (req.user as { id: number })?.id;
+    const authUser = req.user as { id?: number; userId?: number } | undefined;
+    const userId = authUser?.id ?? authUser?.userId;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new GlobalError("User not found", "NotFoundError", 404, true);
 
+    // If files were uploaded via multipart/form-data, upload them to Cloudinary
+    const rawFiles = req.files as Express.Multer.File[] | undefined;
+    let uploadedFiles: any[] = [];
+    if (rawFiles && rawFiles.length) {
+      const uploads = await Promise.all(
+        rawFiles.map(async (file) => {
+          const result = await uploadToCloudinary(file);
+          const { public_id, url } = result as any;
+          const mimePrefix = file.mimetype.split("/")[0];
+          return {
+            fileName: file.originalname,
+            fileType: (mimePrefix === "image"
+              ? "image"
+              : file.mimetype.includes("pdf")
+              ? "pdf"
+              : "doc") as "image" | "pdf" | "doc" | "other",
+            fileUrl: url,
+            fileId: public_id,
+          };
+        })
+      );
+      uploadedFiles = uploads;
+    }
+
+    let existingFiles = req.body.files;
+    if (typeof existingFiles === "string") {
+      try {
+        existingFiles = JSON.parse(existingFiles);
+      } catch {
+        existingFiles = undefined;
+      }
+    }
+
+    let combinedFiles: any[] | undefined = undefined;
+    if (uploadedFiles.length > 0) {
+      combinedFiles = Array.isArray(existingFiles)
+        ? [...existingFiles, ...uploadedFiles].slice(0, 2)
+        : uploadedFiles.slice(0, 2);
+    } else if (existingFiles !== undefined) {
+      combinedFiles = existingFiles;
+    }
+
+    const reviseData = {
+      ...req.body,
+      ...(combinedFiles !== undefined ? { files: combinedFiles } : {}),
+    };
+
     const updated = await reviseTransactionService(
       Number(req.params.id),
       userId,
       user.email,
-      req.body
+      reviseData
     );
 
+    const message = req.body.resubmit
+      ? "Transaction revised and resubmitted successfully"
+      : "Transaction revised successfully";
+
     return res.status(200).json({
-      message: "Transaction revised successfully",
+      message,
       data: updated,
     });
   } catch (error: any) {
@@ -764,7 +817,8 @@ export const resubmitTransactionController = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const userId = (req.user as { id: number })?.id;
+    const authUser = req.user as { id?: number; userId?: number } | undefined;
+    const userId = authUser?.id ?? authUser?.userId;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
     const user = await prisma.user.findUnique({ where: { id: userId } });

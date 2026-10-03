@@ -28,19 +28,28 @@ const FutureDeadlineSchema = z.coerce.date().refine(
   "Deadline must be in the future"
 );
 
+export const FileAttachmentSchema = z.object({
+  fileName: z.string(),
+  fileType: z.preprocess((val) => {
+    if (typeof val === "string") {
+      const lower = val.toLowerCase();
+      if (lower.includes("image")) return "image";
+      if (lower.includes("pdf")) return "pdf";
+      if (lower.includes("doc") || lower.includes("word")) return "doc";
+      return "other";
+    }
+    return val;
+  }, z.enum(["image", "pdf", "doc", "other"])),
+  fileUrl: z.string().url(),
+  fileId: z.string().optional(),
+});
+
 export const MilestoneSchema = z.object({
   name: z.string().min(1, "Milestone name is required"),
   amount: z.coerce.number().int().positive("Milestone amount must be positive"),
   deadline: FutureDeadlineSchema,
   files: z
-    .array(
-      z.object({
-        fileName: z.string(),
-        fileType: z.enum(["image", "pdf", "doc", "other"]),
-        fileUrl: z.string().url(),
-        fileId: z.string().optional(),
-      })
-    )
+    .array(FileAttachmentSchema)
     .optional(),
 });
 
@@ -180,15 +189,17 @@ export const RequestChangesSchema = z.object({
 
 export type RequestChangesType = z.infer<typeof RequestChangesSchema>;
 
-const FileAttachmentSchema = z.object({
-  fileName: z.string(),
-  fileType: z.enum(["image", "pdf", "doc", "other"]),
-  fileUrl: z.string().url(),
-  fileId: z.string().optional(),
-});
-
 export const ReviseTransactionSchema = z
-  .object({
+  .preprocess((val: any) => {
+    if (val && typeof val === "object") {
+      const copy = { ...val };
+      if (copy.description !== undefined && copy.transaction_description === undefined) {
+        copy.transaction_description = copy.description;
+      }
+      return copy;
+    }
+    return val;
+  }, z.object({
     title: z.string().min(1).max(200).optional(),
     amount: z.coerce.number().int().positive().optional(),
     transaction_description: z.string().max(200).optional(),
@@ -198,7 +209,19 @@ export const ReviseTransactionSchema = z
     inspection_duration: z.coerce.number().int().positive().optional(),
     pay_escrow_fee: EscrowFeePayerEnum.optional(),
     pay_shipping_cost: EscrowFeePayerEnum.nullable().optional(),
-    files: z.array(FileAttachmentSchema).max(2).optional(),
+    files: z.preprocess(
+      (val) => {
+        if (typeof val === "string") {
+          try {
+            return JSON.parse(val);
+          } catch {
+            return val;
+          }
+        }
+        return val;
+      },
+      z.array(FileAttachmentSchema).max(2).optional()
+    ),
     milestones: z.preprocess(
       (val) => {
         if (typeof val === "string") {
@@ -212,7 +235,11 @@ export const ReviseTransactionSchema = z
       },
       z.array(MilestoneSchema).optional()
     ),
-  })
+    resubmit: z.preprocess(
+      (val) => (val === "true" || val === true ? true : false),
+      z.boolean().optional().default(false)
+    ),
+  }))
   .superRefine((data, ctx) => {
     if (data.milestones && data.deadline) {
       data.milestones.forEach((milestone, index) => {
