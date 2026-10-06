@@ -7,6 +7,7 @@ export interface User {
   lastName: string;
   createdAt: Date;
   verified: boolean;
+  phoneVerified?: boolean;
   verificationToken?: string | null; // Nullable string
   profile?: Profile | null; 
   provider?: string | null;
@@ -23,6 +24,7 @@ export interface Profile {
     id: number;
     address?: string | null;
     phone_no?: string | null;
+    phoneVerified?: boolean;
     avatarUrl?: string | null;
     avatarPublicId?: string | null;
     bio?: string | null;

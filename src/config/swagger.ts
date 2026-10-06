@@ -1005,6 +1005,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
           fullName: { type: "string" },
           email: { type: "string", format: "email" },
           phone_no: { type: "string", nullable: true },
+          phoneVerified: { type: "boolean", example: false },
           address: { type: "string", nullable: true },
           city: { type: "string", nullable: true },
           country: { type: "string", nullable: true },
@@ -1276,7 +1277,18 @@ Welcome to the **Mimotar API** documentation. This API supports:
                       type: "object",
                       properties: {
                         token: { type: "string" },
-                        user: { type: "object" },
+                        user: {
+                          type: "object",
+                          properties: {
+                            id: { type: "number" },
+                            firstName: { type: "string" },
+                            lastName: { type: "string" },
+                            email: { type: "string" },
+                            verified: { type: "boolean", description: "Email verification status" },
+                            phoneVerified: { type: "boolean", description: "Phone verification status" },
+                            profile: { $ref: "#/components/schemas/ProfileResponse" },
+                          },
+                        },
                       },
                     },
                     success: { type: "boolean" },

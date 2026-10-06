@@ -27,6 +27,7 @@ export const getProfileService = async (userId: number) => {
     fullName,
     email: user.email,
     phone_no: user.profile?.phone_no || null,
+    phoneVerified: user.profile?.phoneVerified ?? false,
     address: user.profile?.address || null,
     avatar: user.profile?.avatar || null,
     city: user.profile?.city || null,
@@ -61,9 +62,16 @@ export const updateProfileService = async (userId: number, data: UpdateProfileDt
     });
   }
 
+  const phoneChanged =
+    data.phone_no !== undefined &&
+    user.profile?.phone_no !== null &&
+    user.profile?.phone_no !== undefined &&
+    data.phone_no !== user.profile?.phone_no;
+
   // Clean undefined data for profile
   const profileData = {
     phone_no: data.phone_no !== undefined ? data.phone_no : user.profile?.phone_no,
+    phoneVerified: phoneChanged ? false : (user.profile?.phoneVerified ?? false),
     address: data.address !== undefined ? data.address : user.profile?.address,
     city: data.city !== undefined ? data.city : user.profile?.city,
     country: data.country !== undefined ? data.country : user.profile?.country,

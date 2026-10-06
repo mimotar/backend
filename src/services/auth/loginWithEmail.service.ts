@@ -46,6 +46,7 @@ export const loginWithEmailService = async (email: string, password: string) => 
             lastName: user.lastName,
             email: user.email,
             verified: user.verified,
+            phoneVerified: user.profile?.phoneVerified ?? false,
             profile: user.profile,
         }}
   } catch (error) {

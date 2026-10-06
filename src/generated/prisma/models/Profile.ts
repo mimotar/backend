@@ -40,6 +40,7 @@ export type ProfileMinAggregateOutputType = {
   id: number | null
   address: string | null
   phone_no: string | null
+  phoneVerified: boolean | null
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -58,6 +59,7 @@ export type ProfileMaxAggregateOutputType = {
   id: number | null
   address: string | null
   phone_no: string | null
+  phoneVerified: boolean | null
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -76,6 +78,7 @@ export type ProfileCountAggregateOutputType = {
   id: number
   address: number
   phone_no: number
+  phoneVerified: number
   avatar: number
   bio: number
   verification_no: number
@@ -106,6 +109,7 @@ export type ProfileMinAggregateInputType = {
   id?: true
   address?: true
   phone_no?: true
+  phoneVerified?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -124,6 +128,7 @@ export type ProfileMaxAggregateInputType = {
   id?: true
   address?: true
   phone_no?: true
+  phoneVerified?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -142,6 +147,7 @@ export type ProfileCountAggregateInputType = {
   id?: true
   address?: true
   phone_no?: true
+  phoneVerified?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -247,6 +253,7 @@ export type ProfileGroupByOutputType = {
   id: number
   address: string | null
   phone_no: string | null
+  phoneVerified: boolean
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -288,6 +295,7 @@ export type ProfileWhereInput = {
   id?: Prisma.IntFilter<"Profile"> | number
   address?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableFilter<"Profile"> | string | null
+  phoneVerified?: Prisma.BoolFilter<"Profile"> | boolean
   avatar?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -307,6 +315,7 @@ export type ProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneVerified?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   verification_no?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -330,6 +339,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   address?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableFilter<"Profile"> | string | null
+  phoneVerified?: Prisma.BoolFilter<"Profile"> | boolean
   avatar?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -348,6 +358,7 @@ export type ProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneVerified?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   verification_no?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,6 +385,7 @@ export type ProfileScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
   address?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  phoneVerified?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
   avatar?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
@@ -391,6 +403,7 @@ export type ProfileScalarWhereWithAggregatesInput = {
 export type ProfileCreateInput = {
   address?: string | null
   phone_no?: string | null
+  phoneVerified?: boolean
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -409,6 +422,7 @@ export type ProfileUncheckedCreateInput = {
   id?: number
   address?: string | null
   phone_no?: string | null
+  phoneVerified?: boolean
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -426,6 +440,7 @@ export type ProfileUncheckedCreateInput = {
 export type ProfileUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -444,6 +459,7 @@ export type ProfileUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -462,6 +478,7 @@ export type ProfileCreateManyInput = {
   id?: number
   address?: string | null
   phone_no?: string | null
+  phoneVerified?: boolean
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -479,6 +496,7 @@ export type ProfileCreateManyInput = {
 export type ProfileUpdateManyMutationInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -496,6 +514,7 @@ export type ProfileUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -519,6 +538,7 @@ export type ProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
+  phoneVerified?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -542,6 +562,7 @@ export type ProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
+  phoneVerified?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -560,6 +581,7 @@ export type ProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
+  phoneVerified?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -614,6 +636,7 @@ export type ProfileUncheckedUpdateOneWithoutUserNestedInput = {
 export type ProfileCreateWithoutUserInput = {
   address?: string | null
   phone_no?: string | null
+  phoneVerified?: boolean
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -631,6 +654,7 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   id?: number
   address?: string | null
   phone_no?: string | null
+  phoneVerified?: boolean
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -663,6 +687,7 @@ export type ProfileUpdateToOneWithWhereWithoutUserInput = {
 export type ProfileUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -680,6 +705,7 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -699,6 +725,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   address?: boolean
   phone_no?: boolean
+  phoneVerified?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -718,6 +745,7 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   address?: boolean
   phone_no?: boolean
+  phoneVerified?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -737,6 +765,7 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   address?: boolean
   phone_no?: boolean
+  phoneVerified?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -756,6 +785,7 @@ export type ProfileSelectScalar = {
   id?: boolean
   address?: boolean
   phone_no?: boolean
+  phoneVerified?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -770,7 +800,7 @@ export type ProfileSelectScalar = {
   postal_code?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "user_id" | "city" | "country" | "id_number" | "postal_code", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "phoneVerified" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "user_id" | "city" | "country" | "id_number" | "postal_code", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -790,6 +820,7 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: number
     address: string | null
     phone_no: string | null
+    phoneVerified: boolean
     avatar: string | null
     bio: string | null
     verification_no: string | null
@@ -1229,6 +1260,7 @@ export interface ProfileFieldRefs {
   readonly id: Prisma.FieldRef<"Profile", 'Int'>
   readonly address: Prisma.FieldRef<"Profile", 'String'>
   readonly phone_no: Prisma.FieldRef<"Profile", 'String'>
+  readonly phoneVerified: Prisma.FieldRef<"Profile", 'Boolean'>
   readonly avatar: Prisma.FieldRef<"Profile", 'String'>
   readonly bio: Prisma.FieldRef<"Profile", 'String'>
   readonly verification_no: Prisma.FieldRef<"Profile", 'String'>

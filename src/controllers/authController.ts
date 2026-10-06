@@ -253,6 +253,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       user: {
         id: user.id,
         email: user.email,
+        phoneVerified: false,
       },
     });
   } catch (error) {

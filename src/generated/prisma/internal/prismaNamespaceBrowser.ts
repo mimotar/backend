@@ -338,6 +338,7 @@ export const ProfileScalarFieldEnum = {
   id: 'id',
   address: 'address',
   phone_no: 'phone_no',
+  phoneVerified: 'phoneVerified',
   avatar: 'avatar',
   bio: 'bio',
   verification_no: 'verification_no',
