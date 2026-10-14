@@ -1,7 +1,17 @@
 import prisma from "../../utils/prisma.js";
+import type { Prisma } from "../../generated/prisma/client.js";
 import type { Role } from "../../generated/prisma/enums.js";
 
 const FUNDED_ACTIVE_STATUSES = ["ONGOING", "PENDING_CLOSURE", "DISPUTE"] as const;
+const ACTIVE_CONTRACT_STATUSES = [
+  "CREATED",
+  "APPROVED",
+  "CHANGES_REQUESTED",
+  "ONGOING",
+  "PENDING_CLOSURE",
+  "DISPUTE",
+] as const;
+
 const ACTION_PRIORITY: Record<string, number> = {
   APPROVE_OR_REJECT_CANCEL: 1,
   RESPOND_TO_DISPUTE: 2,
@@ -42,9 +52,14 @@ function getCounterparty(
     creator_fullname: string;
     reciever_email: string;
     receiver_fullname: string;
+    user_id?: number | null;
   },
-  userEmail: string
+  userEmail: string,
+  userId?: number
 ): Counterparty {
+  if (userId && transaction.user_id === userId) {
+    return { name: transaction.receiver_fullname, email: transaction.reciever_email };
+  }
   const isCreator = transaction.creator_email.toLowerCase() === userEmail.toLowerCase();
   return isCreator
     ? { name: transaction.receiver_fullname, email: transaction.reciever_email }
@@ -52,14 +67,15 @@ function getCounterparty(
 }
 
 function isBuyer(
-  transaction: { creator_role: Role; creator_email: string; reciever_email: string },
-  userEmail: string
+  transaction: { creator_role: Role; creator_email: string; reciever_email: string; user_id?: number | null },
+  userEmail: string,
+  userId?: number
 ): boolean {
-  const email = userEmail.toLowerCase();
+  const isCreator = (userId && transaction.user_id === userId) || transaction.creator_email.toLowerCase() === userEmail.toLowerCase();
   if (transaction.creator_role === "CLIENT") {
-    return transaction.creator_email.toLowerCase() === email;
+    return isCreator;
   }
-  return transaction.reciever_email.toLowerCase() === email;
+  return !isCreator;
 }
 
 function getUserRole(
@@ -68,9 +84,14 @@ function getUserRole(
     creator_role: Role;
     reciever_email: string;
     reciever_role: Role;
+    user_id?: number | null;
   },
-  userEmail: string
+  userEmail: string,
+  userId?: number
 ): Role {
+  if (userId && transaction.user_id === userId) {
+    return transaction.creator_role;
+  }
   const isCreator = transaction.creator_email.toLowerCase() === userEmail.toLowerCase();
   return isCreator ? transaction.creator_role : transaction.reciever_role;
 }
@@ -117,6 +138,7 @@ function buildActionsForUser(
     currency: string;
     status: string;
     created_at: Date;
+    user_id?: number | null;
     creator_email: string;
     creator_fullname: string;
     creator_role: Role;
@@ -136,6 +158,7 @@ function buildActionsForUser(
       currency: string;
       status: string;
       created_at: Date;
+      user_id?: number | null;
       creator_email: string;
       creator_fullname: string;
       creator_role: Role;
@@ -144,7 +167,8 @@ function buildActionsForUser(
       reciever_role: Role;
       payment: { status: string } | null;
     };
-  }>
+  }>,
+  userId?: number
 ): ActionItem[] {
   const email = userEmail.toLowerCase();
   const actions: ActionItem[] = [];
@@ -158,16 +182,16 @@ function buildActionsForUser(
       amount: txn.amount,
       currency: txn.currency,
       status: txn.status,
-      from: getCounterparty(txn, userEmail),
+      from: getCounterparty(txn, userEmail, userId),
       createdAt: txn.created_at.toISOString(),
       fundStatus: getFundStatus(txn.payment),
       deliveredAndReleasedStatus: getDeliveredAndReleasedStatus(txn.status),
-      roleStatus: getUserRole(txn, userEmail),
+      roleStatus: getUserRole(txn, userEmail, userId),
     });
   }
 
   for (const txn of transactions) {
-    const isCreator = txn.creator_email.toLowerCase() === email;
+    const isCreator = (userId && txn.user_id === userId) || txn.creator_email.toLowerCase() === email;
     const isReceiver = txn.reciever_email.toLowerCase() === email;
     const title = txn.title || `Transaction #${txn.id}`;
     const base = {
@@ -176,11 +200,11 @@ function buildActionsForUser(
       amount: txn.amount,
       currency: txn.currency,
       status: txn.status,
-      from: getCounterparty(txn, userEmail),
+      from: getCounterparty(txn, userEmail, userId),
       createdAt: txn.created_at.toISOString(),
       fundStatus: getFundStatus(txn.payment),
       deliveredAndReleasedStatus: getDeliveredAndReleasedStatus(txn.status),
-      roleStatus: getUserRole(txn, userEmail),
+      roleStatus: getUserRole(txn, userEmail, userId),
     };
 
     if (
@@ -202,13 +226,13 @@ function buildActionsForUser(
 
     if (
       txn.status === "APPROVED" &&
-      isBuyer(txn, userEmail) &&
+      isBuyer(txn, userEmail, userId) &&
       (!txn.payment || txn.payment.status !== "COMPLETED")
     ) {
       actions.push({ ...base, type: "PAY_ESCROW" });
     }
 
-    if (txn.status === "PENDING_CLOSURE" && isBuyer(txn, userEmail)) {
+    if (txn.status === "PENDING_CLOSURE" && isBuyer(txn, userEmail, userId)) {
       actions.push({ ...base, type: "ACCEPT_OR_REJECT_CLOSURE" });
     }
   }
@@ -239,6 +263,14 @@ export async function DashboardService(id: number, months?: number) {
 
   const { email } = user;
 
+  const userFilter: Prisma.TransactionWhereInput = {
+    OR: [
+      { user_id: id },
+      { creator_email: { equals: email, mode: "insensitive" } },
+      { reciever_email: { equals: email, mode: "insensitive" } },
+    ],
+  };
+
   let dateFilter = {};
   if (months) {
     const startDate = new Date();
@@ -258,15 +290,14 @@ export async function DashboardService(id: number, months?: number) {
     openDisputesCount,
     transactionCounts,
     userEarnings,
-    fundedActiveTransactions,
+    activeTransactions,
     actionCandidates,
     openDisputes,
     notifications,
   ] = await Promise.all([
     prisma.transaction.count({
       where: {
-        OR: [{ creator_email: email }, { reciever_email: email }],
-        ...dateFilter,
+        AND: [userFilter, dateFilter],
       },
     }),
     prisma.dispute.count({
@@ -279,8 +310,7 @@ export async function DashboardService(id: number, months?: number) {
     prisma.transaction.groupBy({
       by: ["status"],
       where: {
-        OR: [{ creator_email: email }, { reciever_email: email }],
-        ...dateFilter,
+        AND: [userFilter, dateFilter],
       },
       _count: { id: true },
     }),
@@ -297,9 +327,10 @@ export async function DashboardService(id: number, months?: number) {
     }),
     prisma.transaction.findMany({
       where: {
-        OR: [{ creator_email: email }, { reciever_email: email }],
-        status: { in: [...FUNDED_ACTIVE_STATUSES] },
-        payment: { is: { status: "COMPLETED" } },
+        AND: [
+          userFilter,
+          { status: { in: [...ACTIVE_CONTRACT_STATUSES] } },
+        ],
       },
       select: {
         id: true,
@@ -308,6 +339,8 @@ export async function DashboardService(id: number, months?: number) {
         currency: true,
         status: true,
         deadline: true,
+        created_at: true,
+        user_id: true,
         payment_sent_to_escrow_at: true,
         transactionType: true,
         pay_escrow_fee: true,
@@ -323,12 +356,12 @@ export async function DashboardService(id: number, months?: number) {
           orderBy: { sequence: "asc" },
         },
       },
-      orderBy: { payment_sent_to_escrow_at: "desc" },
+      orderBy: { created_at: "desc" },
     }),
     prisma.transaction.findMany({
       where: {
         AND: [
-          { OR: [{ creator_email: email }, { reciever_email: email }] },
+          userFilter,
           {
             OR: [
               {
@@ -351,6 +384,7 @@ export async function DashboardService(id: number, months?: number) {
         currency: true,
         status: true,
         created_at: true,
+        user_id: true,
         creator_email: true,
         creator_fullname: true,
         creator_role: true,
@@ -378,6 +412,7 @@ export async function DashboardService(id: number, months?: number) {
             currency: true,
             status: true,
             created_at: true,
+            user_id: true,
             creator_email: true,
             creator_fullname: true,
             creator_role: true,
@@ -432,8 +467,13 @@ export async function DashboardService(id: number, months?: number) {
   });
 
   const lockedEscrow: CurrencyBucket = { NGN: 0, USD: 0 };
-  for (const txn of fundedActiveTransactions) {
-    addToBucket(lockedEscrow, txn.currency, computeLockedAmount(txn));
+  for (const txn of activeTransactions) {
+    if (
+      txn.payment?.status === "COMPLETED" &&
+      FUNDED_ACTIVE_STATUSES.includes(txn.status as (typeof FUNDED_ACTIVE_STATUSES)[number])
+    ) {
+      addToBucket(lockedEscrow, txn.currency, computeLockedAmount(txn));
+    }
   }
 
   const balance = {
@@ -444,13 +484,13 @@ export async function DashboardService(id: number, months?: number) {
     lockedEscrow,
   };
 
-  const allActions = buildActionsForUser(email, actionCandidates, openDisputes);
+  const allActions = buildActionsForUser(email, actionCandidates, openDisputes, id);
   const actionsRequired = {
     count: allActions.length,
     items: allActions.slice(0, 20),
   };
 
-  const activeContracts = fundedActiveTransactions.slice(0, 20).map((txn) => {
+  const activeContracts = activeTransactions.slice(0, 20).map((txn) => {
     const activeMilestone =
       txn.milestones.find((m) =>
         ["ONGOING", "PENDING_CLOSURE", "DISPUTE"].includes(m.status)
@@ -463,11 +503,11 @@ export async function DashboardService(id: number, months?: number) {
       currency: txn.currency,
       status: txn.status,
       deadline: txn.deadline.toISOString(),
-      counterparty: getCounterparty(txn, email),
+      counterparty: getCounterparty(txn, email, id),
       paymentSentToEscrowAt: txn.payment_sent_to_escrow_at?.toISOString() ?? null,
       fundedStatus: getFundStatus(txn.payment),
       feePayer: txn.pay_escrow_fee,
-      role: getUserRole(txn, email),
+      role: getUserRole(txn, email, id),
       activeMilestone: activeMilestone
         ? {
             id: activeMilestone.id,

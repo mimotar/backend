@@ -367,12 +367,13 @@ export const validateTransactionOtpService = async (id: number, otp: string) => 
   return transaction;
 };
 
-export const getAUserTransactionService = async (userEmail: string) => {
+export const getAUserTransactionService = async (userEmail: string, userId?: number) => {
   const transactions = await prisma.transaction.findMany({
     where: {
       OR: [
-        { creator_email: userEmail },
-        { reciever_email: userEmail }
+        ...(userId ? [{ user_id: userId }] : []),
+        { creator_email: { equals: userEmail, mode: "insensitive" } },
+        { reciever_email: { equals: userEmail, mode: "insensitive" } }
       ]
     },
     select: {

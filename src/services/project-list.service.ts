@@ -100,7 +100,8 @@ function buildMilestoneSummary(
 
 export async function listUserProjectsService(
   userEmail: string,
-  query: ProjectsQueryType
+  query: ProjectsQueryType,
+  userId?: number
 ) {
   const { page, limit, q, status, amount, minAmount, maxAmount } = query;
   const skip = (page - 1) * limit;
@@ -113,7 +114,11 @@ export async function listUserProjectsService(
   const where: Prisma.TransactionWhereInput = {
     AND: [
       {
-        OR: [{ creator_email: userEmail }, { reciever_email: userEmail }],
+        OR: [
+          ...(userId ? [{ user_id: userId }] : []),
+          { creator_email: { equals: userEmail, mode: "insensitive" } },
+          { reciever_email: { equals: userEmail, mode: "insensitive" } },
+        ],
       },
       ...(status?.length ? [{ status: { in: status } }] : []),
       ...(q

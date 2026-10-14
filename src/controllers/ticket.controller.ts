@@ -410,18 +410,25 @@ export const requestTokenToValidateTransactionController = async (req: Request, 
 }
 
 export const getAUserTransactionsController = async (req: Request, res: Response): Promise<Response | void> => {
-  const userId = (req.user as { id: number })?.id;
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const userId = (req.user as { id?: number; userId?: number } | undefined)?.id
+    ?? (req.user as { id?: number; userId?: number } | undefined)?.userId;
 
   if (!userId) {
     return res.status(401).json({ message: "Invalid token or user ID missing" });
   }
+
   try {
-    const transactions = await getAUserTransactionService(user?.email as string);
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(userId),
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const transactions = await getAUserTransactionService(user.email, user.id);
     res.status(200).json({
       message: "Transactions retrieved successfully",
       data: transactions,
@@ -440,12 +447,13 @@ export const listUserProjectsController = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const userId = (req.user as { id: number })?.id;
+    const userId = (req.user as { id?: number; userId?: number } | undefined)?.id
+      ?? (req.user as { id?: number; userId?: number } | undefined)?.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: Number(userId) } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -458,7 +466,7 @@ export const listUserProjectsController = async (
       });
     }
 
-    const data = await listUserProjectsService(user.email, parsed.data);
+    const data = await listUserProjectsService(user.email, parsed.data, user.id);
     return res.status(200).json({
       message: "Projects retrieved successfully",
       data,

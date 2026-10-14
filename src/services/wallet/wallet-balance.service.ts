@@ -57,7 +57,11 @@ export async function getWalletBalancesService(userId: number): Promise<WalletBa
 
   const fundedActiveTransactions = await prisma.transaction.findMany({
     where: {
-      OR: [{ creator_email: user.email }, { reciever_email: user.email }],
+      OR: [
+        { user_id: userId },
+        { creator_email: { equals: user.email, mode: "insensitive" } },
+        { reciever_email: { equals: user.email, mode: "insensitive" } },
+      ],
       status: { in: [...FUNDED_ACTIVE_STATUSES] },
       payment: { is: { status: "COMPLETED" } },
     },

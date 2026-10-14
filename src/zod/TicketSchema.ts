@@ -271,6 +271,10 @@ export const ProjectsQuerySchema = z.object({
         .filter(Boolean);
       const parsed: z.infer<typeof StatusEnum>[] = [];
       for (const part of parts) {
+        if (part.toUpperCase() === "ACTIVE") {
+          parsed.push("ONGOING", "PENDING_CLOSURE", "DISPUTE");
+          continue;
+        }
         const result = StatusEnum.safeParse(part);
         if (!result.success) {
           ctx.addIssue({
@@ -281,7 +285,7 @@ export const ProjectsQuerySchema = z.object({
         }
         parsed.push(result.data);
       }
-      return parsed;
+      return [...new Set(parsed)];
     }),
   amount: z.coerce.number().int().positive().optional(),
   minAmount: z.coerce.number().int().nonnegative().optional(),
