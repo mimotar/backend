@@ -207,14 +207,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { profile: true },
+    });
     if (!user) {
       res.status(400).json({ message: "Invalid credentials" });
       return;
     }
 
-    // const isMatch = await bcrypt.compare(password, user?.password);
-    // const isMatch = await bcrypt.compare(password, user?.password);
     if (!user.password) {
       res.status(400).json({
         message:
@@ -224,11 +225,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      res.status(400).json({ message: "Invalid credentials" });
-      return;
-    }
-
     if (!isMatch) {
       res.status(400).json({ message: "Invalid credentials" });
       return;
@@ -246,14 +242,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
-    // res.json({ token });
     res.json({
       message: "Login successful",
       token,
       user: {
         id: user.id,
         email: user.email,
-        phoneVerified: false,
+        phoneVerified: user.profile?.phoneVerified ?? false,
       },
     });
   } catch (error) {

@@ -41,6 +41,9 @@ export type ProfileMinAggregateOutputType = {
   address: string | null
   phone_no: string | null
   phoneVerified: boolean | null
+  phoneOtp: string | null
+  phoneOtpCreatedAt: Date | null
+  pendingPhone: string | null
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -60,6 +63,9 @@ export type ProfileMaxAggregateOutputType = {
   address: string | null
   phone_no: string | null
   phoneVerified: boolean | null
+  phoneOtp: string | null
+  phoneOtpCreatedAt: Date | null
+  pendingPhone: string | null
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -79,6 +85,9 @@ export type ProfileCountAggregateOutputType = {
   address: number
   phone_no: number
   phoneVerified: number
+  phoneOtp: number
+  phoneOtpCreatedAt: number
+  pendingPhone: number
   avatar: number
   bio: number
   verification_no: number
@@ -110,6 +119,9 @@ export type ProfileMinAggregateInputType = {
   address?: true
   phone_no?: true
   phoneVerified?: true
+  phoneOtp?: true
+  phoneOtpCreatedAt?: true
+  pendingPhone?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -129,6 +141,9 @@ export type ProfileMaxAggregateInputType = {
   address?: true
   phone_no?: true
   phoneVerified?: true
+  phoneOtp?: true
+  phoneOtpCreatedAt?: true
+  pendingPhone?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -148,6 +163,9 @@ export type ProfileCountAggregateInputType = {
   address?: true
   phone_no?: true
   phoneVerified?: true
+  phoneOtp?: true
+  phoneOtpCreatedAt?: true
+  pendingPhone?: true
   avatar?: true
   bio?: true
   verification_no?: true
@@ -254,6 +272,9 @@ export type ProfileGroupByOutputType = {
   address: string | null
   phone_no: string | null
   phoneVerified: boolean
+  phoneOtp: string | null
+  phoneOtpCreatedAt: Date | null
+  pendingPhone: string | null
   avatar: string | null
   bio: string | null
   verification_no: string | null
@@ -296,6 +317,9 @@ export type ProfileWhereInput = {
   address?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableFilter<"Profile"> | string | null
   phoneVerified?: Prisma.BoolFilter<"Profile"> | boolean
+  phoneOtp?: Prisma.StringNullableFilter<"Profile"> | string | null
+  phoneOtpCreatedAt?: Prisma.DateTimeNullableFilter<"Profile"> | Date | string | null
+  pendingPhone?: Prisma.StringNullableFilter<"Profile"> | string | null
   avatar?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -316,6 +340,9 @@ export type ProfileOrderByWithRelationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneVerified?: Prisma.SortOrder
+  phoneOtp?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneOtpCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   verification_no?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -340,6 +367,9 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   address?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableFilter<"Profile"> | string | null
   phoneVerified?: Prisma.BoolFilter<"Profile"> | boolean
+  phoneOtp?: Prisma.StringNullableFilter<"Profile"> | string | null
+  phoneOtpCreatedAt?: Prisma.DateTimeNullableFilter<"Profile"> | Date | string | null
+  pendingPhone?: Prisma.StringNullableFilter<"Profile"> | string | null
   avatar?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -359,6 +389,9 @@ export type ProfileOrderByWithAggregationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneVerified?: Prisma.SortOrder
+  phoneOtp?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneOtpCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   verification_no?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -386,6 +419,9 @@ export type ProfileScalarWhereWithAggregatesInput = {
   address?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   phone_no?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   phoneVerified?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
+  phoneOtp?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  phoneOtpCreatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Profile"> | Date | string | null
+  pendingPhone?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   verification_no?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
@@ -404,6 +440,9 @@ export type ProfileCreateInput = {
   address?: string | null
   phone_no?: string | null
   phoneVerified?: boolean
+  phoneOtp?: string | null
+  phoneOtpCreatedAt?: Date | string | null
+  pendingPhone?: string | null
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -423,6 +462,9 @@ export type ProfileUncheckedCreateInput = {
   address?: string | null
   phone_no?: string | null
   phoneVerified?: boolean
+  phoneOtp?: string | null
+  phoneOtpCreatedAt?: Date | string | null
+  pendingPhone?: string | null
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -441,6 +483,9 @@ export type ProfileUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -460,6 +505,9 @@ export type ProfileUncheckedUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -479,6 +527,9 @@ export type ProfileCreateManyInput = {
   address?: string | null
   phone_no?: string | null
   phoneVerified?: boolean
+  phoneOtp?: string | null
+  phoneOtpCreatedAt?: Date | string | null
+  pendingPhone?: string | null
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -497,6 +548,9 @@ export type ProfileUpdateManyMutationInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -515,6 +569,9 @@ export type ProfileUncheckedUpdateManyInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -539,6 +596,9 @@ export type ProfileCountOrderByAggregateInput = {
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
   phoneVerified?: Prisma.SortOrder
+  phoneOtp?: Prisma.SortOrder
+  phoneOtpCreatedAt?: Prisma.SortOrder
+  pendingPhone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -563,6 +623,9 @@ export type ProfileMaxOrderByAggregateInput = {
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
   phoneVerified?: Prisma.SortOrder
+  phoneOtp?: Prisma.SortOrder
+  phoneOtpCreatedAt?: Prisma.SortOrder
+  pendingPhone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -582,6 +645,9 @@ export type ProfileMinOrderByAggregateInput = {
   address?: Prisma.SortOrder
   phone_no?: Prisma.SortOrder
   phoneVerified?: Prisma.SortOrder
+  phoneOtp?: Prisma.SortOrder
+  phoneOtpCreatedAt?: Prisma.SortOrder
+  pendingPhone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   verification_no?: Prisma.SortOrder
@@ -637,6 +703,9 @@ export type ProfileCreateWithoutUserInput = {
   address?: string | null
   phone_no?: string | null
   phoneVerified?: boolean
+  phoneOtp?: string | null
+  phoneOtpCreatedAt?: Date | string | null
+  pendingPhone?: string | null
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -655,6 +724,9 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   address?: string | null
   phone_no?: string | null
   phoneVerified?: boolean
+  phoneOtp?: string | null
+  phoneOtpCreatedAt?: Date | string | null
+  pendingPhone?: string | null
   avatar?: string | null
   bio?: string | null
   verification_no?: string | null
@@ -688,6 +760,9 @@ export type ProfileUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -706,6 +781,9 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneOtpCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pendingPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verification_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -726,6 +804,9 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   address?: boolean
   phone_no?: boolean
   phoneVerified?: boolean
+  phoneOtp?: boolean
+  phoneOtpCreatedAt?: boolean
+  pendingPhone?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -746,6 +827,9 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   address?: boolean
   phone_no?: boolean
   phoneVerified?: boolean
+  phoneOtp?: boolean
+  phoneOtpCreatedAt?: boolean
+  pendingPhone?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -766,6 +850,9 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   address?: boolean
   phone_no?: boolean
   phoneVerified?: boolean
+  phoneOtp?: boolean
+  phoneOtpCreatedAt?: boolean
+  pendingPhone?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -786,6 +873,9 @@ export type ProfileSelectScalar = {
   address?: boolean
   phone_no?: boolean
   phoneVerified?: boolean
+  phoneOtp?: boolean
+  phoneOtpCreatedAt?: boolean
+  pendingPhone?: boolean
   avatar?: boolean
   bio?: boolean
   verification_no?: boolean
@@ -800,7 +890,7 @@ export type ProfileSelectScalar = {
   postal_code?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "phoneVerified" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "user_id" | "city" | "country" | "id_number" | "postal_code", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "phone_no" | "phoneVerified" | "phoneOtp" | "phoneOtpCreatedAt" | "pendingPhone" | "avatar" | "bio" | "verification_no" | "verification_type" | "next_kin" | "next_email" | "next_no" | "user_id" | "city" | "country" | "id_number" | "postal_code", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -821,6 +911,9 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     address: string | null
     phone_no: string | null
     phoneVerified: boolean
+    phoneOtp: string | null
+    phoneOtpCreatedAt: Date | null
+    pendingPhone: string | null
     avatar: string | null
     bio: string | null
     verification_no: string | null
@@ -1261,6 +1354,9 @@ export interface ProfileFieldRefs {
   readonly address: Prisma.FieldRef<"Profile", 'String'>
   readonly phone_no: Prisma.FieldRef<"Profile", 'String'>
   readonly phoneVerified: Prisma.FieldRef<"Profile", 'Boolean'>
+  readonly phoneOtp: Prisma.FieldRef<"Profile", 'String'>
+  readonly phoneOtpCreatedAt: Prisma.FieldRef<"Profile", 'DateTime'>
+  readonly pendingPhone: Prisma.FieldRef<"Profile", 'String'>
   readonly avatar: Prisma.FieldRef<"Profile", 'String'>
   readonly bio: Prisma.FieldRef<"Profile", 'String'>
   readonly verification_no: Prisma.FieldRef<"Profile", 'String'>

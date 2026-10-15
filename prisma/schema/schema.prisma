@@ -288,7 +288,10 @@ model Profile {
   id                Int     @id @default(autoincrement())
   address           String?
   phone_no          String?
-  phoneVerified     Boolean @default(false)
+  phoneVerified     Boolean   @default(false)
+  phoneOtp          String?
+  phoneOtpCreatedAt DateTime?
+  pendingPhone      String?
   avatar            String?
   bio               String? @db.VarChar(100)
   verification_no   String?

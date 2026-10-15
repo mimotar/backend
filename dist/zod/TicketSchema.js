@@ -18,19 +18,33 @@ export const StatusEnum = z.enum([
     "CANCELED",
     "EXPIRED",
     "PENDING_CLOSURE",
+    "CHANGES_REQUESTED",
 ]);
 const FutureDeadlineSchema = z.coerce.date().refine((deadline) => deadline.getTime() > Date.now(), "Deadline must be in the future");
+export const FileAttachmentSchema = z.object({
+    fileName: z.string(),
+    fileType: z.preprocess((val) => {
+        if (typeof val === "string") {
+            const lower = val.toLowerCase();
+            if (lower.includes("image"))
+                return "image";
+            if (lower.includes("pdf"))
+                return "pdf";
+            if (lower.includes("doc") || lower.includes("word"))
+                return "doc";
+            return "other";
+        }
+        return val;
+    }, z.enum(["image", "pdf", "doc", "other"])),
+    fileUrl: z.string().url(),
+    fileId: z.string().optional(),
+});
 export const MilestoneSchema = z.object({
     name: z.string().min(1, "Milestone name is required"),
     amount: z.coerce.number().int().positive("Milestone amount must be positive"),
     deadline: FutureDeadlineSchema,
     files: z
-        .array(z.object({
-        fileName: z.string(),
-        fileType: z.enum(["image", "pdf", "doc", "other"]),
-        fileUrl: z.string().url(),
-        fileId: z.string().optional(),
-    }))
+        .array(FileAttachmentSchema)
         .optional(),
 });
 // Transaction settlement currently has dedicated wallet handling for NGN and USD only.
@@ -117,4 +131,128 @@ export const DeadlineExtensionSchema = z.object({
 export const RejectTransactionSchema = z.object({
     otp: z.string().min(1, "OTP is required"),
     rejection_reason: z.string().min(1, "Rejection reason is required").max(500, "Rejection reason must be under 500 characters"),
+});
+export const ResolveDeliverySchema = z.object({
+    note: z
+        .string()
+        .trim()
+        .min(1, "Delivery note is required")
+        .max(2000, "Delivery note must be under 2000 characters"),
+});
+export const RejectDeliverySchema = z.object({
+    reason: z
+        .string()
+        .trim()
+        .min(1, "Rejection reason is required")
+        .max(2000, "Rejection reason must be under 2000 characters"),
+});
+export const RequestChangesSchema = z.object({
+    comment: z
+        .string()
+        .trim()
+        .min(1, "Comment is required")
+        .max(500, "Comment must be under 500 characters"),
+});
+export const ReviseTransactionSchema = z
+    .preprocess((val) => {
+    if (val && typeof val === "object") {
+        const copy = { ...val };
+        if (copy.description !== undefined && copy.transaction_description === undefined) {
+            copy.transaction_description = copy.description;
+        }
+        return copy;
+    }
+    return val;
+}, z.object({
+    title: z.string().min(1).max(200).optional(),
+    amount: z.coerce.number().int().positive().optional(),
+    transaction_description: z.string().max(200).optional(),
+    terms: z.string().nullable().optional(),
+    additional_agreement: z.string().max(200).nullable().optional(),
+    deadline: FutureDeadlineSchema.optional(),
+    inspection_duration: z.coerce.number().int().positive().optional(),
+    pay_escrow_fee: EscrowFeePayerEnum.optional(),
+    pay_shipping_cost: EscrowFeePayerEnum.nullable().optional(),
+    files: z.preprocess((val) => {
+        if (typeof val === "string") {
+            try {
+                return JSON.parse(val);
+            }
+            catch {
+                return val;
+            }
+        }
+        return val;
+    }, z.array(FileAttachmentSchema).max(2).optional()),
+    milestones: z.preprocess((val) => {
+        if (typeof val === "string") {
+            try {
+                return JSON.parse(val);
+            }
+            catch {
+                return val;
+            }
+        }
+        return val;
+    }, z.array(MilestoneSchema).optional()),
+    resubmit: z.preprocess((val) => (val === "true" || val === true ? true : false), z.boolean().optional().default(false)),
+}))
+    .superRefine((data, ctx) => {
+    if (data.milestones && data.deadline) {
+        data.milestones.forEach((milestone, index) => {
+            if (milestone.deadline > data.deadline) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ["milestones", index, "deadline"],
+                    message: "Milestone deadline cannot be later than the transaction deadline",
+                });
+            }
+        });
+    }
+});
+export const ProjectsQuerySchema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(10),
+    q: z.string().trim().min(1).optional(),
+    status: z
+        .string()
+        .optional()
+        .transform((value, ctx) => {
+        if (!value || !value.trim())
+            return undefined;
+        const parts = value
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+        const parsed = [];
+        for (const part of parts) {
+            if (part.toUpperCase() === "ACTIVE") {
+                parsed.push("ONGOING", "PENDING_CLOSURE", "DISPUTE");
+                continue;
+            }
+            const result = StatusEnum.safeParse(part);
+            if (!result.success) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Invalid status: ${part}`,
+                });
+                return z.NEVER;
+            }
+            parsed.push(result.data);
+        }
+        return [...new Set(parsed)];
+    }),
+    amount: z.coerce.number().int().positive().optional(),
+    minAmount: z.coerce.number().int().nonnegative().optional(),
+    maxAmount: z.coerce.number().int().positive().optional(),
+}).superRefine((data, ctx) => {
+    if (data.minAmount !== undefined &&
+        data.maxAmount !== undefined &&
+        data.minAmount > data.maxAmount) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["minAmount"],
+            message: "minAmount cannot be greater than maxAmount",
+        });
+    }
 });

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { getProfileService, updateProfileService, uploadProfileImageService, UpdateProfileDto } from "../services/profile/profile.service.js";
+import { sendPhoneOtpService, verifyPhoneOtpService } from "../services/profile/phoneVerification.service.js";
 
 export const getProfileController = async (
   req: Request,
@@ -110,6 +111,74 @@ export const uploadAvatarController = async (
     });
   } catch (error) {
     console.error("Error in uploadAvatarController:", error);
+    res.status(500).json({
+      message: error instanceof Error ? error.message : "Internal server error",
+      success: false,
+    });
+  }
+};
+
+export const sendPhoneOtpController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as any;
+    const userId = user?.id || user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        message: "Unauthorized",
+        success: false,
+      });
+      return;
+    }
+
+    const { phone_no } = req.body;
+    const result = await sendPhoneOtpService(Number(userId), phone_no);
+
+    res.status(result.status).json({
+      message: result.message,
+      success: result.success,
+      data: result.data || null,
+    });
+  } catch (error) {
+    console.error("Error in sendPhoneOtpController:", error);
+    res.status(500).json({
+      message: error instanceof Error ? error.message : "Internal server error",
+      success: false,
+    });
+  }
+};
+
+export const verifyPhoneOtpController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as any;
+    const userId = user?.id || user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        message: "Unauthorized",
+        success: false,
+      });
+      return;
+    }
+
+    const { otp } = req.body;
+    const result = await verifyPhoneOtpService(Number(userId), otp);
+
+    res.status(result.status).json({
+      message: result.message,
+      success: result.success,
+      data: result.data || null,
+    });
+  } catch (error) {
+    console.error("Error in verifyPhoneOtpController:", error);
     res.status(500).json({
       message: error instanceof Error ? error.message : "Internal server error",
       success: false,

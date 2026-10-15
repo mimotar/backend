@@ -5,6 +5,9 @@ export interface CurrentUserDetail {
   id: string;
   email: string;
   name: string;
+  phone_no: string | null;
+  phoneVerified: boolean;
+  avatar: string | null;
   isLoggedIn: true;
 }
 
@@ -46,6 +49,13 @@ export async function getCurrentUserDetail(
       email: true,
       firstName: true,
       lastName: true,
+      profile: {
+        select: {
+          phone_no: true,
+          phoneVerified: true,
+          avatar: true,
+        },
+      },
     },
   });
 
@@ -62,6 +72,9 @@ export async function getCurrentUserDetail(
     id: String(user.id),
     email: user.email,
     name: `${user.firstName} ${user.lastName}`.trim(),
+    phone_no: user.profile?.phone_no ?? null,
+    phoneVerified: user.profile?.phoneVerified ?? false,
+    avatar: user.profile?.avatar ?? null,
     isLoggedIn: true,
   };
 }

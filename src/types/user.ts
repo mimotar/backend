@@ -25,8 +25,15 @@ export interface Profile {
     address?: string | null;
     phone_no?: string | null;
     phoneVerified?: boolean;
+    phoneOtp?: string | null;
+    phoneOtpCreatedAt?: Date | null;
+    pendingPhone?: string | null;
+    avatar?: string | null;
     avatarUrl?: string | null;
     avatarPublicId?: string | null;
+    profilePicture?: string | null;
+    profile_picture?: string | null;
+    profilePictureUrl?: string | null;
     bio?: string | null;
     verification_no?: string | null;
     verification_type?: string | null;
@@ -36,6 +43,23 @@ export interface Profile {
     user: User; 
     user_id: number;
   }
+
+export interface ProfileResponse {
+  fullName: string;
+  email: string;
+  phone_no: string | null;
+  phoneVerified: boolean;
+  address: string | null;
+  avatar: string | null;
+  avatarUrl: string | null;
+  profilePicture: string | null;
+  profile_picture: string | null;
+  profilePictureUrl: string | null;
+  city: string | null;
+  country: string | null;
+  postal_code: string | null;
+  id_number: string | null;
+}
 
 
   export interface Transaction {

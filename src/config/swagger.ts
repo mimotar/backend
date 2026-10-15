@@ -1007,6 +1007,36 @@ Welcome to the **Mimotar API** documentation. This API supports:
           phone_no: { type: "string", nullable: true },
           phoneVerified: { type: "boolean", example: false },
           address: { type: "string", nullable: true },
+          avatar: {
+            type: "string",
+            nullable: true,
+            description: "User's profile picture URL",
+            example: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+          },
+          avatarUrl: {
+            type: "string",
+            nullable: true,
+            description: "User's profile picture URL",
+            example: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+          },
+          profilePicture: {
+            type: "string",
+            nullable: true,
+            description: "User's profile picture URL",
+            example: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+          },
+          profile_picture: {
+            type: "string",
+            nullable: true,
+            description: "User's profile picture URL",
+            example: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+          },
+          profilePictureUrl: {
+            type: "string",
+            nullable: true,
+            description: "User's profile picture URL",
+            example: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+          },
           city: { type: "string", nullable: true },
           country: { type: "string", nullable: true },
           postal_code: { type: "string", nullable: true },
@@ -3125,6 +3155,102 @@ Welcome to the **Mimotar API** documentation. This API supports:
             description: "Avatar uploaded successfully",
           },
           "400": { description: "No image file provided" },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/api/profile/phone/send-otp": {
+      post: {
+        summary: "Request phone number verification OTP",
+        description: "Sends a 6-digit OTP code to the provided phone number or the user's existing profile phone number via Prembly SMS.",
+        tags: ["Profile"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  phone_no: {
+                    type: "string",
+                    example: "+2348012345678",
+                    description: "Optional phone number to verify. If omitted, the existing profile phone number is used.",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Verification code sent successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Verification code sent successfully to +234*****5678." },
+                    success: { type: "boolean", example: true },
+                    data: {
+                      type: "object",
+                      properties: {
+                        phone: { type: "string", example: "+234*****5678" },
+                        expiresInMinutes: { type: "number", example: 10 },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Missing or invalid phone number" },
+          "401": { description: "Unauthorized" },
+          "429": { description: "Cooldown in effect (wait 60 seconds)" },
+          "502": { description: "Prembly SMS gateway delivery failure" },
+        },
+      },
+    },
+    "/api/profile/phone/verify-otp": {
+      post: {
+        summary: "Verify phone number with OTP",
+        description: "Validates the 6-digit OTP code sent via Prembly SMS and sets phoneVerified to true.",
+        tags: ["Profile"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp"],
+                properties: {
+                  otp: {
+                    type: "string",
+                    example: "123456",
+                    description: "The 6-digit verification code received by SMS",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Phone number verified successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string", example: "Phone number verified successfully." },
+                    success: { type: "boolean", example: true },
+                    data: { $ref: "#/components/schemas/ProfileResponse" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid or expired OTP code" },
           "401": { description: "Unauthorized" },
         },
       },
