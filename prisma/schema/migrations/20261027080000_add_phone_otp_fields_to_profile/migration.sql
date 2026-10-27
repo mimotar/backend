@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Profile" ADD COLUMN IF NOT EXISTS "phoneOtp" TEXT;
+ALTER TABLE "Profile" ADD COLUMN IF NOT EXISTS "phoneOtpCreatedAt" TIMESTAMP(3);
+ALTER TABLE "Profile" ADD COLUMN IF NOT EXISTS "pendingPhone" TEXT;

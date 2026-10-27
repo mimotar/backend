@@ -18,6 +18,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
 
 - **Authentication** – Register and login with email (OTP) or OAuth (Google, Facebook)
 - **Users** – User registration, OTP verification, and profile
+- **Phone Verification** – Request and verify 6-digit SMS OTP via Prembly for user profile phone numbers
 - **Transactions (Tickets)** – Create, approve, reject, and manage ordinary or milestone-based escrow transactions. Lifecycle statuses are documented as \`StatusEnum\` (\`CREATED\` → \`APPROVED\` → \`ONGOING\`).
 - **Disputes** – Create, cancel, inspect, and resolve transaction-level or milestone-level disputes
 - **Payments** – Initialize payments and handle webhooks
@@ -3163,7 +3164,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       post: {
         summary: "Request phone number verification OTP",
         description: "Sends a 6-digit OTP code to the provided phone number or the user's existing profile phone number via Prembly SMS.",
-        tags: ["Profile"],
+        tags: ["Phone Verification"],
         security: [{ bearerAuth: [] }],
         requestBody: {
           content: {
@@ -3214,7 +3215,7 @@ Welcome to the **Mimotar API** documentation. This API supports:
       post: {
         summary: "Verify phone number with OTP",
         description: "Validates the 6-digit OTP code sent via Prembly SMS and sets phoneVerified to true.",
-        tags: ["Profile"],
+        tags: ["Phone Verification"],
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
